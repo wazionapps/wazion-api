@@ -1,3 +1,6 @@
+---
+sidebar_position: 9
+---
 # Error Codes & Troubleshooting
 
 ## JSON-RPC Error Codes

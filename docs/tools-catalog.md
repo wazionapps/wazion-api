@@ -1,3 +1,6 @@
+---
+sidebar_position: 10
+---
 # Tools Catalog
 
 Complete reference of all 244 WAzion API tools organized by category.
@@ -12,7 +15,7 @@ Complete reference of all 244 WAzion API tools organized by category.
 | Integraciones | 5 | Conexiones con servicios externos |
 | Prompt e IA | 12 | Configuracion del asistente IA |
 | Plugins | 18 | Plugins y extensiones |
-| Avanzado | 8 | Webhooks, funciones personalizadas, CRM |
+| Avanzado | 8 | Webhooks, funciones personalizadas, CRM, API key |
 | Estadisticas | 15 | Metricas y analytics |
 | Almacenamiento | 12 | Gestion de archivos y almacenamiento |
 | Soporte | 1 | Contacto con soporte tecnico |

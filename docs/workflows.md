@@ -1,3 +1,6 @@
+---
+sidebar_position: 4
+---
 # WhatsApp Auto Workflows
 
 Automate WhatsApp responses with conditional workflows. Workflows evaluate incoming messages against conditions and execute actions automatically.

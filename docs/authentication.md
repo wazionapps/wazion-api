@@ -1,3 +1,6 @@
+---
+sidebar_position: 1
+---
 # Authentication
 
 The WAzion API uses **Bearer token** authentication. Every request (except `initialize`) must include your API token in the `Authorization` header.

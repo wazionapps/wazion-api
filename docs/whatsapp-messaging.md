@@ -1,3 +1,6 @@
+---
+sidebar_position: 2
+---
 # WhatsApp Messaging
 
 Send and receive WhatsApp messages, manage sessions, schedule messages, and use templates.

@@ -1,3 +1,6 @@
+---
+sidebar_position: 7
+---
 # Knowledge Base
 
 Upload documents (PDFs, text files) to the knowledge base so the AI assistant can reference them when answering customer questions.

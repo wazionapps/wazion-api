@@ -1,3 +1,6 @@
+---
+sidebar_position: 6
+---
 # CRM & Customers
 
 Manage customer profiles, tags, comments, tasks, calendar events, and perform global searches across all data sources.

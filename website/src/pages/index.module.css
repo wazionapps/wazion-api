@@ -1,0 +1,119 @@
+.heroBanner {
+  padding: 5rem 0 4rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.buttonOutline {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+
+.buttonOutline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* ── Features ── */
+.features {
+  padding: 4rem 0;
+  background: var(--ifm-background-surface-color);
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 996px) {
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featureCardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.featureCardLink:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.featureEmoji {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.featureTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.featureDescription {
+  font-size: 0.9rem;
+  color: var(--ifm-color-secondary-darkest);
+  margin: 0;
+  line-height: 1.5;
+}
+
+[data-theme="dark"] .featureDescription {
+  color: var(--ifm-color-secondary-light);
+}
+
+/* ── Quickstart ── */
+.quickstart {
+  padding: 4rem 0;
+}
+
+.quickstartInner {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .quickstartInner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.codeSnippet pre {
+  background: #1e1e2e;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.codeSnippet code {
+  color: #cdd6f4;
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+}

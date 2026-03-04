@@ -1,3 +1,6 @@
+---
+sidebar_position: 5
+---
 # Mass Marketing
 
 Send WhatsApp campaigns to contact lists with scheduling, segmentation, auto-reply, and unsubscribe management.

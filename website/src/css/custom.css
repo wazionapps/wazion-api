@@ -1,0 +1,126 @@
+/**
+ * WAzion Developer Docs — Custom Theme
+ * Brand primary: #6366f1 (indigo)
+ */
+
+:root {
+  --ifm-color-primary: #6366f1;
+  --ifm-color-primary-dark: #4f52ef;
+  --ifm-color-primary-darker: #4346ee;
+  --ifm-color-primary-darkest: #2427e8;
+  --ifm-color-primary-light: #7779f3;
+  --ifm-color-primary-lighter: #8385f4;
+  --ifm-color-primary-lightest: #a5a7f8;
+
+  --ifm-code-font-size: 90%;
+  --ifm-font-family-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+
+  --ifm-navbar-height: 60px;
+  --ifm-navbar-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.08);
+
+  --docusaurus-highlighted-code-line-bg: rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="dark"] {
+  --ifm-color-primary: #818cf8;
+  --ifm-color-primary-dark: #6b76f6;
+  --ifm-color-primary-darker: #5e6af5;
+  --ifm-color-primary-darkest: #3440f1;
+  --ifm-color-primary-light: #97a0fa;
+  --ifm-color-primary-lighter: #a4acfb;
+  --ifm-color-primary-lightest: #c8cdfd;
+
+  --docusaurus-highlighted-code-line-bg: rgba(129, 140, 248, 0.15);
+}
+
+/* ── Navbar ── */
+.navbar {
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.navbar-dashboard-link {
+  background-color: var(--ifm-color-primary);
+  color: #fff !important;
+  border-radius: 6px;
+  padding: 0.4rem 0.85rem !important;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-dashboard-link:hover {
+  background-color: var(--ifm-color-primary-dark) !important;
+  color: #fff !important;
+  text-decoration: none;
+}
+
+/* ── Hero / Home ── */
+.hero--primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+.hero__title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero__subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-top: 0.5rem;
+}
+
+/* ── Feature cards ── */
+.featureCard {
+  background: var(--ifm-card-background-color, #fff);
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.featureCard:hover {
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .featureCard {
+  background: #1e1e2e;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Code blocks ── */
+.theme-code-block {
+  border-radius: 8px;
+}
+
+/* ── Admonitions ── */
+.alert--info {
+  --ifm-alert-background-color: rgba(99, 102, 241, 0.08);
+  --ifm-alert-border-color: var(--ifm-color-primary);
+}
+
+/* ── Sidebar ── */
+.menu__link--active {
+  font-weight: 600;
+}
+
+/* ── Footer ── */
+.footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── API Reference page ── */
+.swagger-ui-container {
+  margin-top: 1.5rem;
+}
+
+.swagger-ui .opblock-tag {
+  font-family: var(--ifm-font-family-base);
+}

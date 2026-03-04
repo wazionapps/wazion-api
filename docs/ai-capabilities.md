@@ -1,3 +1,6 @@
+---
+sidebar_position: 3
+---
 # AI Capabilities
 
 WAzion includes a powerful AI assistant that can summarize conversations, analyze sentiment, generate smart replies, auto-tag customers, and more.
