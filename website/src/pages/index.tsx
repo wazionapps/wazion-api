@@ -56,6 +56,13 @@ const features: Feature[] = [
       "Upload documents and let the AI answer questions from your own content.",
     link: "/docs/knowledge-base",
   },
+  {
+    title: "E-commerce Integrations",
+    emoji: "🛒",
+    description:
+      "Connect Shopify, WooCommerce, PrestaShop or VTEX for products, orders & customer sync.",
+    link: "/docs/tools-catalog#integraciones",
+  },
 ];
 
 function HeroSection() {

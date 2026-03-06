@@ -79,7 +79,7 @@ When a tool call fails, the response uses the standard MCP tool result format wi
 | `phone is required` | Missing required phone parameter | Include `phone` in arguments |
 | `No credits available` | Insufficient credits | Purchase credits from the dashboard |
 | `Session not connected` | WhatsApp session is disconnected | Reconnect the session |
-| `Shopify not connected` | Shopify integration not configured | Connect Shopify first |
+| `Shopify not connected` | E-commerce integration not configured | Connect your store (Shopify, WooCommerce, PrestaShop or VTEX) first |
 | `Agent limit reached` | Maximum agents for your plan | Remove an agent or upgrade plan |
 
 ## Confirmation-Required Actions
