@@ -806,7 +806,7 @@ paths:
                   description: Dominios donde funcionara el widget
                   type: string
                 faq_enabled:
-                  description: Publicar FAQs automaticamente en Shopify
+                  description: Publicar FAQs automaticamente en tu tienda online
                   type: boolean
                 faq_max_per_product:
                   description: Maximo de FAQs por producto
@@ -2837,7 +2837,7 @@ paths:
       - Estadisticas
   /dashboard/api/ops_products.php:
     post:
-      description: Busca productos en Shopify o en el CRM configurado
+      description: Busca productos en tu tienda online o en el CRM configurado
       operationId: search_products
       requestBody:
         content:
@@ -3507,8 +3507,9 @@ paths:
       - Seguimiento Inteligente
   /dashboard/api/publish_question_as_faq.php:
     post:
-      description: Publica manualmente una pregunta del historial como FAQ en Shopify.
-        Util para promover preguntas importantes que no fueron detectadas automaticamente.
+      description: Publica manualmente una pregunta del historial como FAQ en tu tienda
+        online. Util para promover preguntas importantes que no fueron detectadas
+        automaticamente.
       operationId: publish_question_as_faq
       requestBody:
         content:

@@ -180,7 +180,7 @@
 | `pause_campaign` | Marketing Masivo | mutation | Pausa temporalmente una campana de marketing masivo en curso |
 | `precheck_delete_whatsapp_session` | WhatsApp | query | Muestra qué configuraciones se verían afectadas al eliminar una sesión de WhatsApp (workflows, campañas, seguimiento ... |
 | `preview_smart_followup` | Seguimiento Inteligente | query | Genera una vista previa del mensaje de seguimiento que se enviaria a un cliente sin enviarlo realmente |
-| `publish_question_as_faq` | Plugins | mutation | Publica manualmente una pregunta del historial como FAQ en Shopify. Util para promover preguntas importantes que no f... |
+| `publish_question_as_faq` | Plugins | mutation | Publica manualmente una pregunta del historial como FAQ en tu tienda online. Util para promover preguntas importantes... |
 | `reconnect_whatsapp` | Automatizacion | mutation | Intenta reconectar una sesion de WhatsApp existente (puede requerir escanear QR manualmente). Si hay multiples numero... |
 | `regenerate_api_key` | Avanzado | mutation | Genera una nueva API key (token_ext) para la tienda. Esto invalida la key actual e impide el acceso de cualquier cone... |
 | `regenerate_plugin_token` | Plugins | mutation | Genera un nuevo token para los plugins (invalida el anterior) |
@@ -204,7 +204,7 @@
 | `search_conversations` | Conversaciones | query | Busca conversaciones por texto, telefono o rango de fechas. Ejemplo: 'busca conversaciones que mencionen devolucion' |
 | `search_customer_comments` | Clientes | query | Busca texto en los comentarios de todos los clientes |
 | `search_customers` | Clientes | query | Busca clientes por nombre, telefono o email en el CRM y en los contactos |
-| `search_products` | Productos | query | Busca productos en Shopify o en el CRM configurado |
+| `search_products` | Productos | query | Busca productos en tu tienda online o en el CRM configurado |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
 | `send_whatsapp_message` | WhatsApp | mutation | Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345... |
 | `smart_knowledge_update` | Prompt e IA | mutation | Busca y actualiza datos aprendidos que contradigan o estén desactualizados según la instrucción del usuario. Usa esto... |
