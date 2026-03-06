@@ -1,441 +1,4631 @@
-openapi: 3.1.0
-info:
-  title: WAzion API
-  description: |
-    WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    244 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
-    manage every aspect of your WAzion dashboard programmatically.
-
-    ## Protocol
-
-    All requests use **JSON-RPC 2.0** over a single POST endpoint. The server implements
-    the MCP Streamable HTTP transport (spec 2025-03-26).
-
-    ## Authentication
-
-    Include your API token as a Bearer token in the `Authorization` header. You can find
-    your token in the WAzion Dashboard under **Settings**.
-
-    ## Quick Start
-
-    ```bash
-    curl -X POST https://www.wazion.com/api/mcp/ \
-      -H "Content-Type: application/json" \
-      -H "Authorization: Bearer YOUR_TOKEN" \
-      -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"get_shop_status","arguments":{}},"id":1}'
-    ```
-  version: 1.1.0
-  contact:
-    name: WAzion Support
-    url: https://www.wazion.com
-    email: support@wazion.com
-  license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
-
-servers:
-  - url: https://www.wazion.com/api/mcp
-    description: Production
-
-security:
-  - bearerAuth: []
-
-tags:
-  - name: protocol
-    description: MCP protocol methods (initialize, ping)
-  - name: general
-    description: General settings (language, timezone, date format, store URL, business info)
-  - name: account
-    description: Account and billing information
-  - name: agents
-    description: Agent management, permissions, activity, and performance
-  - name: integrations
-    description: Shopify connection and locale configuration
-  - name: prompt
-    description: AI prompt management, auto-learning, knowledge snippets
-  - name: plugins
-    description: Product Q&A, Chat Web, Doc Q&A plugin configuration and stats
-  - name: advanced
-    description: Webhooks, custom functions, CRM endpoints
-  - name: stats
-    description: Usage stats, analytics, credit info, workflow stats
-  - name: storage
-    description: Knowledge base files and conversation file management
-  - name: support
-    description: Support ticket submission
-  - name: automation
-    description: WhatsApp Auto workflows (create, update, delete, dry-run)
-  - name: mass_marketing
-    description: Mass marketing campaigns, contact lists, blacklist, scheduling
-  - name: smart_followup
-    description: AI-powered sales recovery and follow-up
-  - name: conversations
-    description: Search, view, export, and manage WhatsApp conversations
-  - name: customers
-    description: CRM customers, tags, comments, GDPR, global search
-  - name: tasks
-    description: Task management linked to customers and agents
-  - name: calendar
-    description: Calendar events and appointments
-  - name: activity
-    description: Daily summaries, period stats, busiest hours, topics
-  - name: products
-    description: Product search and top-asked products
-  - name: whatsapp_ops
-    description: WhatsApp sessions, message logs, templates, scheduled messages, opt-out
-  - name: ai_analysis
-    description: AI summaries, sentiment, smart replies, auto-tagging, translation
-  - name: notifications
-    description: System notification management
-  - name: knowledge
-    description: Knowledge base file upload, download, and processing
-  - name: referrals
-    description: Referral program (codes, commissions, payouts)
-
-paths:
-  /:
-    post:
-      operationId: jsonRpcRequest
-      summary: JSON-RPC 2.0 endpoint
-      description: |
-        All WAzion API operations go through this single endpoint using JSON-RPC 2.0.
-
-        ### Available methods
-
-        | Method | Auth Required | Description |
-        |--------|--------------|-------------|
-        | `initialize` | No | MCP handshake |
-        | `tools/list` | Yes | List all available tools |
-        | `tools/call` | Yes | Execute a tool |
-        | `resources/list` | Yes | List available resources |
-        | `resources/read` | Yes | Read a resource (e.g. shop://profile) |
-        | `ping` | Yes | Health check |
-
-        ### Tool execution
-
-        Use `tools/call` with `params.name` set to the tool name and `params.arguments`
-        containing the tool parameters.
-
-        ### Confirmations
-
-        Some destructive actions require confirmation. On the first call, the server
-        returns a warning message. Call again with `confirm: true` in the arguments
-        to execute.
-
-        ### Batch requests
-
-        You can send an array of JSON-RPC requests for batch processing.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - $ref: '#/components/schemas/JsonRpcRequest'
-                - type: array
-                  items:
-                    $ref: '#/components/schemas/JsonRpcRequest'
-            examples:
-              initialize:
-                summary: MCP handshake
-                value:
-                  jsonrpc: "2.0"
-                  method: initialize
-                  params:
-                    protocolVersion: "2025-03-26"
-                    capabilities: {}
-                    clientInfo:
-                      name: my-app
-                      version: "1.0.0"
-                  id: 1
-
-              tools_list:
-                summary: List all tools
-                value:
-                  jsonrpc: "2.0"
-                  method: tools/list
-                  params: {}
-                  id: 2
-
-              send_message:
-                summary: Send a WhatsApp message
-                value:
-                  jsonrpc: "2.0"
-                  method: tools/call
-                  params:
-                    name: send_whatsapp_message
-                    arguments:
-                      phone: "+34600000000"
-                      message: "Hello from WAzion API!"
-                      session_id: 1
-                  id: 3
-
-              list_conversations:
-                summary: List recent conversations
-                value:
-                  jsonrpc: "2.0"
-                  method: tools/call
-                  params:
-                    name: get_recent_conversations
-                    arguments:
-                      limit: 10
-                  id: 4
-
-              create_workflow:
-                summary: Create a WhatsApp workflow
-                value:
-                  jsonrpc: "2.0"
-                  method: tools/call
-                  params:
-                    name: create_whatsapp_workflow
-                    arguments:
-                      name: Welcome Message
-                      trigger_type: message_received
-                      conditions:
-                        - type: keyword
-                          value: hello
-                      actions:
-                        - type: reply_text
-                          value: "Welcome! How can I help you?"
-                      status: active
-                      session_id: 1
-                  id: 5
-
-              get_ai_summary:
-                summary: Get AI conversation summary
-                value:
-                  jsonrpc: "2.0"
-                  method: tools/call
-                  params:
-                    name: get_ai_summary
-                    arguments:
-                      phone: "+34600000000"
-                      summary_type: detailed
-                  id: 6
-
-              read_resource:
-                summary: Read shop profile resource
-                value:
-                  jsonrpc: "2.0"
-                  method: resources/read
-                  params:
-                    uri: "shop://profile"
-                  id: 7
-
-      responses:
-        '200':
-          description: JSON-RPC response
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/JsonRpcSuccessResponse'
-                  - $ref: '#/components/schemas/JsonRpcErrorResponse'
-                  - type: array
-                    items:
-                      oneOf:
-                        - $ref: '#/components/schemas/JsonRpcSuccessResponse'
-                        - $ref: '#/components/schemas/JsonRpcErrorResponse'
-              examples:
-                tool_success:
-                  summary: Successful tool call
-                  value:
-                    jsonrpc: "2.0"
-                    result:
-                      content:
-                        - type: text
-                          text: "Message sent successfully"
-                    id: 3
-                tool_error:
-                  summary: Tool error
-                  value:
-                    jsonrpc: "2.0"
-                    result:
-                      content:
-                        - type: text
-                          text: "Error: phone is required"
-                      isError: true
-                    id: 3
-                auth_error:
-                  summary: Authentication error
-                  value:
-                    jsonrpc: "2.0"
-                    error:
-                      code: -32000
-                      message: "Unauthorized: invalid or missing Bearer token."
-                    id: 1
-
-        '202':
-          description: Notification acknowledged (no response body)
-        '405':
-          description: Method not allowed (only POST is supported)
-
-    delete:
-      operationId: terminateSession
-      summary: Terminate MCP session (no-op, server is stateless)
-      responses:
-        '202':
-          description: Session terminated
-
 components:
   securitySchemes:
     bearerAuth:
-      type: http
+      description: Your WAzion API token (token_ext from dashboard)
       scheme: bearer
-      description: |
-        Your WAzion API token. Find it at https://www.wazion.com/dashboard → Settings.
-
-  schemas:
-    JsonRpcRequest:
-      type: object
-      required:
-        - jsonrpc
-        - method
-      properties:
-        jsonrpc:
+      type: http
+info:
+  contact:
+    email: dev@wazion.com
+    url: https://www.wazion.com
+  description: Auto-generated from capabilities.json. For the full hand-written spec,
+    see openapi-full.yaml.
+  title: WAzion API
+  version: 1.1.0
+openapi: 3.0.3
+paths:
+  /dashboard/api/mass_marketing_lists.php:
+    get:
+      description: Obtiene todas las listas de contactos de marketing masivo de la
+        tienda
+      operationId: list_contact_lists
+      parameters:
+      - description: 'Accion fija: list'
+        in: query
+        name: action
+        required: true
+        schema:
           type: string
-          const: "2.0"
-        method:
-          type: string
-          enum:
-            - initialize
-            - tools/list
-            - tools/call
-            - resources/list
-            - resources/read
-            - ping
-        params:
-          type: object
-          description: Method-specific parameters
-        id:
-          oneOf:
-            - type: string
-            - type: integer
-          description: Request ID (omit for notifications)
-
-    JsonRpcSuccessResponse:
-      type: object
-      required:
-        - jsonrpc
-        - result
-        - id
-      properties:
-        jsonrpc:
-          type: string
-          const: "2.0"
-        result:
-          type: object
-        id:
-          oneOf:
-            - type: string
-            - type: integer
-
-    JsonRpcErrorResponse:
-      type: object
-      required:
-        - jsonrpc
-        - error
-        - id
-      properties:
-        jsonrpc:
-          type: string
-          const: "2.0"
-        error:
-          $ref: '#/components/schemas/JsonRpcError'
-        id:
-          oneOf:
-            - type: string
-            - type: integer
-            - type: "null"
-
-    JsonRpcError:
-      type: object
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          description: |
-            Error codes:
-            - `-32700` Parse error (invalid JSON)
-            - `-32601` Method not found
-            - `-32602` Invalid params
-            - `-32000` Unauthorized
-        message:
-          type: string
-
-    ToolCallParams:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          type: string
-          description: Tool name (e.g. `send_whatsapp_message`)
-        arguments:
-          type: object
-          description: Tool-specific arguments
-          additionalProperties: true
-
-    McpToolResult:
-      type: object
-      properties:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar listas de contactos
+      tags:
+      - Marketing Masivo
+    post:
+      description: Elimina registros de bajas de marketing masivo
+      operationId: remove_unsubscribed_bulk
+      requestBody:
         content:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                const: text
-              text:
-                type: string
-        isError:
-          type: boolean
-          description: Present and true when the tool call failed
-
-    InitializeResult:
-      type: object
-      properties:
-        protocolVersion:
-          type: string
-          example: "2025-03-26"
-        capabilities:
-          type: object
-          properties:
-            tools:
-              type: object
+          application/json:
+            schema:
               properties:
-                listChanged:
+                action:
+                  description: ''
+                  type: string
+                ids:
+                  description: Array de IDs de registros de baja a eliminar
+                  type: array
+                select_all:
+                  description: Seleccionar todos
                   type: boolean
-            resources:
+              required:
+              - action
               type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Eliminar bajas en bloque
+      tags:
+      - Marketing Masivo
+  /dashboard/api/ops_customers.php:
+    post:
+      description: Busca clientes por nombre, telefono o email en el CRM y en los
+        contactos
+      operationId: search_customers
+      requestBody:
+        content:
+          application/json:
+            schema:
               properties:
-                subscribe:
+                action:
+                  description: Accion fija
+                  type: string
+                agent_name:
+                  description: Nombre del agente
+                  type: string
+                comment:
+                  description: Texto del comentario
+                  type: string
+                limit:
+                  description: ''
+                  type: integer
+                phone:
+                  description: Telefono del cliente
+                  type: string
+                primary_phone:
+                  description: Telefono principal para merge
+                  type: string
+                query:
+                  description: Texto a buscar (nombre, telefono o email)
+                  type: string
+                secondary_phone:
+                  description: Telefono secundario para merge
+                  type: string
+                tag_color:
+                  description: Color del tag en formato hexadecimal
+                  type: string
+                tag_name:
+                  description: Nombre del tag
+                  type: string
+              required:
+              - action
+              - query
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Buscar clientes
+      tags:
+      - Clientes
+  /dashboard/api/mass_marketing_blacklist.php:
+    get:
+      description: Obtiene los numeros bloqueados manualmente que no recibiran campanas
+        masivas, distinta de las bajas voluntarias
+      operationId: list_blacklist
+      parameters:
+      - description: 'Accion fija: list'
+        in: query
+        name: action
+        required: true
+        schema:
+          type: string
+      - description: Filtrar por numero de telefono
+        in: query
+        name: search
+        required: false
+        schema:
+          type: string
+      - description: Pagina de resultados
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver lista negra de marketing
+      tags:
+      - Marketing Masivo
+    post:
+      description: Desbloquea un numero de telefono de la lista negra de marketing
+        masivo
+      operationId: remove_from_blacklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: 'Accion fija: remove'
+                  type: string
+                phone:
+                  description: Numero de telefono a desbloquear
+                  type: string
+              required:
+              - action
+              - phone
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Quitar telefono de lista negra
+      tags:
+      - Marketing Masivo
+  /dashboard/api/whatsapp_optout.php:
+    get:
+      description: Muestra los contactos que han solicitado no recibir mensajes automaticos
+        de WhatsApp
+      operationId: list_whatsapp_optout
+      parameters:
+      - description: Accion fija
+        in: query
+        name: action
+        required: true
+        schema:
+          type: string
+      - description: Pagina de resultados (default 1)
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: Filtrar por numero de telefono
+        in: query
+        name: search
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar contactos opt-out de WhatsApp
+      tags:
+      - WhatsApp
+    post:
+      description: Elimina un numero de la lista de opt-out para que pueda recibir
+        mensajes automaticos de nuevo
+      operationId: remove_whatsapp_optout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                phone:
+                  description: Numero de telefono a quitar de opt-out
+                  type: string
+              required:
+              - action
+              - phone
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Quitar contacto de opt-out WhatsApp
+      tags:
+      - WhatsApp
+  /dashboard/api/apply_prompt_instruction.php:
+    post:
+      description: 'Genera una version modificada del prompt segun una instruccion.
+        NO guarda los cambios - solo devuelve el prompt modificado como preview. Despues
+        de obtener el resultado, DEBES llamar a save_prompt para guardar los cambios.
+        Ejemplos: ''Anade horario de atencion de 9 a 18h'', ''Quita la parte de devoluciones'',
+        ''Hazlo mas formal''.'
+      operationId: apply_prompt_instruction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                instruction:
+                  description: La instruccion de que modificar en el prompt
+                  type: string
+                prompt:
+                  description: El prompt a modificar. Si no se proporciona, el endpoint
+                    lee automaticamente el prompt actual de la tienda. No es necesario
+                    llamar a get_prompt primero.
+                  type: string
+              required:
+              - instruction
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Aplicar instruccion al prompt
+      tags:
+      - Prompt e IA
+  /dashboard/api/mass_marketing_campaigns.php:
+    get:
+      description: Obtiene todas las campanas de marketing masivo de la tienda
+      operationId: list_campaigns
+      parameters:
+      - description: 'Accion fija: list'
+        in: query
+        name: action
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar campanas de marketing
+      tags:
+      - Marketing Masivo
+    post:
+      description: Modifica los datos de una campaña de marketing masivo existente
+        (solo en estado borrador)
+      operationId: update_campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+                archive_after_send:
+                  description: Archivar chat tras enviar
                   type: boolean
-                listChanged:
+                campaign_id:
+                  description: ID de la campaña a actualizar
+                  type: integer
+                include_unsubscribe_link:
+                  description: Incluir enlace de baja
                   type: boolean
-        serverInfo:
-          type: object
-          properties:
-            name:
-              type: string
-              example: wazion-mcp
-            version:
-              type: string
-              example: "1.1.0"
-        instructions:
+                is_recurring:
+                  description: Si true, la campana se ejecuta de forma recurrente
+                    segun recurring_cron
+                  type: boolean
+                list_id:
+                  description: ID de la lista de contactos
+                  type: integer
+                media_filename:
+                  description: Nombre del archivo multimedia
+                  type: string
+                media_type:
+                  description: Tipo de multimedia (image, video, document)
+                  type: string
+                media_url:
+                  description: URL del archivo multimedia
+                  type: string
+                message_text:
+                  description: Texto del mensaje
+                  type: string
+                name:
+                  description: Nuevo nombre de la campaña
+                  type: string
+                recurring_cron:
+                  description: Expresion cron para campanas recurrentes. Requerido
+                    si is_recurring es true.
+                  type: string
+                scheduled_at:
+                  description: Fecha/hora de envío programado (ISO 8601)
+                  type: string
+                segment_filters:
+                  description: Filtros de segmentacion para enviar solo a contactos
+                    que cumplan criterios
+                  type: object
+                send_interval_seconds:
+                  description: Intervalo entre mensajes en segundos
+                  type: integer
+                session_ids:
+                  description: IDs de sesiones WhatsApp a usar
+                  type: array
+                translate_by_prefix:
+                  description: Traducir según prefijo telefónico
+                  type: boolean
+              required:
+              - action
+              - campaign_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualizar campaña
+      tags:
+      - Marketing Masivo
+  /dashboard/api/ops_ai.php:
+    post:
+      description: Traduce los ultimos mensajes de una conversacion a otro idioma
+        usando IA
+      operationId: translate_conversation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+                days:
+                  description: Numero de dias a analizar
+                  type: integer
+                hours:
+                  description: Ultimas N horas a analizar
+                  type: integer
+                last_n:
+                  description: Ultimos N mensajes a traducir (default 20, max 50)
+                  type: integer
+                limit:
+                  description: Maximo de resultados
+                  type: integer
+                phone:
+                  description: Telefono del cliente
+                  type: string
+                summary_type:
+                  description: 'Tipo de resumen: quick (rapido), actionable (con acciones),
+                    detailed (detallado)'
+                  enum:
+                  - quick
+                  - actionable
+                  - detailed
+                  type: string
+                target_language:
+                  description: Idioma destino (es, en, de, fr, pt, it, etc.)
+                  type: string
+                tone:
+                  description: Tono para la respuesta
+                  type: string
+              required:
+              - action
+              - phone
+              - target_language
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Traducir conversacion
+      tags:
+      - Analisis IA
+  /dashboard/api/whatsapp/workflow_bulk.php:
+    get:
+      description: 'Obtiene estadísticas de workflows para una sesión específica de
+        WhatsApp: mensajes de hoy, ejecuciones, volumen de 7 días'
+      operationId: get_workflow_session_stats
+      parameters:
+      - description: ''
+        in: query
+        name: action
+        required: true
+        schema:
           type: string
-
-    ToolDefinition:
-      type: object
-      properties:
-        name:
+      - description: ID de la sesión WhatsApp
+        in: query
+        name: session_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver estadísticas de sesión de workflows
+      tags:
+      - Automatizacion
+    post:
+      description: Cambia el orden de ejecucion de los workflows de WhatsApp
+      operationId: reorder_whatsapp_workflows
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+                order:
+                  description: Array de objetos {id, priority} con el nuevo orden
+                    de los workflows
+                  type: array
+              required:
+              - action
+              - order
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Reordenar workflows
+      tags:
+      - Automatizacion
+  /dashboard/api/mass_marketing_action.php:
+    post:
+      description: Inicia el envio de una campana de marketing masivo. Funciona con
+        campanas en estado borrador o programadas.
+      operationId: start_campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: 'Accion fija: start'
+                  type: string
+                campaign_id:
+                  description: ID de la campana a iniciar
+                  type: integer
+              required:
+              - action
+              - campaign_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Iniciar campana de marketing
+      tags:
+      - Marketing Masivo
+  /dashboard/api/whatsapp_scheduled.php:
+    get:
+      description: Muestra los mensajes de WhatsApp programados para envio futuro
+      operationId: list_scheduled_messages
+      parameters:
+      - description: Accion fija
+        in: query
+        name: action
+        required: true
+        schema:
           type: string
-          description: Tool identifier
-        description:
+      - description: 'Filtrar por estado (default: pending, all para ver todos)'
+        in: query
+        name: status
+        required: false
+        schema:
           type: string
-        inputSchema:
-          type: object
-          description: JSON Schema for tool arguments
+      - description: Pagina de resultados
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: 'Periodo de tiempo para filtrar: today (hoy), 7/30/90 (ultimos
+          N dias), custom (requiere date_from y date_to)'
+        in: query
+        name: period
+        required: false
+        schema:
+          type: string
+      - description: Fecha inicio YYYY-MM-DD
+        in: query
+        name: date_from
+        required: false
+        schema:
+          type: string
+      - description: Fecha fin YYYY-MM-DD
+        in: query
+        name: date_to
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar mensajes programados
+      tags:
+      - WhatsApp
+    post:
+      description: 'Programa un mensaje de WhatsApp para envio futuro. PREREQUISITO
+        OBLIGATORIO: ANTES de llamar esta accion, DEBES llamar a get_whatsapp_status
+        para obtener el session_id de una sesion conectada. Sin session_id la accion
+        SIEMPRE falla. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true
+        con success=false - esto NO es un error, es el flujo normal. Cuando recibas
+        esto, describe brevemente al usuario lo que se programara y PARA. NO llames
+        de nuevo a esta accion. El sistema mostrara botones automaticamente.'
+      operationId: create_scheduled_message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                message_text:
+                  description: Texto del mensaje a enviar
+                  type: string
+                phone:
+                  description: 'Numero de telefono destino con prefijo internacional
+                    formato E.164 (ej: +34612345678). Si el usuario da un numero sin
+                    prefijo, preguntarle el pais'
+                  type: string
+                scheduled_at:
+                  description: Fecha y hora de envio en formato YYYY-MM-DD HH:MM:SS.
+                    Debe ser una fecha futura. Si el usuario dice una fecha relativa
+                    como 'manana a las 10', convertirla al formato correcto
+                  type: string
+                session_id:
+                  description: ID numerico de la sesion de WhatsApp. OBLIGATORIO.
+                    Obtener llamando a get_whatsapp_status primero y usar el campo
+                    'id' de una sesion con status 'connected'. Si hay varias sesiones,
+                    preguntar al usuario cual usar
+                  type: integer
+              required:
+              - action
+              - session_id
+              - phone
+              - message_text
+              - scheduled_at
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Programar mensaje de WhatsApp
+      tags:
+      - WhatsApp
+  /dashboard/api/plugin_conversation_note.php:
+    post:
+      description: Genera un resumen IA de una conversacion del plugin de chat web
+        y lo guarda como nota en el perfil del cliente. Requiere que el visitante
+        se haya identificado con telefono o email para poder asociarlo a un cliente
+        existente.
+      operationId: save_plugin_conversation_note
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                session_id:
+                  description: ID de la sesion de chat del plugin
+                  type: string
+              required:
+              - session_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Guardar nota de conversacion del plugin
+      tags:
+      - Plugins
+  /dashboard/api/save_integrations.php:
+    post:
+      description: Desconecta la integracion con tu plataforma e-commerce (Shopify,
+        WooCommerce, etc.)
+      operationId: disconnect_ecommerce
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                platform_type:
+                  description: Plataforma a desconectar (si no se especifica, desconecta
+                    la activa)
+                  type: string
+                shopify_connected:
+                  description: false para desconectar
+                  type: boolean
+                shopify_token:
+                  description: Dejar vacio
+                  type: string
+                shopify_url:
+                  description: Dejar vacio
+                  type: string
+              required:
+              - shopify_connected
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Desconectar plataforma e-commerce
+      tags:
+      - Integraciones
+  /dashboard/api/save_plugin.php:
+    post:
+      description: Activa y configura el widget de preguntas sobre productos
+      operationId: configure_plugin_productqa
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                allowed_domains:
+                  description: Dominios donde funcionara el widget
+                  type: string
+                faq_enabled:
+                  description: Publicar FAQs automaticamente en Shopify
+                  type: boolean
+                faq_max_per_product:
+                  description: Maximo de FAQs por producto
+                  type: integer
+                is_enabled:
+                  description: true para activar el plugin
+                  type: boolean
+                plugin_type:
+                  description: ''
+                  type: string
+              required:
+              - plugin_type
+              - is_enabled
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Configurar plugin Product Q&A
+      tags:
+      - Plugins
+  /dashboard/api/save_advanced.php:
+    post:
+      description: Define APIs que la IA puede llamar durante conversaciones
+      operationId: update_custom_functions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                add_function:
+                  description: JSON de UNA funcion para ANADIR sin borrar las existentes.
+                    USAR SIEMPRE ESTE para crear nuevas funciones.
+                  type: string
+                remove_function:
+                  description: Nombre de la funcion a eliminar
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Configurar funciones personalizadas IA
+      tags:
+      - Avanzado
+  /dashboard/api/whatsapp/connect.php:
+    post:
+      description: Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve
+        un código QR para escanear con el teléfono.
+      operationId: connect_whatsapp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                force_new:
+                  description: Forzar creación de nueva sesión aunque haya sesiones
+                    desconectadas disponibles
+                  type: boolean
+                label:
+                  description: Etiqueta para identificar la sesión (máximo 50 caracteres)
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Conectar número de WhatsApp
+      tags:
+      - WhatsApp
+  /dashboard/api/agents.php:
+    post:
+      description: Modifica los datos de un agente existente
+      operationId: update_agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+                color:
+                  description: Nuevo color en formato hexadecimal
+                  type: string
+                email:
+                  description: Nuevo email del agente
+                  type: string
+                full_name:
+                  description: Nuevo nombre completo del agente
+                  type: string
+                id:
+                  description: ID del agente a editar
+                  type: integer
+                nickname:
+                  description: Nuevo nombre corto del agente
+                  type: string
+                permissions_json:
+                  description: 'JSON string con los permisos del agente (ej: {"ai_generate":
+                    true, "notes_view": true}). Alternativa a save_agent_permissions.'
+                  type: string
+                phone:
+                  description: Nuevo telefono del agente
+                  type: string
+                pin:
+                  description: Nuevo PIN numerico para identificacion en la extension
+                    de Chrome
+                  type: string
+              required:
+              - action
+              - id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Editar agente
+      tags:
+      - Agentes
+  /dashboard/api/ops_calendar.php:
+    post:
+      description: Modifica un evento existente del calendario
+      operationId: update_calendar_event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                agent_id:
+                  description: ID del agente
+                  type: integer
+                all_day:
+                  description: ''
+                  type: integer
+                assigned_agent_id:
+                  description: ''
+                  type: integer
+                date_from:
+                  description: Fecha inicio para filtrar
+                  type: string
+                date_to:
+                  description: Fecha fin para filtrar
+                  type: string
+                description:
+                  description: ''
+                  type: string
+                end_datetime:
+                  description: ''
+                  type: string
+                event_id:
+                  description: ID del evento
+                  type: integer
+                phone:
+                  description: Telefono del cliente
+                  type: string
+                start_datetime:
+                  description: ''
+                  type: string
+                title:
+                  description: ''
+                  type: string
+              required:
+              - action
+              - event_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualizar evento
+      tags:
+      - Calendario
+  /api/plugins/doc-qa/create.php:
+    post:
+      description: Crea un nuevo asistente de documentacion. Despues de crearlo, podras
+        subir archivos (PDF, Word, etc.) desde el dashboard.
+      operationId: create_docqa_assistant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                allowed_domains:
+                  description: Dominios donde funcionara el widget (vacio = todos)
+                  type: array
+                display_name:
+                  description: 'Nombre del asistente (ej: ''Manual de Usuario'', ''FAQ
+                    Producto X'')'
+                  type: string
+                is_enabled:
+                  description: true para activar inmediatamente
+                  type: boolean
+                language_fixed:
+                  description: REQUERIDO si language_mode=fixed. Codigo del idioma
+                    fijo (es=Espanol, en=Ingles, de=Aleman, fr=Frances, pt=Portugues,
+                    it=Italiano, hu=Hungaro). Si el usuario dice 'idioma fijo en espanol',
+                    usar language_mode='fixed' Y language_fixed='es'.
+                  enum:
+                  - es
+                  - en
+                  - de
+                  - fr
+                  - pt
+                  - it
+                  - hu
+                  type: string
+                language_mode:
+                  description: 'Modo de idioma: auto (detecta automaticamente), fixed
+                    (siempre responde en un idioma fijo), selector (el usuario elige
+                    el idioma)'
+                  enum:
+                  - auto
+                  - fixed
+                  - selector
+                  type: string
+                prompt:
+                  description: Instrucciones adicionales para la IA (opcional)
+                  type: string
+                rate_limit_per_session:
+                  description: Limite de preguntas por sesion
+                  type: integer
+              required:
+              - display_name
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Crear asistente Doc Q&A
+      tags:
+      - Plugins
+  /dashboard/api/knowledge/upload_text.php:
+    post:
+      description: Crea un nuevo archivo en la base de conocimiento a partir de contenido
+        de texto. Ideal para anadir informacion como promociones, politicas, instrucciones,
+        FAQs, etc. sin necesidad de subir un archivo manualmente.
+      operationId: create_knowledge_file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                content:
+                  description: Contenido de texto del archivo
+                  type: string
+                description:
+                  description: Descripcion breve del contenido (para que la IA sepa
+                    cuando usar este archivo)
+                  type: string
+                filename:
+                  description: 'Nombre del archivo con extension (ej: ''promociones.txt'').
+                    Si no se proporciona, se genera automaticamente desde el titulo.
+                    Extensiones validas: txt, md, csv, json, html'
+                  type: string
+                title:
+                  description: Titulo descriptivo del archivo (max 255 caracteres)
+                  type: string
+              required:
+              - title
+              - content
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Crear archivo de conocimiento desde texto
+      tags:
+      - Almacenamiento
+  /dashboard/api/ops_tasks.php:
+    post:
+      description: 'Modifica una tarea existente: cambiar estado, texto, prioridad,
+        fecha limite o asignacion'
+      operationId: update_task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                agent_id:
+                  description: ID del agente
+                  type: integer
+                assigned_agent_id:
+                  description: Nuevo agente asignado
+                  type: integer
+                due_date:
+                  description: Nueva fecha limite (YYYY-MM-DD)
+                  type: string
+                include_completed:
+                  description: Incluir tareas completadas
+                  type: boolean
+                limit:
+                  description: Maximo de resultados
+                  type: integer
+                offset:
+                  description: Posicion de inicio para paginacion
+                  type: integer
+                phone:
+                  description: Telefono del cliente
+                  type: string
+                priority:
+                  description: ''
+                  enum:
+                  - low
+                  - medium
+                  - high
+                  type: string
+                status:
+                  description: Nuevo estado
+                  enum:
+                  - pending
+                  - in_progress
+                  - completed
+                  - cancelled
+                  type: string
+                task_id:
+                  description: ID de la tarea a actualizar
+                  type: integer
+                task_text:
+                  description: Nuevo texto de la tarea
+                  type: string
+              required:
+              - action
+              - task_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualizar tarea
+      tags:
+      - Tareas
+  /dashboard/api/whatsapp_templates.php:
+    get:
+      description: Muestra las plantillas de mensajes guardadas para WhatsApp
+      operationId: list_whatsapp_templates
+      parameters:
+      - description: Accion fija
+        in: query
+        name: action
+        required: true
+        schema:
+          type: string
+      - description: Filtrar por categoria de plantilla
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar plantillas de WhatsApp
+      tags:
+      - WhatsApp
+    post:
+      description: Guarda un mensaje como plantilla reutilizable de WhatsApp
+      operationId: save_as_whatsapp_template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                category:
+                  description: Categoria de la plantilla
+                  type: string
+                name:
+                  description: Nombre de la plantilla
+                  type: string
+              required:
+              - action
+              - name
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Guardar como plantilla
+      tags:
+      - WhatsApp
+  /dashboard/api/whatsapp/workflow_save.php:
+    post:
+      description: 'Modifica un workflow existente. Soporta update parcial: solo se
+        sobreescriben los campos que se envian, los demas se mantienen sin cambios'
+      operationId: update_whatsapp_workflow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                actions:
+                  description: 'Array de acciones a ejecutar. Si no se envia, se mantienen
+                    las acciones actuales. Tipos soportados: reply_with_ai (con pre_send_check
+                    opcional), reply (con no_repeat opcional), delay, ai_filter (filtro
+                    IA que decide si responder, previene bucles, ideal como primera
+                    accion). Para ai_filter se puede añadir prompt:''instrucciones''
+                    para personalizar criterios.'
+                  type: array
+                conditions:
+                  description: Objeto con 'logic' (AND/OR) y 'rules' (array de condiciones).
+                    Si no se envia, se mantienen las condiciones actuales
+                  type: object
+                id:
+                  description: ID del workflow a editar
+                  type: integer
+                name:
+                  description: Nombre del workflow (max 100 caracteres)
+                  type: string
+                session_id:
+                  description: ID de la sesion de WhatsApp a la que asignar este workflow.
+                    null = todos los numeros. Usa get_whatsapp_status para ver las
+                    sesiones.
+                  type: integer
+                status:
+                  description: 'Estado del workflow: ''enabled'' para activar, ''disabled''
+                    para desactivar'
+                  enum:
+                  - enabled
+                  - disabled
+                  type: string
+                trigger_type:
+                  description: 'Tipo de trigger: ''message.received'' o ''message.sent''.
+                    Si no se envia, se mantiene el valor actual'
+                  enum:
+                  - message.received
+                  - message.sent
+                  type: string
+              required:
+              - id
+              - name
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Editar workflow de WhatsApp
+      tags:
+      - Automatizacion
+  /dashboard/api/files_delete.php:
+    post:
+      description: Elimina un archivo compartido en una conversacion
+      operationId: delete_conversation_file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                agent_id:
+                  description: ID del agente que realiza la accion
+                  type: integer
+                file_uuid:
+                  description: UUID del archivo a eliminar
+                  type: string
+              required:
+              - file_uuid
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Eliminar archivo de conversacion
+      tags:
+      - Almacenamiento
+  /dashboard/api/ops_conversations.php:
+    post:
+      description: 'Busca conversaciones por texto, telefono o rango de fechas. Ejemplo:
+        ''busca conversaciones que mencionen devolucion'''
+      operationId: search_conversations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                agent_id:
+                  description: ID del agente
+                  type: integer
+                conversation_id:
+                  description: ID de conversacion especifica
+                  type: integer
+                date_from:
+                  description: Fecha inicio (YYYY-MM-DD)
+                  type: string
+                date_to:
+                  description: Fecha fin (YYYY-MM-DD)
+                  type: string
+                format:
+                  description: Formato de respuesta
+                  type: string
+                hours:
+                  description: Ultimas N horas
+                  type: integer
+                last_n:
+                  description: Ultimos N mensajes
+                  type: integer
+                limit:
+                  description: Maximo de resultados (default 20, max 50)
+                  type: integer
+                message:
+                  description: Texto del mensaje a enviar o eliminar
+                  type: string
+                offset:
+                  description: Posicion de inicio para paginacion
+                  type: integer
+                period:
+                  description: Periodo de tiempo
+                  enum:
+                  - today
+                  - yesterday
+                  - last_7_days
+                  type: string
+                phone:
+                  description: Numero de telefono del cliente (con o sin +)
+                  type: string
+                query:
+                  description: Texto a buscar en los mensajes de las conversaciones
+                  type: string
+              required:
+              - action
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Buscar conversaciones
+      tags:
+      - Conversaciones
+  /dashboard/api/knowledge/delete.php:
+    post:
+      description: Elimina un archivo de la base de conocimiento (no permite eliminar
+        archivos de sistema)
+      operationId: delete_knowledge_file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                file_id:
+                  description: ID del archivo a eliminar
+                  type: integer
+              required:
+              - file_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Eliminar archivo de conocimiento
+      tags:
+      - Almacenamiento
+  /dashboard/api/ops_notifications.php:
+    post:
+      description: Marca una notificacion especifica como leida
+      operationId: mark_notification_read
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                agent_id:
+                  description: ID del agente que lee (opcional)
+                  type: integer
+                filter:
+                  description: Filtro de notificaciones
+                  type: string
+                limit:
+                  description: Maximo de resultados
+                  type: integer
+                notification_id:
+                  description: ID de la notificacion
+                  type: integer
+                offset:
+                  description: Posicion de inicio
+                  type: integer
+                type:
+                  description: Tipo de notificacion
+                  type: string
+              required:
+              - action
+              - notification_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Marcar notificacion como leida
+      tags:
+      - Notificaciones
+  /dashboard/api/whatsapp/delete_session.php:
+    post:
+      description: Elimina una sesion de WhatsApp desconectada. Solo funciona con
+        sesiones en estado 'disconnected'.
+      operationId: delete_whatsapp_session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                migrate_to:
+                  description: ID de otra sesión a la que reasignar workflows, campañas
+                    y seguimiento inteligente. Si no se proporciona, se usa 'todas
+                    las líneas'.
+                  type: integer
+                session_id:
+                  description: ID de la sesion a eliminar
+                  type: integer
+              required:
+              - session_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Eliminar sesion de WhatsApp
+      tags:
+      - WhatsApp
+  /dashboard/api/whatsapp/workflow_delete.php:
+    post:
+      description: Elimina permanentemente un workflow de WhatsApp
+      operationId: delete_whatsapp_workflow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  description: ID del workflow a eliminar
+                  type: integer
+              required:
+              - id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Eliminar workflow
+      tags:
+      - Automatizacion
+  /dashboard/api/whatsapp/disconnect.php:
+    post:
+      description: Desconecta una sesion de WhatsApp y elimina los datos de autenticacion.
+        Si hay multiples numeros, requiere session_id.
+      operationId: disconnect_whatsapp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                session_id:
+                  description: ID de la sesion a desconectar. Obligatorio si hay mas
+                    de un numero conectado. Usa get_whatsapp_status para obtener los
+                    IDs.
+                  type: integer
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Desconectar WhatsApp
+      tags:
+      - Automatizacion
+  /dashboard/api/files_download.php:
+    get:
+      description: Obtiene la URL de descarga de un archivo compartido en una conversacion
+      operationId: download_conversation_file
+      parameters:
+      - description: UUID del archivo a descargar
+        in: query
+        name: file_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Descargar archivo de conversacion
+      tags:
+      - Almacenamiento
+  /dashboard/api/knowledge/download.php:
+    get:
+      description: Obtiene la URL de descarga de un archivo de la base de conocimiento
+      operationId: download_knowledge_file
+      parameters:
+      - description: ID del archivo de conocimiento
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Descargar archivo de conocimiento
+      tags:
+      - Base de Conocimiento
+  /dashboard/api/mass_marketing_export.php:
+    get:
+      description: Descarga los logs de envio de una campana completada como archivo
+        CSV. Solo funciona con campanas completadas, canceladas, pausadas o archivadas.
+      operationId: export_campaign_csv
+      parameters:
+      - description: ID de la campana cuyos resultados se quieren exportar
+        in: query
+        name: campaign_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Exportar resultados de campana a CSV
+      tags:
+      - Marketing Masivo
+  /dashboard/api/ops_gdpr.php:
+    post:
+      description: Exporta todos los datos almacenados de un cliente para cumplimiento
+        GDPR (Art. 15 - Derecho de acceso)
+      operationId: gdpr_export_customer_data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+                phone:
+                  description: Telefono del cliente
+                  type: string
+              required:
+              - action
+              - phone
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Exportar datos del cliente (GDPR)
+      tags:
+      - Clientes
+  /dashboard/api/referrals_generate.php:
+    post:
+      description: Genera el enlace único de referido del usuario para compartir.
+        Si ya tiene uno, lo devuelve.
+      operationId: generate_referral_code
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Generar enlace de referido
+      tags:
+      - Referidos
+  /dashboard/api/ops_agents_activity.php:
+    post:
+      description: Vista general de todos los agentes con su carga de trabajo actual
+      operationId: get_team_summary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                agent_id:
+                  description: ID del agente para filtrar
+                  type: integer
+                days:
+                  description: Numero de dias a consultar
+                  type: integer
+                period:
+                  description: Periodo de tiempo
+                  enum:
+                  - today
+                  - yesterday
+                  - last_7_days
+                  - last_30_days
+                  type: string
+              required:
+              - action
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Resumen del equipo
+      tags:
+      - Agentes
+  /api/mcp/tools/get_analytics:
+    post:
+      description: 'Muestra metricas de rendimiento: conversaciones, mensajes, actividad
+        diaria'
+      operationId: get_analytics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                period:
+                  description: 'Periodo: 7d (semana), 14d (2 semanas), 30d (mes)'
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver analytics
+      tags:
+      - Estadisticas
+  /api/mcp/tools/get_api_key:
+    post:
+      description: Muestra la API key actual de la tienda (token_ext) y la URL del
+        servidor MCP. Usa esta accion cuando el usuario pregunte por su API key, token,
+        como conectar MCP, o como configurar Claude/Cursor/VS Code.
+      operationId: get_api_key
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver API key actual
+      tags:
+      - Avanzado
+  /dashboard/api/ops_activity.php:
+    post:
+      description: Muestra los temas/intenciones mas comunes en las conversaciones
+      operationId: get_top_topics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+                days:
+                  description: Dias a analizar (default 30)
+                  type: integer
+              required:
+              - action
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Temas mas frecuentes
+      tags:
+      - Actividad
+  /dashboard/api/get_autolearning_metrics.php:
+    get:
+      description: Muestra las metricas del sistema de aprendizaje automatico
+      operationId: get_autolearning_metrics
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver metricas de autolearning
+      tags:
+      - Estadisticas
+  /dashboard/api/autolearning_stats.php:
+    get:
+      description: 'Obtiene estadisticas detalladas del sistema de auto-learning:
+        snippets activos, pendientes, rechazados, etc.'
+      operationId: get_autolearning_stats
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Estadisticas de auto-learning
+      tags:
+      - Estadisticas
+  /dashboard/api/mass_marketing_logs.php:
+    get:
+      description: Obtiene el progreso y logs de envio de una campana especifica
+      operationId: get_campaign_logs
+      parameters:
+      - description: ID de la campana
+        in: query
+        name: campaign_id
+        required: true
+        schema:
+          type: integer
+      - description: Numero de pagina
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: Resultados por pagina
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver logs de campana
+      tags:
+      - Marketing Masivo
+  /dashboard/api/get_plugin_stats.php:
+    get:
+      description: 'Muestra estadisticas de uso del plugin de chat web: conversaciones,
+        mensajes, sesiones activas, referrers y paises'
+      operationId: get_chat_plugin_stats
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver estadisticas del plugin Chat Web
+      tags:
+      - Estadisticas
+  /dashboard/api/ops_plugins.php:
+    post:
+      description: Lista todos los plugins instalados con su configuracion y estado
+      operationId: list_plugin_configs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+                hours:
+                  description: Ultimas N horas a analizar
+                  type: integer
+                limit:
+                  description: Maximo de resultados
+                  type: integer
+                period:
+                  description: Periodo de tiempo para las estadisticas
+                  enum:
+                  - today
+                  - yesterday
+                  - last_7_days
+                  - last_30_days
+                  type: string
+                plugin_type:
+                  description: Filtrar por tipo de plugin
+                  type: string
+              required:
+              - action
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar configuracion de plugins
+      tags:
+      - Plugins
+  null:
+    post:
+      description: Muestra la lista de archivos subidos a la base de conocimiento
+        con su tamano y fecha
+      operationId: list_storage_files
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                limit:
+                  description: Numero maximo de archivos a mostrar (1-50)
+                  type: integer
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar archivos de almacenamiento
+      tags:
+      - Almacenamiento
+  /api/plugins/doc-qa/stats.php:
+    get:
+      description: 'Muestra estadisticas detalladas de un asistente de documentacion.
+        Requiere assistant_id: usa list_docqa_assistants primero para obtener los
+        IDs disponibles.'
+      operationId: get_docqa_stats
+      parameters:
+      - description: ID del asistente (obtenlo llamando a list_docqa_assistants)
+        in: query
+        name: assistant_id
+        required: true
+        schema:
+          type: integer
+      - description: Periodo en dias (1-365)
+        in: query
+        name: days
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver estadisticas de asistente Doc Q&A
+      tags:
+      - Estadisticas
+  /dashboard/api/knowledge/status.php:
+    get:
+      description: Obtiene el estado de procesamiento de todos los archivos de conocimiento
+        (polling endpoint)
+      operationId: get_knowledge_processing_status
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Estado de procesamiento de archivos
+      tags:
+      - Base de Conocimiento
+  /dashboard/api/save_mass_marketing.php:
+    get:
+      description: 'Obtiene la configuracion actual de marketing masivo: auto-respuesta,
+        traduccion automatica, texto personalizado de baja'
+      operationId: get_mass_marketing_config
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver configuracion de marketing masivo
+      tags:
+      - Marketing Masivo
+    post:
+      description: 'Guarda la configuracion de marketing masivo: auto-respuesta, traduccion
+        y opciones de envio'
+      operationId: save_mass_marketing_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                auto_reply_enabled:
+                  description: true para activar la auto-respuesta, false para desactivarla
+                  type: boolean
+                auto_reply_text:
+                  description: Texto de auto-respuesta cuando un destinatario responde
+                    a un mensaje masivo
+                  type: string
+                auto_reply_translate:
+                  description: Si true, la auto-respuesta se traduce al idioma del
+                    destinatario segun su prefijo telefonico
+                  type: boolean
+                auto_reply_unsubscribe:
+                  description: Si true, incluye un enlace de baja en la auto-respuesta
+                  type: boolean
+                custom_unsubscribe_text:
+                  description: Texto personalizado para el enlace de baja en campanas.
+                    Maximo 500 caracteres. Enviar vacio o null para usar el texto
+                    predeterminado.
+                  type: string
+                require_approval:
+                  description: Si true, las campanas creadas por agentes requieren
+                    aprobacion del administrador antes de enviarse
+                  type: boolean
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Guardar configuracion de marketing masivo
+      tags:
+      - Marketing Masivo
+  /dashboard/api/mass_marketing_stats.php:
+    get:
+      description: 'Estadisticas de campanas masivas: rendimiento por campana, desglose
+        de fallos, distribucion horaria de envios, calidad de listas y balance de
+        creditos disponibles'
+      operationId: get_mass_marketing_stats
+      parameters:
+      - description: 'Fecha inicio (YYYY-MM-DD). Default: hace 30 dias'
+        in: query
+        name: date_from
+        required: false
+        schema:
+          type: string
+      - description: 'Fecha fin (YYYY-MM-DD). Default: hoy'
+        in: query
+        name: date_to
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Estadisticas de Marketing Masivo
+      tags:
+      - Estadisticas
+  /dashboard/api/onboarding_step.php:
+    get:
+      description: Muestra el progreso de configuracion inicial del usuario (setup
+        guide)
+      operationId: get_onboarding_status
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver estado del onboarding
+      tags:
+      - Configuracion General
+  /dashboard/api/get_plugin_conversation_detail.php:
+    get:
+      description: Muestra los mensajes completos de una conversacion del plugin de
+        chat web
+      operationId: get_plugin_conversation_detail
+      parameters:
+      - description: ID de la sesion de chat del plugin
+        in: query
+        name: session_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Detalle de conversacion de plugin
+      tags:
+      - Plugins
+  /dashboard/api/get_plugin_conversations.php:
+    get:
+      description: Muestra las conversaciones del plugin de chat web. Soporta filtros
+        por periodo de tiempo.
+      operationId: get_plugin_conversations
+      parameters:
+      - description: Numero maximo de conversaciones
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: 'Periodo: 1 (ultimo dia/hoy), 7 (ultima semana), 30 (ultimo mes),
+          90 (ultimos 3 meses), all (todas)'
+        in: query
+        name: period
+        required: false
+        schema:
+          type: string
+      - description: Fecha inicio en formato YYYY-MM-DD
+        in: query
+        name: date_from
+        required: false
+        schema:
+          type: string
+      - description: Fecha fin en formato YYYY-MM-DD
+        in: query
+        name: date_to
+        required: false
+        schema:
+          type: string
+      - description: Numero de pagina
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver conversaciones del plugin
+      tags:
+      - Estadisticas
+  /api/mcp/tools/get_plugin_embed_code:
+    post:
+      description: Genera el codigo de instalacion (embed code) para un plugin. Usalo
+        cuando el usuario necesite el codigo para instalar Chat Web, Product Q&A o
+        Doc Q&A en su web.
+      operationId: get_plugin_embed_code
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                plugin_type:
+                  description: 'Tipo de plugin: chat (Chat Web), product-qa (Product
+                    Q&A), doc-qa (Doc Q&A)'
+                  enum:
+                  - chat
+                  - product-qa
+                  - doc-qa
+                  type: string
+              required:
+              - plugin_type
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Obtener codigo embed de plugin
+      tags:
+      - Plugins
+  /dashboard/api/get_product_qa_faqs.php:
+    get:
+      description: Lista las FAQs publicadas del plugin Product Q&A, agrupadas por
+        producto. Requiere que el plugin Product Q&A este configurado/activado.
+      operationId: get_product_qa_faqs
+      parameters:
+      - description: Filtrar por estado de la FAQ
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - description: Filtrar por ID de producto especifico
+        in: query
+        name: product_id
+        required: false
+        schema:
+          type: string
+      - description: Numero de pagina
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: FAQs por pagina (max 50)
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver FAQs publicadas
+      tags:
+      - Plugins
+  /dashboard/api/get_product_qa_questions.php:
+    get:
+      description: Muestra las preguntas sobre productos. Soporta filtros por periodo
+        de tiempo.
+      operationId: get_product_qa_questions
+      parameters:
+      - description: Numero maximo de preguntas
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: 'Periodo de tiempo: today (solo hoy), 7 (ultimos 7 dias), 30
+          (ultimos 30 dias), 90 (ultimos 90 dias), all (todas)'
+        in: query
+        name: period
+        required: false
+        schema:
+          type: string
+      - description: Fecha inicio en formato YYYY-MM-DD (tiene prioridad sobre period)
+        in: query
+        name: date_from
+        required: false
+        schema:
+          type: string
+      - description: Fecha fin en formato YYYY-MM-DD (tiene prioridad sobre period)
+        in: query
+        name: date_to
+        required: false
+        schema:
+          type: string
+      - description: Numero de pagina
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver preguntas de Product Q&A
+      tags:
+      - Estadisticas
+  /dashboard/api/get_product_qa_stats.php:
+    get:
+      description: Muestra estadisticas del plugin de preguntas sobre productos
+      operationId: get_product_qa_stats
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver estadisticas de Product Q&A
+      tags:
+      - Estadisticas
+  /dashboard/api/get_general_prompt.php:
+    get:
+      description: Muestra el prompt actual de la IA
+      operationId: get_prompt
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver prompt actual
+      tags:
+      - Prompt e IA
+  /dashboard/api/get_prompt_history.php:
+    get:
+      description: Muestra las versiones anteriores del prompt
+      operationId: get_prompt_history
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver historial de prompts
+      tags:
+      - Prompt e IA
+  /dashboard/api/get_purchase_history.php:
+    get:
+      description: Muestra el historial de compras de creditos
+      operationId: get_purchase_history
+      parameters:
+      - description: 'Pagina a mostrar (default: 1)'
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: 'Registros por pagina (default: 20, max: 50)'
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver historial de compras
+      tags:
+      - Cuenta
+  /dashboard/api/referrals_data.php:
+    get:
+      description: Muestra los referidos del usuario, comisiones pendientes y pagadas,
+        y estado de solicitudes de pago
+      operationId: get_referral_data
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver datos de referidos
+      tags:
+      - Referidos
+  /dashboard/api/save_smart_followup.php:
+    get:
+      description: 'Obtiene la configuracion actual de seguimiento inteligente. Incluye:
+        hora de ejecucion, nivel de intencion minimo, intentos, envio automatico,
+        tono, dias activos, etc.'
+      operationId: get_smart_followup_config
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Configuracion de Smart Follow-up
+      tags:
+      - Seguimiento Inteligente
+    post:
+      description: Actualiza la configuracion de seguimiento inteligente. Solo envia
+        los campos que quieras cambiar. El sistema verifica automaticamente que el
+        contacto no este dado de baja (mass marketing) y no tenga sentimiento negativo
+        antes de enviar.
+      operationId: save_smart_followup_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                archive_after_send:
+                  description: Whether to archive the WhatsApp chat after sending
+                    follow-up
+                  type: boolean
+                auto_send_enabled:
+                  description: Whether to automatically send WhatsApp follow-up messages
+                  type: boolean
+                custom_instructions:
+                  description: Instrucciones personalizadas para la IA al generar
+                    mensajes de seguimiento
+                  type: string
+                delay_days:
+                  description: Days to wait before sending follow-up (0-7)
+                  type: integer
+                enabled:
+                  description: Enable or disable smart follow-up
+                  type: boolean
+                exclude_phones:
+                  description: 'Lista de telefonos a excluir del seguimiento (maximo
+                    200). Formato: array de strings con prefijo +'
+                  type: array
+                followup_tone:
+                  description: 'Tono de los mensajes de seguimiento: ''friendly''
+                    (amigable), ''professional'' (profesional) o ''casual'''
+                  type: string
+                lookback_hours:
+                  description: How many hours back to look for conversations (default
+                    24)
+                  type: integer
+                max_attempts:
+                  description: Maximum follow-up attempts per conversation (1-5)
+                  type: integer
+                max_conversations:
+                  description: Maximum conversations to process per cron run
+                  type: integer
+                min_intent_level:
+                  description: 'Minimum intent level to follow up: ''low'', ''medium'',
+                    or ''high'''
+                  type: string
+                reset_attempts_days:
+                  description: Days after which attempt count resets for a conversation
+                  type: integer
+                retry_interval_hours:
+                  description: Hours to wait between retry attempts for the same conversation
+                  type: integer
+                run_days:
+                  description: Days of the week to run (0=Sunday, 1=Monday, ..., 6=Saturday).
+                    JSON array of integers.
+                  type: array
+                run_hour:
+                  description: Hour to run (0-23) in shop's timezone
+                  type: integer
+                sending_window_end:
+                  description: Hora de fin de la ventana de envio (0-23). null para
+                    desactivar ventana
+                  type: integer
+                sending_window_start:
+                  description: Hora de inicio de la ventana de envio (0-23). null
+                    para desactivar ventana
+                  type: integer
+                tracking_days:
+                  description: Days to track conversions after follow-up is sent
+                  type: integer
+                whatsapp_session_id:
+                  description: ID de la sesion de WhatsApp a usar para enviar los
+                    mensajes de seguimiento
+                  type: integer
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualizar configuracion Smart Follow-up
+      tags:
+      - Seguimiento Inteligente
+  /dashboard/api/smart_followup_logs.php:
+    get:
+      description: 'Estadisticas de recuperacion de ventas: embudo de conversion,
+        tasa de respuesta, productos mas mencionados, rendimiento por intento y desglose
+        de motivos de omision'
+      operationId: get_smart_followup_stats
+      parameters:
+      - description: ''
+        in: query
+        name: action
+        required: true
+        schema:
+          type: string
+      - description: 'Periodo: ''today'', ''yesterday'', ''last_7_days'', ''last_30_days'',
+          ''this_month'', ''last_month'', ''last_90_days'', ''last_365_days'', ''all_time''
+          o ''custom''. Default: ''last_30_days'''
+        in: query
+        name: period
+        required: false
+        schema:
+          type: string
+      - description: Fecha inicio (YYYY-MM-DD). Solo con period='custom'
+        in: query
+        name: date_from
+        required: false
+        schema:
+          type: string
+      - description: Fecha fin (YYYY-MM-DD). Solo con period='custom'
+        in: query
+        name: date_to
+        required: false
+        schema:
+          type: string
+      - description: Numero de pagina
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: Filtrar por nivel de intencion
+        in: query
+        name: intent_level
+        required: false
+        schema:
+          type: string
+      - description: Filtrar por resultado
+        in: query
+        name: outcome
+        required: false
+        schema:
+          type: string
+      - description: Filtrar por accion tomada
+        in: query
+        name: action_taken
+        required: false
+        schema:
+          type: string
+      - description: Buscar en los registros
+        in: query
+        name: search
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Estadisticas de Smart Follow-up
+      tags:
+      - Seguimiento Inteligente
+  /api/storage_quota.php:
+    get:
+      description: Muestra el uso actual de almacenamiento y el plan activo
+      operationId: get_storage_status
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver estado de almacenamiento
+      tags:
+      - Almacenamiento
+  /dashboard/api/get_analytics.php:
+    post:
+      description: 'Obtiene analytics detallados de conversaciones usando structured
+        outputs: KPIs, distribucion por intencion, sentimiento, urgencia, tendencia
+        de satisfaccion y conversaciones recientes. Requiere que structured outputs
+        este activado.'
+      operationId: get_structured_analytics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                date_from:
+                  description: 'Fecha inicio YYYY-MM-DD (default: hace 30 dias)'
+                  type: string
+                date_to:
+                  description: 'Fecha fin YYYY-MM-DD (default: hoy)'
+                  type: string
+                limit:
+                  description: Cantidad de conversaciones recientes a incluir (default
+                    50)
+                  type: integer
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Analytics detallado con structured outputs
+      tags:
+      - Estadisticas
+  /dashboard/api/ops_products.php:
+    post:
+      description: Busca productos en Shopify o en el CRM configurado
+      operationId: search_products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: Accion fija
+                  type: string
+                limit:
+                  description: ''
+                  type: integer
+                query:
+                  description: Texto a buscar en el nombre del producto
+                  type: string
+              required:
+              - action
+              - query
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Buscar productos
+      tags:
+      - Productos
+  /dashboard/api/openai_stats.php:
+    get:
+      description: Muestra el detalle individual de cada consulta de IA con tokens
+        y costes
+      operationId: get_usage_stats_detail
+      parameters:
+      - description: ''
+        in: query
+        name: action
+        required: true
+        schema:
+          type: string
+      - description: Fecha inicio YYYY-MM-DD
+        in: query
+        name: from
+        required: false
+        schema:
+          type: string
+      - description: Fecha fin YYYY-MM-DD
+        in: query
+        name: to
+        required: false
+        schema:
+          type: string
+      - description: Número de página
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: Resultados por página
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver detalle de uso por consulta
+      tags:
+      - Estadisticas
+  /api/mcp/tools/get_webhook_config:
+    post:
+      description: 'Lee la configuracion actual de webhooks de la tienda: si estan
+        activados, URL configurada, eventos suscritos y si tiene secret. Usa esta
+        accion SIEMPRE antes de configurar o modificar webhooks, y cuando el usuario
+        pregunte sobre su configuracion de webhooks.'
+      operationId: get_webhook_config
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver configuracion de webhooks
+      tags:
+      - Avanzado
+  /dashboard/api/whatsapp/get_status.php:
+    get:
+      description: Muestra todas las sesiones de WhatsApp de la tienda con su estado
+        actual (conectado, desconectado, pendiente QR)
+      operationId: get_whatsapp_connection_status
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver estado de conexiones WhatsApp
+      tags:
+      - WhatsApp
+  /dashboard/api/whatsapp/conversation_history.php:
+    get:
+      description: Muestra el historial de mensajes de WhatsApp con un telefono especifico
+      operationId: get_whatsapp_conversation_history
+      parameters:
+      - description: 'Numero de telefono (con codigo de pais, ej: +34600123456)'
+        in: query
+        name: phone
+        required: true
+        schema:
+          type: string
+      - description: Cantidad maxima de mensajes a mostrar (1-100)
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver historial de conversacion WhatsApp
+      tags:
+      - Automatizacion
+  /dashboard/api/ops_whatsapp.php:
+    post:
+      description: 'Envia un mensaje de WhatsApp a un telefono. El numero debe incluir
+        prefijo internacional formato E.164 (ej: +34612345678). Si el usuario da un
+        numero sin prefijo, preguntale el pais antes de enviar. IMPORTANTE: Esta accion
+        requiere confirmacion. Cuando la llames, recibiras requires_confirmation=true
+        y success=false - esto es NORMAL, NO es un error. Simplemente describe al
+        usuario lo que se va a enviar y PARA. El sistema mostrara botones de confirmar/cancelar
+        automaticamente. NO reintentes la accion.'
+      operationId: send_whatsapp_message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+                archive_after_send:
+                  description: Archivar chat tras enviar
+                  type: boolean
+                message:
+                  description: Texto del mensaje a enviar. OBLIGATORIO - no enviar
+                    vacio
+                  type: string
+                phone:
+                  description: 'Telefono destino en formato E.164 con prefijo internacional
+                    (ej: +34612345678). Si el usuario no incluye prefijo, preguntarle
+                    el pais. OBLIGATORIO'
+                  type: string
+                session_id:
+                  description: ID de sesion especifica (opcional, usa la primera conectada)
+                  type: integer
+              required:
+              - action
+              - phone
+              - message
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Enviar mensaje de WhatsApp
+      tags:
+      - WhatsApp
+  /dashboard/api/whatsapp/profile_get.php:
+    get:
+      description: 'Obtiene el perfil de WhatsApp de una sesion conectada: nombre,
+        foto, estado/info, y datos de empresa si es WhatsApp Business (descripcion,
+        direccion, email, web, horario)'
+      operationId: get_whatsapp_profile
+      parameters:
+      - description: ID de la sesion WhatsApp conectada
+        in: query
+        name: session_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver perfil de WhatsApp
+      tags:
+      - WhatsApp
+  /api/mcp/tools/get_whatsapp_qr:
+    post:
+      description: Obtiene el codigo QR de WhatsApp para que el usuario lo escanee
+        y conecte su cuenta. Si WhatsApp ya esta conectado, informa del estado. Devuelve
+        una URL de imagen que puedes mostrar inline con ![QR WhatsApp](url).
+      operationId: get_whatsapp_qr
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Obtener QR de WhatsApp
+      tags:
+      - Automatizacion
+  /dashboard/api/whatsapp/workflow_logs.php:
+    get:
+      description: Get WhatsApp message volume, workflow execution stats, peak hours,
+        and performance metrics
+      operationId: get_whatsapp_workflow_stats
+      parameters:
+      - description: ''
+        in: query
+        name: action
+        required: true
+        schema:
+          type: string
+      - description: 'Number of days: 7, 30, or 90. Default: 7'
+        in: query
+        name: period
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: WhatsApp Workflow Statistics
+      tags:
+      - Estadisticas
+  /dashboard/api/mass_marketing_import.php:
+    post:
+      description: Importa contactos a una lista de marketing masivo. Soporta entrada
+        manual de telefonos o importacion desde conversaciones.
+      operationId: import_marketing_contacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                list_id:
+                  description: ID de la lista destino
+                  type: integer
+                name_column:
+                  description: Nombre de la columna de nombre en el CSV
+                  type: string
+                phone_column:
+                  description: Nombre de la columna de teléfono en el CSV
+                  type: string
+                phones:
+                  description: Array de teléfonos a importar (para source=manual)
+                  type: array
+                phones_text:
+                  description: 'Para source=manual: telefonos separados por saltos
+                    de linea, uno por linea'
+                  type: string
+                source:
+                  description: 'Origen de importacion: manual (texto libre), conversations
+                    (desde historial WhatsApp), csv (archivo CSV), txt (archivo de
+                    texto)'
+                  enum:
+                  - manual
+                  - conversations
+                  - csv
+                  - txt
+                  type: string
+                tmp_id:
+                  description: ID temporal del archivo previamente subido (para importación
+                    con mapeo)
+                  type: string
+              required:
+              - source
+              - list_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Importar contactos de marketing
+      tags:
+      - Marketing Masivo
+  /dashboard/api/improve_prompt.php:
+    post:
+      description: Analiza el prompt actual con IA y devuelve puntuaciones por categoria,
+        sugerencias de mejora y una version mejorada del prompt. Util cuando el usuario
+        quiere saber si su prompt es bueno o como mejorarlo.
+      operationId: improve_prompt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                prompt:
+                  description: El prompt a analizar. Si no lo proporciona el usuario,
+                    usar el prompt actual (obtener con get_prompt primero)
+                  type: string
+              required:
+              - prompt
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Mejorar prompt con IA
+      tags:
+      - Prompt e IA
+  /dashboard/api/files_list.php:
+    get:
+      description: Lista los archivos compartidos en una conversacion con un cliente
+      operationId: list_conversation_files
+      parameters:
+      - description: Telefono del cliente para filtrar archivos
+        in: query
+        name: phone
+        required: false
+        schema:
+          type: string
+      - description: ''
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Posicion de inicio para paginacion
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Archivos de una conversacion
+      tags:
+      - Almacenamiento
+  /api/plugins/doc-qa/list.php:
+    get:
+      description: Muestra todos los asistentes de documentacion creados con el plugin
+        Doc Q&A
+      operationId: list_docqa_assistants
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar asistentes Doc Q&A
+      tags:
+      - Plugins
+  /dashboard/api/knowledge/list.php:
+    get:
+      description: Muestra todos los archivos subidos a la base de conocimiento (PDFs,
+        documentos, etc.)
+      operationId: list_knowledge_files
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar archivos de base de conocimiento
+      tags:
+      - Almacenamiento
+  /dashboard/api/knowledge/snippets_list.php:
+    get:
+      description: Muestra los datos (facts) que la IA ha aprendido automaticamente
+        de las conversaciones. Estos son datos concretos del negocio como horarios,
+        precios, politicas, etc.
+      operationId: list_knowledge_snippets
+      parameters:
+      - description: 'Filtrar por estado: pending (pendientes de revision), active
+          (aprobados), conflicts (en conflicto), stale (obsoletos), rejected (rechazados),
+          all (todos)'
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+      - description: 'Filtrar por categoria (ej: horarios, precios, envios)'
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - description: Buscar en el contenido de los snippets
+        in: query
+        name: search
+        required: false
+        schema:
+          type: string
+      - description: Cantidad por pagina (max 100)
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Posicion de inicio para paginacion
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar conocimiento aprendido
+      tags:
+      - Prompt e IA
+  /dashboard/api/whatsapp/agents_list.php:
+    get:
+      description: Muestra todos los agentes disponibles para asignar en workflows
+        de WhatsApp
+      operationId: list_whatsapp_agents
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar agentes de atencion
+      tags:
+      - Agentes
+  /dashboard/api/whatsapp/workflows_list.php:
+    get:
+      description: Obtiene la lista de todos los workflows de automatizacion de WhatsApp
+      operationId: list_whatsapp_workflows
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Listar workflows de WhatsApp
+      tags:
+      - Automatizacion
+  /dashboard/api/manage_faq.php:
+    post:
+      description: Permite despublicar, republicar o eliminar FAQs del plugin Product
+        Q&A. Util para gestionar contenido que ya no es relevante.
+      operationId: manage_faq
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: 'Acción a realizar: unpublish (despublicar FAQs), republish
+                    (republicar), delete (eliminar)'
+                  enum:
+                  - unpublish
+                  - republish
+                  - delete
+                  type: string
+                faq_ids:
+                  description: Array de IDs de FAQs a gestionar (obtener de get_product_qa_faqs)
+                  type: array
+              required:
+              - faq_ids
+              - action
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Gestionar FAQs
+      tags:
+      - Plugins
+  /dashboard/api/whatsapp/delete_session_precheck.php:
+    post:
+      description: Muestra qué configuraciones se verían afectadas al eliminar una
+        sesión de WhatsApp (workflows, campañas, seguimiento inteligente) y lista
+        las sesiones alternativas disponibles para migración.
+      operationId: precheck_delete_whatsapp_session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                session_id:
+                  description: ID de la sesión a verificar
+                  type: integer
+              required:
+              - session_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Pre-verificar eliminación de sesión WhatsApp
+      tags:
+      - WhatsApp
+  /dashboard/api/smart_followup_preview.php:
+    post:
+      description: Genera una vista previa del mensaje de seguimiento que se enviaria
+        a un cliente sin enviarlo realmente
+      operationId: preview_smart_followup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                conversation_hash:
+                  description: Hash de la conversacion a analizar
+                  type: string
+              required:
+              - conversation_hash
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Vista previa de seguimiento
+      tags:
+      - Seguimiento Inteligente
+  /dashboard/api/publish_question_as_faq.php:
+    post:
+      description: Publica manualmente una pregunta del historial como FAQ en Shopify.
+        Util para promover preguntas importantes que no fueron detectadas automaticamente.
+      operationId: publish_question_as_faq
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                question_id:
+                  description: ID de la pregunta a publicar (obtener de get_product_qa_questions)
+                  type: integer
+              required:
+              - question_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Publicar pregunta como FAQ
+      tags:
+      - Plugins
+  /dashboard/api/whatsapp/reconnect.php:
+    post:
+      description: Intenta reconectar una sesion de WhatsApp existente (puede requerir
+        escanear QR manualmente). Si hay multiples numeros, requiere session_id.
+      operationId: reconnect_whatsapp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                session_id:
+                  description: ID de la sesion a reconectar. Obligatorio si hay mas
+                    de un numero. Usa get_whatsapp_status para obtener los IDs.
+                  type: integer
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Reconectar WhatsApp
+      tags:
+      - Automatizacion
+  /dashboard/api/regenerate_token_ext.php:
+    post:
+      description: Genera una nueva API key (token_ext) para la tienda. Esto invalida
+        la key actual e impide el acceso de cualquier conexion MCP o aplicacion que
+        la use. Usar solo si el usuario lo pide explicitamente.
+      operationId: regenerate_api_key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                confirmation:
+                  description: Debe ser true para confirmar la regeneracion
+                  type: boolean
+              required:
+              - confirmation
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Regenerar API key del dashboard
+      tags:
+      - Avanzado
+  /dashboard/api/regenerate_plugin_token.php:
+    post:
+      description: Genera un nuevo token para los plugins (invalida el anterior)
+      operationId: regenerate_plugin_token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                plugin_type:
+                  description: Tipo de plugin cuyo token regenerar
+                  enum:
+                  - chat
+                  - product-qa
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Regenerar token de plugin
+      tags:
+      - Plugins
+  /dashboard/api/referrals_request_payout.php:
+    post:
+      description: Solicita el pago de las comisiones pendientes (mínimo 50€). Solo
+        disponible si no hay otra solicitud abierta.
+      operationId: request_referral_payout
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Solicitar pago de comisiones
+      tags:
+      - Referidos
+  /dashboard/api/restore_default_prompt.php:
+    get:
+      description: Obtiene el prompt por defecto segun el idioma
+      operationId: restore_default_prompt
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Restaurar prompt por defecto
+      tags:
+      - Prompt e IA
+  /dashboard/api/rollback_prompt.php:
+    post:
+      description: 'Revierte la parte autogenerada del prompt a una version anterior
+        del historial. La parte personalizada del usuario se mantiene. FLUJO DE CONFIRMACION:
+        Esta accion devolvera requires_confirmation=true con success=false - esto
+        NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente
+        al usuario que version se va a restaurar y PARA. NO llames de nuevo a esta
+        accion. El sistema mostrara botones automaticamente.'
+      operationId: rollback_prompt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                version_id:
+                  description: ID de la version a restaurar. Obtenerlo llamando a
+                    get_prompt_history primero
+                  type: integer
+              required:
+              - version_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Revertir prompt a version anterior
+      tags:
+      - Prompt e IA
+  /dashboard/api/save_prompt.php:
+    post:
+      description: Activa o desactiva la busqueda en internet de la IA. Cuando esta
+        activa, la IA puede buscar informacion actualizada en internet para responder
+        preguntas sobre tendencias, precios del mercado, noticias o datos que cambian
+        frecuentemente.
+      operationId: toggle_web_search
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                enable_web_search:
+                  description: true para activar busqueda web, false para desactivar
+                  type: boolean
+              required:
+              - enable_web_search
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Activar/desactivar busqueda web
+      tags:
+      - Prompt e IA
+  /api/contact_support.php:
+    post:
+      description: Envia un mensaje al equipo de soporte de WAzion. Usa esta accion
+        cuando el usuario tenga un problema que no puedas resolver, quiera reportar
+        un bug, o necesite ayuda del equipo tecnico.
+      operationId: send_support_ticket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                message:
+                  description: Descripcion detallada del problema o consulta (max
+                    2000 caracteres)
+                  type: string
+                subject:
+                  description: Asunto breve del mensaje (max 100 caracteres)
+                  type: string
+                type:
+                  description: 'Tipo de solicitud: bug (problema tecnico), question
+                    (consulta general), feature (sugerencia de mejora), billing (facturacion),
+                    other (otro)'
+                  enum:
+                  - bug
+                  - question
+                  - feature
+                  - billing
+                  - other
+                  type: string
+              required:
+              - type
+              - subject
+              - message
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Enviar ticket de soporte
+      tags:
+      - Soporte
+  /dashboard/api/knowledge/smart_update.php:
+    post:
+      description: Busca y actualiza datos aprendidos que contradigan o estén desactualizados
+        según la instrucción del usuario. Usa esto cuando el usuario dice cosas como
+        'ahora aceptamos PayPal', 'hemos cambiado el horario', 'ya no hacemos envíos
+        a X', etc. Primero llama SIN confirm para ver preview, luego con confirm=true
+        y selected_ids para ejecutar.
+      operationId: smart_knowledge_update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                changes:
+                  description: 'Lista de cambios propuestos del preview (para Phase
+                    2 con confirm=true). Cada elemento: {id, action, proposed}'
+                  type: array
+                confirm:
+                  description: true para ejecutar los cambios (segunda llamada)
+                  type: boolean
+                instruction:
+                  description: Instrucción en lenguaje natural describiendo el cambio
+                    en el negocio
+                  type: string
+                selected_ids:
+                  description: IDs de snippets a modificar (solo con confirm=true).
+                    Si no se pasa, se aplican todos los cambios propuestos
+                  type: array
+              required:
+              - instruction
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualización inteligente de conocimiento
+      tags:
+      - Prompt e IA
+  /dashboard/api/knowledge/sync_now.php:
+    post:
+      description: Fuerza la sincronizacion inmediata de los facts aprendidos al Vector
+        Store (normalmente se hace automaticamente)
+      operationId: sync_knowledge_now
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Sincronizar conocimiento ahora
+      tags:
+      - Almacenamiento
+  /dashboard/api/test_crm_endpoint.php:
+    post:
+      description: Envia una peticion de prueba a un endpoint CRM para verificar que
+        funciona correctamente
+      operationId: test_crm_endpoint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                auth:
+                  description: Configuración de autenticación del endpoint
+                  type: object
+                method:
+                  description: Metodo HTTP del endpoint (GET o POST)
+                  enum:
+                  - GET
+                  - POST
+                  type: string
+                test_phone:
+                  description: Número de teléfono de prueba
+                  type: string
+                type:
+                  description: Tipo de endpoint CRM a probar
+                  enum:
+                  - sidePanel_CustomerInfo
+                  - ai_CustomerInitialInfo
+                  - sidePanel_CustomerFindToJoin
+                  - search_Products
+                  - globalSearch
+                  type: string
+                url:
+                  description: URL del endpoint CRM a probar
+                  type: string
+              required:
+              - type
+              - url
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Probar endpoint CRM
+      tags:
+      - Avanzado
+  /dashboard/api/test_connection.php:
+    post:
+      description: Verifica que la conexion con la plataforma e-commerce (Shopify
+        o WooCommerce) funciona correctamente. Usa las credenciales guardadas si no
+        se proporcionan.
+      operationId: test_ecommerce_connection
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Probar conexion e-commerce
+      tags:
+      - Integraciones
+  /dashboard/api/test_webhook.php:
+    post:
+      description: Envia un webhook de prueba. Usa automaticamente la URL y secret
+        configurados en la tienda si no se proporcionan parametros.
+      operationId: test_webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                webhook_secret:
+                  description: Secret para firmar el webhook. Si no se envia, usa
+                    el secret guardado en la configuracion
+                  type: string
+                webhook_url:
+                  description: URL del webhook a probar. Si no se envia, usa la URL
+                    guardada en la configuracion
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Probar webhook
+      tags:
+      - Avanzado
+  /dashboard/api/save_analytics.php:
+    post:
+      description: Activa o desactiva el registro de analytics con structured outputs
+        para esta tienda
+      operationId: toggle_analytics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                enable_structured_outputs:
+                  description: true para activar analytics con structured outputs,
+                    false para desactivar
+                  type: boolean
+              required:
+              - enable_structured_outputs
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Activar/desactivar analytics
+      tags:
+      - Estadisticas
+  /dashboard/api/save_ai_settings.php:
+    post:
+      description: Activa o desactiva el analisis automatico de imagenes, documentos
+        PDF y audios enviados por clientes via WhatsApp. Afecta a todos los sistemas
+        de IA (Piloto Automatico, WhatsApp Auto, respuestas manuales)
+      operationId: toggle_auto_describe_images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                auto_describe_images:
+                  description: true para activar, false para desactivar
+                  type: boolean
+              required:
+              - auto_describe_images
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Activar/desactivar lectura automatica de medios
+      tags:
+      - Configuracion General
+  /dashboard/api/save_main_settings.php:
+    post:
+      description: Cambia la zona horaria para mostrar fechas y horas correctamente
+      operationId: update_timezone
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                timezone_pref:
+                  description: 'Zona horaria en formato IANA (ej: Europe/Madrid, America/Mexico_City)'
+                  type: string
+              required:
+              - timezone_pref
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Cambiar zona horaria
+      tags:
+      - Configuracion General
+  /dashboard/api/save_autolearning_toggle.php:
+    post:
+      description: Activa o desactiva el aprendizaje automatico de la IA
+      operationId: toggle_autolearning
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                autolearning_enabled:
+                  description: true para activar, false para desactivar
+                  type: boolean
+              required:
+              - autolearning_enabled
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Activar/desactivar auto-learning
+      tags:
+      - Prompt e IA
+  /dashboard/api/knowledge/toggle.php:
+    post:
+      description: Activa o pausa un archivo sin eliminarlo (la IA solo usa archivos
+        activos)
+      operationId: toggle_knowledge_file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                file_id:
+                  description: ID del archivo
+                  type: integer
+                is_active:
+                  description: true para activar, false para pausar
+                  type: boolean
+              required:
+              - file_id
+              - is_active
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Activar/desactivar archivo de conocimiento
+      tags:
+      - Almacenamiento
+  /dashboard/api/whatsapp/workflow_toggle.php:
+    post:
+      description: Activa o pausa un workflow de WhatsApp existente
+      operationId: toggle_whatsapp_workflow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                enabled:
+                  description: true para activar, false para pausar
+                  type: boolean
+                id:
+                  description: ID del workflow a modificar
+                  type: integer
+              required:
+              - id
+              - enabled
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Activar/Pausar workflow
+      tags:
+      - Automatizacion
+  /dashboard/api/smart_followup_trigger.php:
+    post:
+      description: Lanza manualmente el analisis de seguimiento inteligente para esta
+        tienda. Si ya hay una ejecucion en curso (cron o manual), devuelve error.
+      operationId: trigger_smart_followup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                conversation_hash:
+                  description: Hash de conversación específica
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ejecutar Smart Follow-up ahora
+      tags:
+      - Seguimiento Inteligente
+  /dashboard/api/save_account.php:
+    post:
+      description: Actualiza nombre, email y telefono de la cuenta
+      operationId: update_contact_info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                billing_address:
+                  description: Direccion fiscal
+                  type: string
+                billing_address2:
+                  description: Direccion linea 2 (piso, puerta, etc.)
+                  type: string
+                billing_city:
+                  description: Ciudad
+                  type: string
+                billing_country:
+                  description: Pais
+                  type: string
+                billing_name:
+                  description: Nombre fiscal
+                  type: string
+                billing_postal_code:
+                  description: Codigo postal
+                  type: string
+                billing_state:
+                  description: Provincia o estado
+                  type: string
+                billing_tax_id:
+                  description: NIF/CIF/Tax ID
+                  type: string
+                client_email:
+                  description: Email de contacto
+                  type: string
+                client_name:
+                  description: Nombre del titular de la cuenta
+                  type: string
+                client_phone:
+                  description: Telefono de contacto
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualizar datos de contacto
+      tags:
+      - Cuenta
+  /dashboard/api/save_customers.php:
+    post:
+      description: Configura las etiquetas para clasificar clientes
+      operationId: update_customer_tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                add_tag:
+                  description: 'JSON de UNA etiqueta para ANADIR sin borrar las existentes.
+                    Formato: {"name": "VIP", "color": "#ff0000"}. USAR SIEMPRE ESTE.'
+                  type: string
+                remove_tag:
+                  description: Nombre de la etiqueta a eliminar
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Configurar etiquetas de clientes
+      tags:
+      - Configuracion General
+  /api/plugins/doc-qa/update.php:
+    post:
+      description: Modifica la configuracion de un asistente de documentacion existente
+      operationId: update_docqa_assistant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                allowed_domains:
+                  description: Dominios permitidos
+                  type: array
+                assistant_id:
+                  description: ID del asistente a modificar (obtener de list_docqa_assistants)
+                  type: integer
+                display_name:
+                  description: Nuevo nombre del asistente
+                  type: string
+                is_enabled:
+                  description: true para activar, false para desactivar
+                  type: boolean
+                language_fixed:
+                  description: Idioma fijo
+                  type: string
+                language_mode:
+                  description: Modo de idioma
+                  enum:
+                  - auto
+                  - fixed
+                  - selector
+                  type: string
+                prompt:
+                  description: Nuevas instrucciones para la IA
+                  type: string
+                rate_limit_per_session:
+                  description: Limite de preguntas por sesion
+                  type: integer
+              required:
+              - assistant_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualizar asistente Doc Q&A
+      tags:
+      - Plugins
+  /dashboard/api/knowledge/update.php:
+    post:
+      description: Cambia el titulo, descripcion y/o contenido de un archivo de conocimiento.
+        Para archivos de texto (txt, md, csv, json, html) tambien permite editar el
+        contenido del archivo.
+      operationId: update_knowledge_file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                content:
+                  description: 'Nuevo contenido del archivo (solo para archivos de
+                    texto: txt, md, csv, json, html). Si se envia, el archivo se reemplaza
+                    en OpenAI y se re-indexa en el Vector Store. No enviar este parametro
+                    si solo se quiere cambiar titulo/descripcion.'
+                  type: string
+                description:
+                  description: Nueva descripcion (max 500 caracteres)
+                  type: string
+                file_id:
+                  description: ID del archivo
+                  type: integer
+                title:
+                  description: Nuevo titulo (max 200 caracteres)
+                  type: string
+              required:
+              - file_id
+              - title
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualizar archivo de conocimiento
+      tags:
+      - Almacenamiento
+  /dashboard/api/knowledge/snippets_update.php:
+    post:
+      description: 'Permite aprobar, rechazar, editar o eliminar un dato aprendido.
+        Usa filter=pending en list_knowledge_snippets para ver los pendientes de revision.
+        IMPORTANTE: Esta accion requiere confirmacion - ver seccion confirmation_flow.'
+      operationId: update_knowledge_snippet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: 'Acción a realizar: approve (aprobar snippet), reject
+                    (rechazar), edit (editar contenido), delete (eliminar), resolve_conflict
+                    (resolver conflicto eligiendo uno), keep_both (mantener ambos
+                    snippets)'
+                  enum:
+                  - approve
+                  - reject
+                  - edit
+                  - delete
+                  - resolve_conflict
+                  - keep_both
+                  type: string
+                category:
+                  description: Nueva categoria (solo para action=edit)
+                  type: string
+                content:
+                  description: Nuevo contenido (solo para action=edit)
+                  type: string
+                id:
+                  description: ID del snippet a gestionar
+                  type: integer
+                keep_id:
+                  description: ID del snippet a mantener (solo para action=resolve_conflict)
+                  type: integer
+              required:
+              - id
+              - action
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Gestionar snippet de conocimiento
+      tags:
+      - Prompt e IA
+  /dashboard/api/save_orders.php:
+    post:
+      description: Configura prefijos de pedidos y telefonos/emails a ignorar
+      operationId: update_order_settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                add_helper:
+                  description: 'JSON para crear o actualizar un atajo. Formato: {"name":
+                    "NOMBRE_CORTO", "text": "TEXTO_DEL_ATAJO", "send": true/false}.
+                    El campo ''send'' activa el envio automatico (el atajo se envia
+                    al cliente sin que el agente pulse enviar). Si no se incluye ''send'',
+                    se desactiva por defecto. Ejemplo con envio automatico: {"name":
+                    "compra VIN ok", "text": "la compra esta correcta para dicho numero
+                    de bastidor", "send": true}. Si ya existe un atajo con el mismo
+                    nombre, se actualiza (util para activar/desactivar envio automatico
+                    sin recrear el atajo).'
+                  type: string
+                add_ignore_email:
+                  description: Email a ANADIR sin borrar los existentes. USAR SIEMPRE
+                    ESTE para anadir emails.
+                  type: string
+                add_ignore_phone:
+                  description: Telefono a ANADIR sin borrar los existentes. USAR SIEMPRE
+                    ESTE para anadir telefonos.
+                  type: string
+                order_prefix:
+                  description: 'Prefijo para numeros de pedido (ej: #, PED-)'
+                  type: string
+                order_suffix:
+                  description: Sufijo para numeros de pedido
+                  type: string
+                remove_helper:
+                  description: 'Nombre corto del atajo a eliminar (ej: bastidor)'
+                  type: string
+                remove_ignore_email:
+                  description: Email a eliminar de la lista de ignorados
+                  type: string
+                remove_ignore_phone:
+                  description: Telefono a eliminar de la lista de ignorados
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Configurar pedidos
+      tags:
+      - Configuracion General
+  /dashboard/api/whatsapp/profile_update.php:
+    post:
+      description: 'Actualiza campos del perfil de WhatsApp: info/about, y datos de
+        empresa (descripcion, direccion, email, web, horario). El nombre solo se puede
+        cambiar en cuentas personales (no Business). Opcionalmente aplica los cambios
+        a otras sesiones conectadas.'
+      operationId: update_whatsapp_profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                address:
+                  description: Direccion de empresa (solo Business)
+                  type: string
+                apply_to_sessions:
+                  description: IDs de otras sesiones conectadas a las que aplicar
+                    los mismos cambios
+                  type: array
+                description:
+                  description: Descripcion de empresa (solo Business)
+                  type: string
+                email:
+                  description: Email de empresa (solo Business)
+                  type: string
+                name:
+                  description: Nuevo nombre (min 3 chars, solo cuentas personales,
+                    NO funciona en Business)
+                  type: string
+                session_id:
+                  description: ID de la sesion WhatsApp
+                  type: integer
+                status:
+                  description: Nuevo texto de info/about (max 139 chars)
+                  type: string
+                websites:
+                  description: URLs de la empresa (solo Business)
+                  type: array
+              required:
+              - session_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Actualizar perfil de WhatsApp
+      tags:
+      - WhatsApp
+  /dashboard/api/whatsapp/session_update.php:
+    post:
+      description: 'Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada.
+        Util para identificar numeros (ej: ''Soporte'', ''Ventas'').'
+      operationId: update_whatsapp_session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                label:
+                  description: Etiqueta para identificar la sesion (max 50 caracteres).
+                    Null para quitar la etiqueta.
+                  type: string
+                session_id:
+                  description: ID de la sesion a editar. Usa get_whatsapp_status para
+                    obtener los IDs.
+                  type: integer
+              required:
+              - session_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Editar sesion de WhatsApp
+      tags:
+      - Automatizacion
+  /dashboard/api/verify_shopify_write_permission.php:
+    post:
+      description: Verifica si la conexion con la plataforma e-commerce tiene permisos
+        de escritura para sincronizar FAQs. Requiere plataforma conectada Y plugin
+        Product Q&A configurado.
+      operationId: verify_ecommerce_write_permission
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Verificar permisos de escritura
+      tags:
+      - Integraciones
+security:
+- bearerAuth: []
+servers:
+- description: Production
+  url: https://www.wazion.com
