@@ -762,20 +762,16 @@ paths:
             schema:
               properties:
                 platform_type:
-                  description: Plataforma a desconectar (si no se especifica, desconecta
-                    la activa)
-                  type: string
-                shopify_connected:
-                  description: false para desconectar
-                  type: boolean
-                shopify_token:
-                  description: Dejar vacio
-                  type: string
-                shopify_url:
-                  description: Dejar vacio
+                  description: Plataforma a desconectar. Usa disconnect_ seguido del
+                    nombre de la plataforma activa
+                  enum:
+                  - disconnect_shopify
+                  - disconnect_woocommerce
+                  - disconnect_prestashop
+                  - disconnect_vtex
                   type: string
               required:
-              - shopify_connected
+              - platform_type
               type: object
         required: true
       responses:
