@@ -3936,6 +3936,42 @@ paths:
       summary: Probar conexion e-commerce
       tags:
       - Integraciones
+  /dashboard/api/test_shopify.php:
+    post:
+      description: Valida la conexion con una tienda Shopify verificando las credenciales
+        y los permisos OAuth. Si no se proporcionan credenciales, usa las almacenadas
+        en la configuracion de la tienda.
+      operationId: test_shopify_connection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                shopify_token:
+                  description: Token de acceso Shopify. Si no se proporciona, usa
+                    el token guardado
+                  type: string
+                shopify_url:
+                  description: 'URL de la tienda Shopify (ej: mitienda.myshopify.com).
+                    Si no se proporciona, usa las credenciales guardadas'
+                  type: string
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Probar conexion Shopify
+      tags:
+      - Integraciones
   /dashboard/api/test_webhook.php:
     post:
       description: Envia un webhook de prueba. Usa automaticamente la URL y secret
