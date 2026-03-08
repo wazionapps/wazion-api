@@ -274,5 +274,5 @@ Global settings for mass marketing:
 - Default send interval is 30 seconds between messages to avoid WhatsApp rate limits.
 - The `session_ids` field accepts multiple sessions for round-robin sending.
 - Campaigns can only be updated while in `draft` status.
-- The unsubscribe link uses HMAC tokens for security.
+- The unsubscribe link uses HMAC tokens for security. The system generates a cryptographically secure random salt if not configured.
 - Contacts are automatically excluded if they are in the unsubscribe or blacklist.

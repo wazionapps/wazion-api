@@ -99,6 +99,32 @@ When using WAzion as an MCP server in tools like Claude Desktop, Cursor, or VS C
 }
 ```
 
+## VPS Direct API Authentication
+
+All VPS routes at `wa.wazion.com` require an `X-API-Key` header with the API key returned when you create a WhatsApp session.
+
+```
+X-API-Key: sk_xxxxxxxxxxxxxxxx
+```
+
+### Exempt Routes
+
+The following routes do not require authentication:
+
+- `GET /health` -- Service health check
+- `POST /sessions` -- Create a new session (returns the API key)
+- `GET /sessions/:key/qr` -- Retrieve QR code for scanning
+
+### Shop Ownership Enforcement
+
+Sessions are scoped to the shop that created them. You can only interact with sessions belonging to your shop. Attempting to use a session from a different shop returns a `401 Unauthorized` error:
+
+```json
+{
+  "error": "Session does not belong to your shop"
+}
+```
+
 ## Security Notes
 
 - Keep your token secret. Do not commit it to version control.

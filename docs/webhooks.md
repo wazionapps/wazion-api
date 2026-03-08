@@ -25,7 +25,7 @@ Receive real-time notifications when events happen in your WAzion account.
     "webhook_enabled": true,
     "webhook_url": "https://myapp.com/webhooks/wazion",
     "webhook_secret": "my-secret-key",
-    "webhook_events": ["phone.detected", "followup.detected"]
+    "webhook_events": ["phone.detected", "followup.detected", "followup.replied", "followup.converted", "plugin_chat.session_closed", "test"]
   }
 }
 ```
@@ -51,6 +51,10 @@ Uses the configured URL and secret automatically.
 |-------|-------------|
 | `phone.detected` | A new phone number was detected in a conversation |
 | `followup.detected` | Smart Follow-up detected a potential sale to recover |
+| `followup.replied` | Customer responded to a follow-up message |
+| `followup.converted` | Customer made a purchase after follow-up |
+| `plugin_chat.session_closed` | Chat widget session ended (includes `ai_summary`, `messages[]`, `satisfaction_score`) |
+| `test` | Test event for verifying webhook connectivity |
 
 ## Webhook Payload
 
@@ -169,3 +173,4 @@ Available CRM endpoint types:
 - Webhook secret is optional but strongly recommended for production.
 - Custom functions follow the OpenAI function calling format.
 - CRM endpoint types must be one of the 5 predefined values.
+- WAzion waits up to 180 seconds for your webhook endpoint to respond before timing out.

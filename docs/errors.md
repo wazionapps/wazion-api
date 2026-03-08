@@ -82,6 +82,18 @@ When a tool call fails, the response uses the standard MCP tool result format wi
 | `Shopify not connected` | E-commerce integration not configured | Connect your store (Shopify, WooCommerce, PrestaShop or VTEX) first |
 | `Agent limit reached` | Maximum agents for your plan | Remove an agent or upgrade plan |
 
+## VPS API Errors
+
+These errors are returned by the VPS direct API (`wa.wazion.com`):
+
+| HTTP Status | Error | Description |
+|-------------|-------|-------------|
+| `401` | `API key requerida` | No `X-API-Key` header provided |
+| `401` | `API key invalida` | API key not found in database |
+| `401` | `Session does not belong to your shop` | Cross-shop access attempt |
+| `503` | `credits_api_unavailable` | Billing API unreachable, message blocked (fail-closed) |
+| `503` | `credits_api_error` | Billing API returned error, message blocked (fail-closed) |
+
 ## Confirmation-Required Actions
 
 Some destructive actions return a warning on the first call:

@@ -279,3 +279,4 @@ Respect customer opt-out preferences:
 - Messages are sent through the WAzion VPS WhatsApp bridge, not the official WhatsApp Business API. This means standard WhatsApp rate limits apply.
 - The `archive_after_send` parameter in `send_whatsapp_message` will archive the chat on WhatsApp after sending.
 - Minimum 3 seconds between messages per session (rate limited server-side).
+- If the billing/credits API is unreachable, message sends are blocked (fail-closed). The system prioritizes preventing unpaid usage over message delivery.
