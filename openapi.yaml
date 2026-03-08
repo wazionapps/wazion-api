@@ -3965,9 +3965,9 @@ paths:
       - Avanzado
   /dashboard/api/test_connection.php:
     post:
-      description: Verifica que la conexion con la plataforma e-commerce (Shopify
-        o WooCommerce) funciona correctamente. Usa las credenciales guardadas si no
-        se proporcionan.
+      description: Verifica que la conexion con la plataforma e-commerce (Shopify,
+        WooCommerce, PrestaShop o VTEX) funciona correctamente. Usa las credenciales
+        guardadas si no se proporcionan.
       operationId: test_ecommerce_connection
       responses:
         '200':

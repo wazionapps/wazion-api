@@ -28,7 +28,7 @@
 | `configure_plugin_chat` | Plugins | mutation | Configura el widget de chat web. Soporta actualizacion parcial: solo envia los campos que quieras cambiar. Los campos... |
 | `configure_plugin_productqa` | Plugins | mutation | Activa y configura el widget de preguntas sobre productos |
 | `configure_webhooks` | Avanzado | mutation | Modifica la configuracion de webhooks. IMPORTANTE: Antes de llamar esta accion, llama SIEMPRE a get_webhook_config pa... |
-| `connect_ecommerce` | Integraciones | mutation | Conecta tu tienda online (Shopify o WooCommerce) para buscar productos, pedidos y clientes. Pregunta al usuario que p... |
+| `connect_ecommerce` | Integraciones | mutation | Conecta tu tienda online (Shopify, WooCommerce, PrestaShop o VTEX) para buscar productos, pedidos y clientes. Pregunt... |
 | `connect_whatsapp` | WhatsApp | mutation | Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve un código QR para escanear con el teléfono. |
 | `count_filtered_contacts` | Marketing Masivo | query | Cuenta cuantos contactos de una lista cumplen con filtros de segmentacion (tags, actividad reciente, historial WhatsApp) |
 | `create_agent` | Agentes | mutation | Crea un nuevo agente de atencion. Puede fallar si se ha alcanzado el limite de agentes del plan actual. |
@@ -213,7 +213,7 @@
 | `start_campaign` | Marketing Masivo | mutation | Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas. |
 | `sync_knowledge_now` | Almacenamiento | mutation | Fuerza la sincronizacion inmediata de los facts aprendidos al Vector Store (normalmente se hace automaticamente) |
 | `test_crm_endpoint` | Avanzado | mutation | Envia una peticion de prueba a un endpoint CRM para verificar que funciona correctamente |
-| `test_ecommerce_connection` | Integraciones | query | Verifica que la conexion con la plataforma e-commerce (Shopify o WooCommerce) funciona correctamente. Usa las credenc... |
+| `test_ecommerce_connection` | Integraciones | query | Verifica que la conexion con la plataforma e-commerce (Shopify, WooCommerce, PrestaShop o VTEX) funciona correctament... |
 | `test_shopify_connection` | Integraciones | query | Valida la conexion con una tienda Shopify verificando las credenciales y los permisos OAuth. Si no se proporcionan cr... |
 | `test_webhook` | Avanzado | mutation | Envia un webhook de prueba. Usa automaticamente la URL y secret configurados en la tienda si no se proporcionan param... |
 | `toggle_analytics` | Estadisticas | mutation | Activa o desactiva el registro de analytics con structured outputs para esta tienda |
