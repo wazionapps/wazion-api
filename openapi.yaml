@@ -2079,6 +2079,58 @@ paths:
       summary: Listar archivos de almacenamiento
       tags:
       - Almacenamiento
+  /dashboard/api/crm_health_status.php:
+    get:
+      description: 'Muestra el estado actual de los endpoints CRM configurados: si
+        estan activos o deshabilitados por errores consecutivos, contador de errores
+        y lista de endpoints'
+      operationId: get_crm_health_status
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Ver estado de salud del CRM
+      tags:
+      - Avanzado
+    post:
+      description: Resetea el contador de errores CRM y reactiva los endpoints si
+        estaban deshabilitados por errores consecutivos
+      operationId: reset_crm_errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                action:
+                  description: ''
+                  type: string
+              required:
+              - action
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                  success:
+                    type: boolean
+                type: object
+          description: Successful operation
+      summary: Resetear errores CRM
+      tags:
+      - Avanzado
   /api/plugins/doc-qa/stats.php:
     get:
       description: 'Muestra estadisticas detalladas de un asistente de documentacion.
