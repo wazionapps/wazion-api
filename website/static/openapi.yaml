@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    244 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    246 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -41,56 +41,54 @@ security:
   - bearerAuth: []
 
 tags:
-  - name: protocol
-    description: MCP protocol methods (initialize, ping)
-  - name: general
-    description: General settings (language, timezone, date format, store URL, business info)
   - name: account
-    description: Account and billing information
-  - name: agents
-    description: Agent management, permissions, activity, and performance
-  - name: integrations
-    description: Shopify connection and locale configuration
-  - name: prompt
-    description: AI prompt management, auto-learning, knowledge snippets
-  - name: plugins
-    description: Product Q&A, Chat Web, Doc Q&A plugin configuration and stats
-  - name: advanced
-    description: Webhooks, custom functions, CRM endpoints
-  - name: stats
-    description: Usage stats, analytics, credit info, workflow stats
-  - name: storage
-    description: Knowledge base files and conversation file management
-  - name: support
-    description: Support ticket submission
-  - name: automation
-    description: WhatsApp Auto workflows (create, update, delete, dry-run)
-  - name: mass_marketing
-    description: Mass marketing campaigns, contact lists, blacklist, scheduling
-  - name: smart_followup
-    description: AI-powered sales recovery and follow-up
-  - name: conversations
-    description: Search, view, export, and manage WhatsApp conversations
-  - name: customers
-    description: CRM customers, tags, comments, GDPR, global search
-  - name: tasks
-    description: Task management linked to customers and agents
-  - name: calendar
-    description: Calendar events and appointments
+    description: Datos de cuenta y facturacion
   - name: activity
-    description: Daily summaries, period stats, busiest hours, topics
-  - name: products
-    description: Product search and top-asked products
-  - name: whatsapp_ops
-    description: WhatsApp sessions, message logs, templates, scheduled messages, opt-out
+    description: Resumenes de actividad, tendencias y metricas operativas
+  - name: advanced
+    description: Webhooks, funciones personalizadas, CRM
+  - name: agents
+    description: Gestion de agentes de atencion
   - name: ai_analysis
-    description: AI summaries, sentiment, smart replies, auto-tagging, translation
-  - name: notifications
-    description: System notification management
+    description: Resumenes y analisis de sentimiento con inteligencia artificial
+  - name: automation
+    description: WhatsApp Auto y workflows de automatizacion
+  - name: calendar
+    description: Eventos y citas programadas
+  - name: conversations
+    description: Buscar, ver y analizar conversaciones con clientes
+  - name: customers
+    description: Informacion de clientes, comentarios, tags y busqueda
+  - name: general
+    description: Ajustes basicos del dashboard
+  - name: integrations
+    description: Conexiones con servicios externos
   - name: knowledge
-    description: Knowledge base file upload, download, and processing
+    description: Gestión de archivos y documentos de la base de conocimiento
+  - name: mass_marketing
+    description: Campanas masivas por WhatsApp, listas de contactos y configuracion de envios
+  - name: notifications
+    description: Gestion de notificaciones del sistema
+  - name: plugins
+    description: Plugins y extensiones
+  - name: products
+    description: Busqueda de productos y estadisticas de consultas
+  - name: prompt
+    description: Configuracion del asistente IA
   - name: referrals
-    description: Referral program (codes, commissions, payouts)
+    description: Programa de referidos - genera enlaces y consulta ganancias
+  - name: smart_followup
+    description: Analisis automatico de conversaciones para detectar intencion de compra y enviar seguimientos personalizados
+  - name: stats
+    description: Metricas y analytics
+  - name: storage
+    description: Gestion de archivos y almacenamiento
+  - name: support
+    description: Contacto con soporte tecnico
+  - name: tasks
+    description: Gestion de tareas y recordatorios asociados a clientes
+  - name: whatsapp_ops
+    description: Estado de sesiones, logs de mensajes y ejecucion de workflows
 
 paths:
   /:
@@ -180,262 +178,5122 @@ paths:
                     arguments:
                       limit: 10
                   id: 4
-
-              create_workflow:
-                summary: Create a WhatsApp workflow
-                value:
-                  jsonrpc: "2.0"
-                  method: tools/call
-                  params:
-                    name: create_whatsapp_workflow
-                    arguments:
-                      name: Welcome Message
-                      trigger_type: message_received
-                      conditions:
-                        - type: keyword
-                          value: hello
-                      actions:
-                        - type: reply_text
-                          value: "Welcome! How can I help you?"
-                      status: active
-                      session_id: 1
-                  id: 5
-
-              get_ai_summary:
-                summary: Get AI conversation summary
-                value:
-                  jsonrpc: "2.0"
-                  method: tools/call
-                  params:
-                    name: get_ai_summary
-                    arguments:
-                      phone: "+34600000000"
-                      summary_type: detailed
-                  id: 6
-
-              read_resource:
-                summary: Read shop profile resource
-                value:
-                  jsonrpc: "2.0"
-                  method: resources/read
-                  params:
-                    uri: "shop://profile"
-                  id: 7
-
       responses:
         '200':
           description: JSON-RPC response
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/JsonRpcSuccessResponse'
-                  - $ref: '#/components/schemas/JsonRpcErrorResponse'
-                  - type: array
-                    items:
-                      oneOf:
-                        - $ref: '#/components/schemas/JsonRpcSuccessResponse'
-                        - $ref: '#/components/schemas/JsonRpcErrorResponse'
-              examples:
-                tool_success:
-                  summary: Successful tool call
-                  value:
-                    jsonrpc: "2.0"
-                    result:
-                      content:
-                        - type: text
-                          text: "Message sent successfully"
-                    id: 3
-                tool_error:
-                  summary: Tool error
-                  value:
-                    jsonrpc: "2.0"
-                    result:
-                      content:
-                        - type: text
-                          text: "Error: phone is required"
-                      isError: true
-                    id: 3
-                auth_error:
-                  summary: Authentication error
-                  value:
-                    jsonrpc: "2.0"
-                    error:
-                      code: -32000
-                      message: "Unauthorized: invalid or missing Bearer token."
-                    id: 1
-
-        '202':
-          description: Notification acknowledged (no response body)
+                $ref: '#/components/schemas/JsonRpcResponse'
+        '401':
+          description: Missing or invalid Bearer token
         '405':
-          description: Method not allowed (only POST is supported)
-
-    delete:
-      operationId: terminateSession
-      summary: Terminate MCP session (no-op, server is stateless)
-      responses:
-        '202':
-          description: Session terminated
+          description: Method not allowed (only POST accepted)
 
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
-      description: |
-        Your WAzion API token. Find it at https://www.wazion.com/dashboard → Settings.
+      description: API token from WAzion Dashboard > Settings
 
   schemas:
     JsonRpcRequest:
       type: object
-      required:
-        - jsonrpc
-        - method
+      required: [jsonrpc, method, id]
       properties:
         jsonrpc:
           type: string
-          const: "2.0"
+          enum: ["2.0"]
         method:
           type: string
-          enum:
-            - initialize
-            - tools/list
-            - tools/call
-            - resources/list
-            - resources/read
-            - ping
+          enum: [initialize, tools/list, tools/call, resources/list, resources/read, ping]
         params:
           type: object
-          description: Method-specific parameters
         id:
           oneOf:
             - type: string
             - type: integer
-          description: Request ID (omit for notifications)
 
-    JsonRpcSuccessResponse:
+    JsonRpcResponse:
       type: object
-      required:
-        - jsonrpc
-        - result
-        - id
       properties:
         jsonrpc:
           type: string
-          const: "2.0"
+          enum: ["2.0"]
         result:
-          type: object
-        id:
-          oneOf:
-            - type: string
-            - type: integer
-
-    JsonRpcErrorResponse:
-      type: object
-      required:
-        - jsonrpc
-        - error
-        - id
-      properties:
-        jsonrpc:
-          type: string
-          const: "2.0"
+          description: Success payload (present on success)
         error:
-          $ref: '#/components/schemas/JsonRpcError'
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data: {}
+          description: Error payload (present on failure)
         id:
           oneOf:
             - type: string
             - type: integer
-            - type: "null"
 
-    JsonRpcError:
+    # ── Tool Schemas ──────────────────────────────────
+
+    AddContactsToListArgs:
+      description: |
+        **add_contacts_to_list** [mass_marketing] (mutation)
+        Añade uno o más contactos a una lista de marketing
       type: object
-      required:
-        - code
-        - message
       properties:
-        code:
+        action:
+          type: string
+        list_id:
           type: integer
-          description: |
-            Error codes:
-            - `-32700` Parse error (invalid JSON)
-            - `-32601` Method not found
-            - `-32602` Invalid params
-            - `-32000` Unauthorized
-        message:
-          type: string
-
-    ToolCallParams:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          type: string
-          description: Tool name (e.g. `send_whatsapp_message`)
-        arguments:
-          type: object
-          description: Tool-specific arguments
-          additionalProperties: true
-
-    McpToolResult:
-      type: object
-      properties:
-        content:
+          description: "ID de la lista"
+        contacts:
           type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                const: text
-              text:
-                type: string
-        isError:
+          description: "Array de contactos [{phone, name}]"
+      required: ["action", "list_id", "contacts"]
+
+    AddCustomerCommentArgs:
+      description: |
+        **add_customer_comment** [customers] (mutation)
+        Anade un nuevo comentario interno a la ficha de un cliente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono del cliente"
+        comment:
+          type: string
+          description: "Texto del comentario"
+        agent_name:
+          type: string
+          description: "Nombre del agente que deja el comentario (default: Assistant)"
+          default: "Assistant"
+        query:
+          type: string
+          description: "Texto de busqueda"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        tag_name:
+          type: string
+          description: "Nombre del tag"
+        tag_color:
+          type: string
+          description: "Color del tag en formato hexadecimal"
+        primary_phone:
+          type: string
+          description: "Telefono principal para merge"
+        secondary_phone:
+          type: string
+          description: "Telefono secundario para merge"
+      required: ["action", "phone", "comment"]
+
+    AddCustomerTagArgs:
+      description: |
+        **add_customer_tag** [customers] (mutation)
+        Anade una etiqueta (tag) a un cliente para clasificarlo
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono del cliente"
+        tag_name:
+          type: string
+          description: "Nombre del tag"
+        tag_color:
+          type: string
+          description: "Color del tag en hex (default: #2563eb)"
+          default: "#2563eb"
+        comment:
+          type: string
+          description: "Texto del comentario"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        query:
+          type: string
+          description: "Texto de busqueda"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        primary_phone:
+          type: string
+          description: "Telefono principal para merge"
+        secondary_phone:
+          type: string
+          description: "Telefono secundario para merge"
+      required: ["action", "phone", "tag_name"]
+
+    AddToBlacklistArgs:
+      description: |
+        **add_to_blacklist** [mass_marketing] (mutation)
+        Bloquea un numero de telefono para que no reciba campanas de marketing masivo
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: add"
+        phone:
+          type: string
+          description: "Numero de telefono a bloquear (con prefijo internacional, ej: +34612345678)"
+        reason:
+          type: string
+          description: "Motivo del bloqueo (opcional, max 500 caracteres)"
+      required: ["action", "phone"]
+
+    AddWhatsappOptoutArgs:
+      description: |
+        **add_whatsapp_optout** [whatsapp_ops] (mutation)
+        Anade un numero a la lista de opt-out para que no reciba mensajes automaticos
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono con prefijo internacional"
+        reason:
+          type: string
+          description: "Motivo del opt-out"
+      required: ["action", "phone"]
+
+    ApplyPromptInstructionArgs:
+      description: |
+        **apply_prompt_instruction** [prompt] (query)
+        Genera una version modificada del prompt segun una instruccion. NO guarda los cambios - solo devuelve el prompt modificado como preview. Despues de obtener el resultado, DEBES llamar a save_prompt para guardar los cambios. Ejemplos: 'Anade horario de atencion de 9 a 18h', 'Quita la parte de devoluciones', 'Hazlo mas formal'.
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: "El prompt a modificar. Si no se proporciona, el endpoint lee automaticamente el prompt actual de la tienda. No es necesario llamar a get_prompt primero."
+        instruction:
+          type: string
+          description: "La instruccion de que modificar en el prompt"
+      required: ["instruction"]
+
+    ApproveCampaignArgs:
+      description: |
+        **approve_campaign** [mass_marketing] (mutation)
+        Aprueba una campaña pendiente de aprobación para que pueda ser enviada
+      type: object
+      properties:
+        action:
+          type: string
+        campaign_id:
+          type: integer
+          description: "ID de la campaña a aprobar"
+      required: ["action", "campaign_id"]
+
+    ArchiveCampaignArgs:
+      description: |
+        **archive_campaign** [mass_marketing] (mutation)
+        Archiva una campaña completada para mantener la lista limpia
+      type: object
+      properties:
+        action:
+          type: string
+        campaign_id:
+          type: integer
+          description: "ID de la campaña a archivar"
+      required: ["action", "campaign_id"]
+
+    AssignMarketingSessionArgs:
+      description: |
+        **assign_marketing_session** [mass_marketing] (mutation)
+        Habilita o deshabilita una sesión de WhatsApp para envío de campañas de marketing
+      type: object
+      properties:
+        action:
+          type: string
+        session_id:
+          type: integer
+          description: "ID de la sesión WhatsApp"
+        enable_mass_marketing:
           type: boolean
-          description: Present and true when the tool call failed
+          description: "true para habilitar, false para deshabilitar"
+      required: ["action", "session_id", "enable_mass_marketing"]
 
-    InitializeResult:
+    AutoCategorizeConversationsArgs:
+      description: |
+        **auto_categorize_conversations** [ai_analysis] (query)
+        Categoriza conversaciones recientes por tema, intento y prioridad usando IA
       type: object
       properties:
-        protocolVersion:
+        action:
           type: string
-          example: "2025-03-26"
-        capabilities:
-          type: object
-          properties:
-            tools:
-              type: object
-              properties:
-                listChanged:
-                  type: boolean
-            resources:
-              type: object
-              properties:
-                subscribe:
-                  type: boolean
-                listChanged:
-                  type: boolean
-        serverInfo:
-          type: object
-          properties:
-            name:
-              type: string
-              example: wazion-mcp
-            version:
-              type: string
-              example: "1.1.0"
-        instructions:
+        hours:
+          type: integer
+          description: "Horas a analizar (default 24)"
+        limit:
+          type: integer
+          description: "Conversaciones a categorizar (default 10, max 20)"
+        phone:
           type: string
+          description: "Filtrar por telefono del cliente"
+        summary_type:
+          type: string
+          description: "Tipo de resumen: quick (rapido), actionable (con acciones), detailed (detallado)"
+          enum: ["quick", "actionable", "detailed"]
+        days:
+          type: integer
+          description: "Numero de dias a analizar"
+        tone:
+          type: string
+          description: "Tono para la respuesta"
+        target_language:
+          type: string
+          description: "Idioma destino para traduccion"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes a procesar"
+      required: ["action"]
 
-    ToolDefinition:
+    AutoTagCustomerArgs:
+      description: |
+        **auto_tag_customer** [ai_analysis] (query)
+        Analiza la conversacion con IA y sugiere tags relevantes para el cliente
       type: object
       properties:
-        name:
+        action:
           type: string
-          description: Tool identifier
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        summary_type:
+          type: string
+          description: "Tipo de resumen: quick (rapido), actionable (con acciones), detailed (detallado)"
+          enum: ["quick", "actionable", "detailed"]
+        days:
+          type: integer
+          description: "Numero de dias a analizar"
+        tone:
+          type: string
+          description: "Tono para la respuesta"
+        hours:
+          type: integer
+          description: "Ultimas N horas a analizar"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        target_language:
+          type: string
+          description: "Idioma destino para traduccion"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes a procesar"
+      required: ["action", "phone"]
+
+    BulkAddToBlacklistArgs:
+      description: |
+        **bulk_add_to_blacklist** [mass_marketing] (mutation)
+        Añade varios números de teléfono a la lista negra de marketing masivo de una vez
+      type: object
+      properties:
+        action:
+          type: string
+        phones:
+          type: array
+          description: "Array de números de teléfono a añadir a la lista negra"
+        reason:
+          type: string
+          description: "Motivo de la inclusión en la lista negra"
+      required: ["action", "phones"]
+
+    BulkDeleteWorkflowsArgs:
+      description: |
+        **bulk_delete_workflows** [automation] (mutation)
+        Elimina multiples workflows de WhatsApp a la vez
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+        workflow_ids:
+          type: array
+          description: "Array de IDs de workflows a eliminar"
+      required: ["action", "workflow_ids"]
+
+    BulkToggleWorkflowsArgs:
+      description: |
+        **bulk_toggle_workflows** [automation] (mutation)
+        Activa o desactiva multiples workflows a la vez
+      type: object
+      properties:
+        action:
+          type: string
+        workflow_ids:
+          type: array
+          description: "Array de IDs de workflows"
+        enabled:
+          type: boolean
+          description: "true para activar, false para desactivar"
+      required: ["action", "workflow_ids", "enabled"]
+
+    CancelCampaignArgs:
+      description: |
+        **cancel_campaign** [mass_marketing] (mutation)
+        Cancela definitivamente una campana de marketing masivo (en curso, pausada, borrador o programada). Los mensajes ya enviados no se deshacen.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: cancel"
+        campaign_id:
+          type: integer
+          description: "ID de la campana a cancelar"
+      required: ["action", "campaign_id"]
+
+    CancelCampaignScheduleArgs:
+      description: |
+        **cancel_campaign_schedule** [mass_marketing] (mutation)
+        Cancela la programacion de una campana programada, cambiandola a estado borrador. No elimina la campana.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: cancel_schedule"
+        campaign_id:
+          type: integer
+          description: "ID de la campana programada"
+      required: ["action", "campaign_id"]
+
+    CancelScheduledMessageArgs:
+      description: |
+        **cancel_scheduled_message** [whatsapp_ops] (mutation)
+        Cancela un mensaje de WhatsApp que esta programado para envio futuro
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del mensaje programado a cancelar"
+      required: ["action", "id"]
+
+    CheckPluginConversationNoteArgs:
+      description: |
+        **check_plugin_conversation_note** [plugins] (query)
+        Comprueba si ya existe una nota guardada para una sesion de chat del plugin y muestra los datos del cliente asociado.
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: "ID de la sesion de chat del plugin"
+      required: ["session_id"]
+
+    CheckWhatsappOptoutArgs:
+      description: |
+        **check_whatsapp_optout** [whatsapp_ops] (query)
+        Comprueba si un numero de telefono esta en la lista de opt-out de automatizacion WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono a verificar (con prefijo internacional)"
+      required: ["action", "phone"]
+
+    ConfigureEcommerceLocalesArgs:
+      description: |
+        **configure_ecommerce_locales** [integrations] (mutation)
+        Configura como se manejan los idiomas y URLs de tu plataforma e-commerce
+      type: object
+      properties:
+        shopify_locale_mode:
+          type: string
+          description: "Modo de URLs: auto detecta por mercado, fixed usa un idioma fijo"
+          enum: ["auto", "fixed"]
+          default: "auto"
+        shopify_fixed_locale:
+          type: string
+          description: "Idioma fijo para URLs (solo si locale_mode es fixed)"
+        shopify_content_locale_mode:
+          type: string
+          description: "Modo de contenido: auto o fijo"
+          enum: ["auto", "fixed"]
+          default: "auto"
+        shopify_content_fixed_locale:
+          type: string
+          description: "Idioma fijo para contenido"
+        shopify_fallback_locale:
+          type: string
+          description: "Idioma por defecto cuando no se puede detectar"
+
+    ConfigurePluginChatArgs:
+      description: |
+        **configure_plugin_chat** [plugins] (mutation)
+        Configura el widget de chat web. Soporta actualizacion parcial: solo envia los campos que quieras cambiar. Los campos JSON (config_design, config_texts, config_behavior) se mergean automaticamente con los valores existentes, puedes enviar solo los sub-campos que quieras modificar.
+      type: object
+      properties:
+        plugin_type:
+          type: string
+          default: "chat"
+        is_enabled:
+          type: boolean
+          description: "true para activar el plugin, false para desactivar"
+        allowed_domains:
+          type: array
+          description: "Lista de dominios donde funcionara el chat (ej: ["tutienda.com", "www.tutienda.com"]). Vacio [] para permitir todos."
+        config_design:
+          type: object
+          description: "Configuracion visual del widget. Se mergea con valores existentes: puedes enviar solo lo que quieras cambiar."
+        config_texts:
+          type: object
+          description: "Textos del widget. Se mergea con valores existentes: puedes enviar solo lo que quieras cambiar."
+        config_behavior:
+          type: object
+          description: "Comportamiento del widget. Se mergea con valores existentes: puedes enviar solo lo que quieras cambiar."
+        avatar_url:
+          type: string
+          description: "URL de la imagen avatar del asistente en el chat"
+        language_mode:
+          type: string
+          description: "'auto' detecta el idioma del visitante, 'fixed' responde siempre en el idioma configurado"
+          enum: ["auto", "fixed"]
+        language_fixed:
+          type: string
+          description: "Idioma fijo (solo aplica si language_mode es 'fixed')"
+          enum: ["es", "en", "de", "fr", "pt", "it", "hu"]
+        language_available:
+          type: array
+          description: "Lista de idiomas disponibles (ej: ["es", "en", "de"])"
+        language_show_selector:
+          type: boolean
+          description: "Mostrar selector de idioma en el widget"
+        rate_limit_per_session:
+          type: integer
+          description: "Maximo de mensajes por sesion (default: 30)"
+        rate_limit_window_minutes:
+          type: integer
+          description: "Ventana de tiempo en minutos para el rate limit (default: 60)"
+        require_verification:
+          type: boolean
+          description: "Requiere verificacion del visitante antes de chatear"
+        custom_css:
+          type: string
+          description: "CSS personalizado para inyectar en el widget"
+        session_close_email_enabled:
+          type: boolean
+          description: "Activar envio de email al cerrar conversacion de chat web"
+        session_close_email_to:
+          type: string
+          description: "Email destino para notificaciones de sesion cerrada (default: email de la tienda)"
+        session_close_timeout_minutes:
+          type: integer
+          description: "Minutos de inactividad para considerar una conversacion cerrada (default: 10)"
+        session_close_min_messages:
+          type: integer
+          description: "Minimo de mensajes para enviar notificacion (default: 2)"
+      required: ["plugin_type"]
+
+    ConfigurePluginProductqaArgs:
+      description: |
+        **configure_plugin_productqa** [plugins] (mutation)
+        Activa y configura el widget de preguntas sobre productos
+      type: object
+      properties:
+        plugin_type:
+          type: string
+          default: "product-qa"
+        is_enabled:
+          type: boolean
+          description: "true para activar el plugin"
+        allowed_domains:
+          type: string
+          description: "Dominios donde funcionara el widget"
+        faq_enabled:
+          type: boolean
+          description: "Publicar FAQs automaticamente en tu tienda online"
+        faq_max_per_product:
+          type: integer
+          description: "Maximo de FAQs por producto"
+          default: 5
+      required: ["plugin_type", "is_enabled"]
+
+    ConfigureWebhooksArgs:
+      description: |
+        **configure_webhooks** [advanced] (mutation)
+        Modifica la configuracion de webhooks. IMPORTANTE: Antes de llamar esta accion, llama SIEMPRE a get_webhook_config para ver la configuracion actual y confirmar con el usuario que datos quiere cambiar. Solo llama esta accion cuando tengas los datos concretos (URL, eventos, etc). Tras llamar esta accion, el sistema pedira confirmacion con botones - NO vuelvas a llamar a esta accion.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        webhook_enabled:
+          type: boolean
+          description: "true para activar webhooks"
+        webhook_url:
+          type: string
+          description: "URL del endpoint que recibira los webhooks"
+        webhook_secret:
+          type: string
+          description: "Secret para verificar la firma HMAC-SHA256"
+        webhook_events:
+          type: array
+          description: "Lista de eventos a enviar. Disponibles: phone.detected (nuevo telefono detectado), followup.detected (Seguimiento Inteligente detecta intencion de compra), followup.replied (cliente respondio al seguimiento), followup.converted (cliente compro tras el seguimiento), plugin_chat.session_closed (conversacion de chat web cerrada por inactividad)"
+      required: ["webhook_enabled"]
+
+    ConnectEcommerceArgs:
+      description: |
+        **connect_ecommerce** [integrations] (mutation)
+        Conecta tu tienda online (Shopify, WooCommerce, PrestaShop o VTEX) para buscar productos, pedidos y clientes. Pregunta al usuario que plataforma usa.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        platform_type:
+          type: string
+          description: "Plataforma e-commerce: shopify, woocommerce, prestashop o vtex"
+          enum: ["shopify", "woocommerce", "prestashop", "vtex"]
+        shopify_url:
+          type: string
+          description: "Shopify: URL de la tienda (ej: mitienda.myshopify.com)"
+        shopify_token:
+          type: string
+          description: "Shopify: Token de acceso de la app personalizada"
+        wc_store_url:
+          type: string
+          description: "Solo WooCommerce: URL de la tienda (ej: mitienda.com)"
+        wc_consumer_key:
+          type: string
+          description: "Solo WooCommerce: Consumer Key de la API REST"
+        wc_consumer_secret:
+          type: string
+          description: "Solo WooCommerce: Consumer Secret de la API REST"
+        ps_store_url:
+          type: string
+          description: "Solo PrestaShop: URL de la tienda (ej: mitienda.com)"
+        ps_api_key:
+          type: string
+          description: "Solo PrestaShop: API Key del Webservice"
+        vtex_account_name:
+          type: string
+          description: "Solo VTEX: Nombre de la cuenta VTEX"
+        vtex_app_key:
+          type: string
+          description: "Solo VTEX: App Key de la API"
+        vtex_app_token:
+          type: string
+          description: "Solo VTEX: App Token de la API"
+        vtex_store_url:
+          type: string
+          description: "Solo VTEX: URL de la tienda (opcional, se genera automaticamente si no se proporciona)"
+      required: ["platform_type"]
+
+    ConnectWhatsappArgs:
+      description: |
+        **connect_whatsapp** [whatsapp_ops] (mutation)
+        Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve un código QR para escanear con el teléfono.
+      type: object
+      properties:
+        label:
+          type: string
+          description: "Etiqueta para identificar la sesión (máximo 50 caracteres)"
+        force_new:
+          type: boolean
+          description: "Forzar creación de nueva sesión aunque haya sesiones desconectadas disponibles"
+
+    CountFilteredContactsArgs:
+      description: |
+        **count_filtered_contacts** [mass_marketing] (query)
+        Cuenta cuantos contactos de una lista cumplen con filtros de segmentacion (tags, actividad reciente, historial WhatsApp)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: count_filtered"
+        list_id:
+          type: integer
+          description: "ID de la lista de contactos"
+        segment_filters:
+          type: string
+          description: "Filtros en formato JSON. Claves: tags (array), last_contact_days (entero), has_whatsapp_history (boolean)"
+      required: ["action", "list_id", "segment_filters"]
+
+    CreateAgentArgs:
+      description: |
+        **create_agent** [agents] (mutation)
+        Crea un nuevo agente de atencion. Puede fallar si se ha alcanzado el limite de agentes del plan actual.
+      type: object
+      properties:
+        action:
+          type: string
+        nickname:
+          type: string
+          description: "Nombre corto del agente (lo veran los clientes)"
+        full_name:
+          type: string
+          description: "Nombre completo del agente"
+        email:
+          type: string
+          description: "Email del agente"
+        color:
+          type: string
+          description: "Color en formato hexadecimal"
+          default: "#2563eb"
+        phone:
+          type: string
+          description: "Telefono del agente"
+        pin:
+          type: string
+          description: "PIN numerico para que el agente se identifique en la extension de Chrome"
+        permissions_json:
+          type: string
+          description: "Permisos iniciales del agente en formato JSON. Si no se proporciona, el agente tendra todos los permisos por defecto"
+      required: ["action", "nickname", "full_name", "email"]
+
+    CreateCalendarEventArgs:
+      description: |
+        **create_calendar_event** [calendar] (mutation)
+        Agenda un nuevo evento o cita en el calendario
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        title:
+          type: string
+          description: "Titulo del evento"
+        start_datetime:
+          type: string
+          description: "Fecha y hora de inicio (YYYY-MM-DD HH:MM:SS)"
+        end_datetime:
+          type: string
+          description: "Fecha y hora de fin"
         description:
           type: string
-        inputSchema:
+        phone:
+          type: string
+          description: "Telefono del cliente relacionado"
+        assigned_agent_id:
+          type: integer
+          description: "Agente asignado al evento"
+        all_day:
+          type: integer
+          enum: [0, 1]
+          default: 0
+        date_from:
+          type: string
+          description: "Fecha inicio para filtrar"
+        date_to:
+          type: string
+          description: "Fecha fin para filtrar"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        event_id:
+          type: integer
+          description: "ID del evento"
+      required: ["action", "title", "start_datetime"]
+
+    CreateCampaignArgs:
+      description: |
+        **create_campaign** [mass_marketing] (mutation)
+        Crea una nueva campana de marketing masivo. Puede crearse como borrador o programarse para una fecha futura. Soporta variables de plantilla {nombre}, {telefono}, {tienda} en el mensaje.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: create"
+        name:
+          type: string
+          description: "Nombre de la campana"
+        message_text:
+          type: string
+          description: "Texto del mensaje. Soporta variables: {nombre} (nombre del contacto), {telefono} (telefono del contacto), {tienda} (nombre de la tienda)"
+        list_id:
+          type: integer
+          description: "ID de la lista de contactos a usar para esta campana"
+        send_interval_seconds:
+          type: integer
+          description: "Segundos entre cada envio (minimo 10, por defecto 30)"
+          default: 30
+        translate_by_prefix:
+          type: boolean
+          description: "Si true, traduce el mensaje al idioma del destinatario segun prefijo telefonico"
+          default: false
+        include_unsubscribe_link:
+          type: boolean
+          description: "Si true, anade un enlace de baja al final del mensaje"
+          default: true
+        archive_after_send:
+          type: boolean
+          description: "Si true, archiva automaticamente cada chat de WhatsApp tras enviar el mensaje"
+          default: false
+        session_ids:
+          type: array
+          description: "Array de IDs de sesion de WhatsApp a usar para enviar. Si no se especifica, usa todas las sesiones habilitadas para marketing masivo. Usa get_whatsapp_status para ver los IDs."
+        scheduled_at:
+          type: string
+          description: "Fecha y hora para programar el envio (formato: YYYY-MM-DD HH:MM:SS). Debe ser una fecha futura. Si se especifica, la campana se crea con estado 'scheduled' en vez de 'draft'."
+        segment_filters:
           type: object
-          description: JSON Schema for tool arguments
+          description: "Filtros de segmentacion para enviar solo a contactos que cumplan criterios. Objeto con claves opcionales: tags (array de nombres de tags), last_contact_days (entero, enviar solo a contactos con actividad en los ultimos N dias), has_whatsapp_history (boolean, enviar solo a contactos con historial de WhatsApp)"
+        media_url:
+          type: string
+          description: "URL del archivo multimedia a enviar con el mensaje (imagen, video, documento). Debe ser una URL publica accesible."
+        media_type:
+          type: string
+          description: "Tipo de multimedia: 'image', 'video' o 'document'. Requerido si se especifica media_url."
+        media_filename:
+          type: string
+          description: "Nombre del archivo multimedia. Requerido para tipo 'document'."
+        is_recurring:
+          type: boolean
+          description: "Si true, la campana se ejecuta de forma recurrente segun recurring_cron"
+        recurring_cron:
+          type: string
+          description: "Expresion cron para campanas recurrentes (ej: '0 10 * * 1' para cada lunes a las 10:00). Requerido si is_recurring es true."
+      required: ["action", "name", "message_text", "list_id"]
+
+    CreateContactListArgs:
+      description: |
+        **create_contact_list** [mass_marketing] (mutation)
+        Crea una nueva lista de contactos para campanas de marketing masivo
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: create"
+        name:
+          type: string
+          description: "Nombre de la lista de contactos"
+        description:
+          type: string
+          description: "Descripcion opcional de la lista"
+      required: ["action", "name"]
+
+    CreateDocqaAssistantArgs:
+      description: |
+        **create_docqa_assistant** [plugins] (mutation)
+        Crea un nuevo asistente de documentacion. Despues de crearlo, podras subir archivos (PDF, Word, etc.) desde el dashboard.
+      type: object
+      properties:
+        display_name:
+          type: string
+          description: "Nombre del asistente (ej: 'Manual de Usuario', 'FAQ Producto X')"
+        prompt:
+          type: string
+          description: "Instrucciones adicionales para la IA (opcional)"
+        is_enabled:
+          type: boolean
+          description: "true para activar inmediatamente"
+          default: true
+        language_mode:
+          type: string
+          description: "Modo de idioma: auto (detecta automaticamente), fixed (siempre responde en un idioma fijo), selector (el usuario elige el idioma)"
+          enum: ["auto", "fixed", "selector"]
+          default: "auto"
+        language_fixed:
+          type: string
+          description: "REQUERIDO si language_mode=fixed. Codigo del idioma fijo (es=Espanol, en=Ingles, de=Aleman, fr=Frances, pt=Portugues, it=Italiano, hu=Hungaro). Si el usuario dice 'idioma fijo en espanol', usar language_mode='fixed' Y language_fixed='es'."
+          enum: ["es", "en", "de", "fr", "pt", "it", "hu"]
+        rate_limit_per_session:
+          type: integer
+          description: "Limite de preguntas por sesion"
+          default: 50
+        allowed_domains:
+          type: array
+          description: "Dominios donde funcionara el widget (vacio = todos)"
+      required: ["display_name"]
+
+    CreateKnowledgeFileArgs:
+      description: |
+        **create_knowledge_file** [storage] (mutation)
+        Crea un nuevo archivo en la base de conocimiento a partir de contenido de texto. Ideal para anadir informacion como promociones, politicas, instrucciones, FAQs, etc. sin necesidad de subir un archivo manualmente.
+      type: object
+      properties:
+        title:
+          type: string
+          description: "Titulo descriptivo del archivo (max 255 caracteres)"
+        content:
+          type: string
+          description: "Contenido de texto del archivo"
+        description:
+          type: string
+          description: "Descripcion breve del contenido (para que la IA sepa cuando usar este archivo)"
+        filename:
+          type: string
+          description: "Nombre del archivo con extension (ej: 'promociones.txt'). Si no se proporciona, se genera automaticamente desde el titulo. Extensiones validas: txt, md, csv, json, html"
+      required: ["title", "content"]
+
+    CreateListFromFollowupArgs:
+      description: |
+        **create_list_from_followup** [mass_marketing] (mutation)
+        Crea una lista de contactos desde conversaciones detectadas por Smart Follow-up
+      type: object
+      properties:
+        action:
+          type: string
+        name:
+          type: string
+          description: "Nombre de la nueva lista"
+        period:
+          type: string
+          description: "Periodo de búsqueda"
+          enum: ["last_7_days", "last_30_days", "last_60_days", "last_90_days"]
+      required: ["action"]
+
+    CreateListFromInactiveArgs:
+      description: |
+        **create_list_from_inactive** [mass_marketing] (mutation)
+        Crea una nueva lista de contactos a partir de clientes que no han tenido conversación en un periodo determinado
+      type: object
+      properties:
+        action:
+          type: string
+        days:
+          type: integer
+          description: "Días de inactividad mínima (default: 30)"
+        name:
+          type: string
+          description: "Nombre de la nueva lista"
+      required: ["action"]
+
+    CreateScheduledMessageArgs:
+      description: |
+        **create_scheduled_message** [whatsapp_ops] (mutation)
+        Programa un mensaje de WhatsApp para envio futuro. PREREQUISITO OBLIGATORIO: ANTES de llamar esta accion, DEBES llamar a get_whatsapp_status para obtener el session_id de una sesion conectada. Sin session_id la accion SIEMPRE falla. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false - esto NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente al usuario lo que se programara y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones automaticamente.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        session_id:
+          type: integer
+          description: "ID numerico de la sesion de WhatsApp. OBLIGATORIO. Obtener llamando a get_whatsapp_status primero y usar el campo 'id' de una sesion con status 'connected'. Si hay varias sesiones, preguntar al usuario cual usar"
+        phone:
+          type: string
+          description: "Numero de telefono destino con prefijo internacional formato E.164 (ej: +34612345678). Si el usuario da un numero sin prefijo, preguntarle el pais"
+        message_text:
+          type: string
+          description: "Texto del mensaje a enviar"
+        scheduled_at:
+          type: string
+          description: "Fecha y hora de envio en formato YYYY-MM-DD HH:MM:SS. Debe ser una fecha futura. Si el usuario dice una fecha relativa como 'manana a las 10', convertirla al formato correcto"
+      required: ["action", "session_id", "phone", "message_text", "scheduled_at"]
+
+    CreateTaskArgs:
+      description: |
+        **create_task** [tasks] (mutation)
+        Crea una nueva tarea asociada opcionalmente a un cliente y agente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        task_text:
+          type: string
+          description: "Descripcion de la tarea"
+        phone:
+          type: string
+          description: "Telefono del cliente relacionado"
+        due_date:
+          type: string
+          description: "Fecha limite (YYYY-MM-DD)"
+        priority:
+          type: string
+          enum: ["low", "medium", "high"]
+          default: "medium"
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente al que asignar la tarea"
+        status:
+          type: string
+          description: "Estado de la tarea"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        task_id:
+          type: integer
+          description: "ID de la tarea"
+        include_completed:
+          type: boolean
+          description: "Incluir tareas completadas"
+      required: ["action", "task_text"]
+
+    CreateWhatsappTemplateFromWorkflowArgs:
+      description: |
+        **create_whatsapp_template_from_workflow** [whatsapp_ops] (mutation)
+        Crea un nuevo workflow de WhatsApp a partir de una plantilla existente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        template_id:
+          type: integer
+          description: "ID de la plantilla desde la que crear el workflow"
+        session_id:
+          type: integer
+          description: "ID de la sesion WhatsApp para asociar al workflow"
+        name:
+          type: string
+          description: "Nombre para el nuevo workflow"
+      required: ["action", "template_id"]
+
+    CreateWhatsappWorkflowArgs:
+      description: |
+        **create_whatsapp_workflow** [automation] (mutation)
+        Crea un nuevo workflow de automatizacion para respuestas de WhatsApp. Campos requeridos: name y actions. Si el usuario no especifica nombre, genera uno descriptivo automaticamente (ej: 'Respuesta IA fuera horario'). Si el usuario pide crearlo desactivado o para revision, usa status='disabled'. Por defecto se crea activo.
+      type: object
+      properties:
+        name:
+          type: string
+          description: "Nombre descriptivo del workflow (max 100 caracteres). Si el usuario no especifica, genera un nombre descriptivo automaticamente basado en las acciones/condiciones."
+        trigger_type:
+          type: string
+          description: "Evento que activa el workflow: 'message.received' (al recibir un mensaje, por defecto) o 'message.sent' (al enviar un mensaje)"
+          enum: ["message.received", "message.sent"]
+          default: "message.received"
+        conditions:
+          type: object
+          description: "Condiciones para ejecutar el workflow. Formato: {logic: 'AND'|'OR', rules: [...]}. Si no se especifica, se ejecuta siempre."
+        actions:
+          type: array
+          description: "Acciones a ejecutar. Tipos: {type:'reply_with_ai'} o {type:'reply', message:'texto'} o {type:'delay', seconds:N} o {type:'ai_filter'} o {type:'ai_filter', prompt:'instrucciones adicionales'}. Para reply_with_ai se puede añadir pre_send_check:{enabled:true} para cancelar el envio si llega un mensaje nuevo durante la generacion IA. Para reply se puede añadir no_repeat:true y no_repeat_hours:N (1, 6, 24, 168 o 0=siempre) para no repetir al mismo contacto. ai_filter analiza si el mensaje necesita respuesta y detiene el workflow si no (previene bucles con mensajes tipo 'gracias' o 'vale', ideal como primera accion antes de reply_with_ai). Opcion prompt:'instrucciones adicionales' para personalizar criterios. Minimo una accion."
+        status:
+          type: string
+          description: "Estado inicial del workflow. Usar 'disabled' si el usuario quiere crearlo desactivado para revision. Por defecto: 'active'."
+          enum: ["active", "disabled"]
+          default: "active"
+        session_id:
+          type: integer
+          description: "ID de la sesion de WhatsApp a la que asignar este workflow. Si no se especifica (null), el workflow se ejecuta para todos los numeros conectados."
+      required: ["name", "actions"]
+
+    DeleteAgentArgs:
+      description: |
+        **delete_agent** [agents] (mutation)
+        Elimina un agente de atencion
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+        id:
+          type: integer
+          description: "ID del agente a eliminar"
+      required: ["action", "id"]
+
+    DeleteCalendarEventArgs:
+      description: |
+        **delete_calendar_event** [calendar] (mutation)
+        Elimina un evento del calendario
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        event_id:
+          type: integer
+          description: "ID del evento a eliminar"
+        date_from:
+          type: string
+          description: "Fecha inicio para filtrar"
+        date_to:
+          type: string
+          description: "Fecha fin para filtrar"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        title:
+          type: string
+          description: "Titulo del evento"
+        description:
+          type: string
+          description: "Descripcion del evento"
+        start_datetime:
+          type: string
+          description: "Fecha/hora inicio YYYY-MM-DD HH:MM:SS"
+        end_datetime:
+          type: string
+          description: "Fecha/hora fin YYYY-MM-DD HH:MM:SS"
+        all_day:
+          type: boolean
+          description: "Evento de dia completo"
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente asignado"
+      required: ["action", "event_id"]
+
+    DeleteCampaignArgs:
+      description: |
+        **delete_campaign** [mass_marketing] (mutation)
+        Elimina permanentemente una campaña de marketing masivo
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+        campaign_id:
+          type: integer
+          description: "ID de la campaña a eliminar"
+      required: ["action", "campaign_id"]
+
+    DeleteContactListArgs:
+      description: |
+        **delete_contact_list** [mass_marketing] (mutation)
+        Elimina una lista de contactos y todos sus contactos asociados. Esta accion no se puede deshacer.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: delete"
+        list_id:
+          type: integer
+          description: "ID de la lista a eliminar"
+      required: ["action", "list_id"]
+
+    DeleteConversationFileArgs:
+      description: |
+        **delete_conversation_file** [storage] (mutation)
+        Elimina un archivo compartido en una conversacion
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        file_uuid:
+          type: string
+          description: "UUID del archivo a eliminar"
+        agent_id:
+          type: integer
+          description: "ID del agente que realiza la accion"
+      required: ["file_uuid"]
+
+    DeleteConversationMessageArgs:
+      description: |
+        **delete_conversation_message** [conversations] (mutation)
+        Elimina un mensaje especifico de una conversacion. Requiere el texto exacto del mensaje.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        message:
+          type: string
+          description: "Texto exacto del mensaje a eliminar (string completo tal como aparece en el historial)"
+        query:
+          type: string
+          description: "Texto de busqueda"
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        hours:
+          type: integer
+          description: "Ultimas N horas"
+        conversation_id:
+          type: integer
+          description: "ID de conversacion especifica"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days"]
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        format:
+          type: string
+          description: "Formato de respuesta"
+      required: ["action", "phone", "message"]
+
+    DeleteKnowledgeFileArgs:
+      description: |
+        **delete_knowledge_file** [storage] (mutation)
+        Elimina un archivo de la base de conocimiento (no permite eliminar archivos de sistema)
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        file_id:
+          type: integer
+          description: "ID del archivo a eliminar"
+      required: ["file_id"]
+
+    DeleteNotificationArgs:
+      description: |
+        **delete_notification** [notifications] (mutation)
+        Elimina permanentemente una notificacion
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        notification_id:
+          type: integer
+          description: "ID de la notificacion a eliminar"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio"
+        filter:
+          type: string
+          description: "Filtro de notificaciones"
+        type:
+          type: string
+          description: "Tipo de notificacion"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+      required: ["action", "notification_id"]
+
+    DeleteTaskArgs:
+      description: |
+        **delete_task** [tasks] (mutation)
+        Elimina una tarea permanentemente
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        task_id:
+          type: integer
+          description: "ID de la tarea a eliminar"
+        status:
+          type: string
+          description: "Estado de la tarea"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        task_text:
+          type: string
+          description: "Texto de la tarea"
+        due_date:
+          type: string
+          description: "Fecha limite YYYY-MM-DD"
+        priority:
+          type: string
+          description: "Prioridad de la tarea"
+          enum: ["low", "medium", "high"]
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente asignado"
+        include_completed:
+          type: boolean
+          description: "Incluir tareas completadas"
+      required: ["action", "task_id"]
+
+    DeleteWhatsappSessionArgs:
+      description: |
+        **delete_whatsapp_session** [whatsapp_ops] (mutation)
+        Elimina una sesion de WhatsApp desconectada. Solo funciona con sesiones en estado 'disconnected'.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: "ID de la sesion a eliminar"
+        migrate_to:
+          type: integer
+          description: "ID de otra sesión a la que reasignar workflows, campañas y seguimiento inteligente. Si no se proporciona, se usa 'todas las líneas'."
+      required: ["session_id"]
+
+    DeleteWhatsappTemplateArgs:
+      description: |
+        **delete_whatsapp_template** [whatsapp_ops] (mutation)
+        Elimina una plantilla de mensaje de WhatsApp
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID de la plantilla a eliminar"
+      required: ["action", "id"]
+
+    DeleteWhatsappWorkflowArgs:
+      description: |
+        **delete_whatsapp_workflow** [automation] (mutation)
+        Elimina permanentemente un workflow de WhatsApp
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID del workflow a eliminar"
+      required: ["id"]
+
+    DisconnectEcommerceArgs:
+      description: |
+        **disconnect_ecommerce** [integrations] (mutation)
+        Desconecta la integracion con tu plataforma e-commerce (Shopify, WooCommerce, etc.)
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        platform_type:
+          type: string
+          description: "Plataforma a desconectar. Usa disconnect_ seguido del nombre de la plataforma activa"
+          enum: ["disconnect_shopify", "disconnect_woocommerce", "disconnect_prestashop", "disconnect_vtex"]
+      required: ["platform_type"]
+
+    DisconnectWhatsappArgs:
+      description: |
+        **disconnect_whatsapp** [automation] (mutation)
+        Desconecta una sesion de WhatsApp y elimina los datos de autenticacion. Si hay multiples numeros, requiere session_id.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: "ID de la sesion a desconectar. Obligatorio si hay mas de un numero conectado. Usa get_whatsapp_status para obtener los IDs."
+
+    DownloadConversationFileArgs:
+      description: |
+        **download_conversation_file** [storage] (query)
+        Obtiene la URL de descarga de un archivo compartido en una conversacion
+      type: object
+      properties:
+        file_uuid:
+          type: string
+          description: "UUID del archivo a descargar"
+      required: ["file_uuid"]
+
+    DownloadKnowledgeFileArgs:
+      description: |
+        **download_knowledge_file** [knowledge] (query)
+        Obtiene la URL de descarga de un archivo de la base de conocimiento
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID del archivo de conocimiento"
+      required: ["id"]
+
+    DryRunWorkflowArgs:
+      description: |
+        **dry_run_workflow** [automation] (query)
+        Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada
+      type: object
+      properties:
+        action:
+          type: string
+        workflow_id:
+          type: integer
+          description: "ID del workflow a probar"
+        test_message:
+          type: string
+          description: "Texto de mensaje simulado"
+        test_phone:
+          type: string
+          description: "Telefono simulado del remitente (con prefijo +)"
+      required: ["action", "workflow_id", "test_message"]
+
+    DuplicateCampaignArgs:
+      description: |
+        **duplicate_campaign** [mass_marketing] (mutation)
+        Crea una copia de una campaña existente en estado borrador
+      type: object
+      properties:
+        action:
+          type: string
+        campaign_id:
+          type: integer
+          description: "ID de la campaña a duplicar"
+      required: ["action", "campaign_id"]
+
+    ExportCampaignCsvArgs:
+      description: |
+        **export_campaign_csv** [mass_marketing] (query)
+        Descarga los logs de envio de una campana completada como archivo CSV. Solo funciona con campanas completadas, canceladas, pausadas o archivadas.
+      type: object
+      properties:
+        campaign_id:
+          type: integer
+          description: "ID de la campana cuyos resultados se quieren exportar"
+      required: ["campaign_id"]
+
+    ExportConversationsArgs:
+      description: |
+        **export_conversations** [conversations] (query)
+        Exporta conversaciones con todos los mensajes en formato estructurado
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Filtrar por telefono"
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        format:
+          type: string
+          description: "Formato: json (completo) o csv_summary (sin mensajes)"
+          enum: ["json", "csv_summary"]
+        limit:
+          type: integer
+          description: "Maximo conversaciones (default 50, max 200)"
+        query:
+          type: string
+          description: "Texto de busqueda"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        hours:
+          type: integer
+          description: "Ultimas N horas"
+        conversation_id:
+          type: integer
+          description: "ID de conversacion especifica"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days"]
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        message:
+          type: string
+          description: "Texto del mensaje a enviar o eliminar"
+      required: ["action"]
+
+    GdprDeleteCustomerDataArgs:
+      description: |
+        **gdpr_delete_customer_data** [customers] (mutation)
+        Elimina todos los datos personales de un cliente para cumplimiento GDPR (Art. 17 - Derecho al olvido). Los registros CRM se anonimizan en vez de eliminarse.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del cliente cuyos datos se eliminaran"
+      required: ["action", "phone"]
+
+    GdprExportCustomerDataArgs:
+      description: |
+        **gdpr_export_customer_data** [customers] (query)
+        Exporta todos los datos almacenados de un cliente para cumplimiento GDPR (Art. 15 - Derecho de acceso)
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del cliente"
+      required: ["action", "phone"]
+
+    GenerateReferralCodeArgs:
+      description: |
+        **generate_referral_code** [referrals] (mutation)
+        Genera el enlace único de referido del usuario para compartir. Si ya tiene uno, lo devuelve.
+      type: object
+
+    GetAgentActivityArgs:
+      description: |
+        **get_agent_activity** [agents] (query)
+        Muestra la actividad y carga de trabajo de un agente especifico
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+        days:
+          type: integer
+          description: "Numero de dias a consultar"
+      required: ["action", "agent_id"]
+
+    GetAgentPerformanceArgs:
+      description: |
+        **get_agent_performance** [agents] (query)
+        Metricas detalladas de rendimiento de un agente: clientes asignados, tareas, tasa de completado
+      type: object
+      properties:
+        action:
+          type: string
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        days:
+          type: integer
+          description: "Dias a analizar (default 30)"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+      required: ["action", "agent_id"]
+
+    GetAgentPermissionsArgs:
+      description: |
+        **get_agent_permissions** [agents] (query)
+        Obtiene los permisos configurados de un agente y el registro completo de permisos disponibles
+      type: object
+      properties:
+        action:
+          type: string
+        id:
+          type: integer
+          description: "ID del agente"
+      required: ["action", "id"]
+
+    GetAgentStatsArgs:
+      description: |
+        **get_agent_stats** [agents] (query)
+        Metricas de rendimiento del equipo: mensajes enviados, recibidos, tareas completadas
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        period:
+          type: string
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+          default: "last_7_days"
+        agent_id:
+          type: integer
+          description: "ID del agente para filtrar"
+        days:
+          type: integer
+          description: "Numero de dias a consultar"
+      required: ["action"]
+
+    GetAgentTasksArgs:
+      description: |
+        **get_agent_tasks** [tasks] (query)
+        Muestra las tareas asignadas a un agente especifico
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        include_completed:
+          type: string
+          description: "Incluir tareas completadas (default 0)"
+          enum: ["0", "1"]
+          default: "0"
+        status:
+          type: string
+          description: "Estado de la tarea"
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        task_text:
+          type: string
+          description: "Texto de la tarea"
+        due_date:
+          type: string
+          description: "Fecha limite YYYY-MM-DD"
+        priority:
+          type: string
+          description: "Prioridad de la tarea"
+          enum: ["low", "medium", "high"]
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente asignado"
+        task_id:
+          type: integer
+          description: "ID de la tarea"
+      required: ["action", "agent_id"]
+
+    GetAiSummaryArgs:
+      description: |
+        **get_ai_summary** [ai_analysis] (query)
+        Genera un resumen de una conversacion usando IA. Tipos: quick (breve), detailed (completo), actionable (acciones pendientes). Consume creditos de IA.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Telefono del cliente (con o sin +)"
+        summary_type:
+          type: string
+          description: "Tipo de resumen: quick (breve), detailed (completo, default), actionable (acciones pendientes)"
+          enum: ["quick", "detailed", "actionable"]
+          default: "detailed"
+        days:
+          type: integer
+          description: "Numero de dias a analizar"
+        tone:
+          type: string
+          description: "Tono para la respuesta"
+        hours:
+          type: integer
+          description: "Ultimas N horas a analizar"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        target_language:
+          type: string
+          description: "Idioma destino para traduccion"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes a procesar"
+      required: ["action", "phone"]
+
+    GetAnalyticsArgs:
+      description: |
+        **get_analytics** [stats] (query)
+        Muestra metricas de rendimiento: conversaciones, mensajes, actividad diaria
+      type: object
+      properties:
+        period:
+          type: string
+          description: "Periodo: 7d (semana), 14d (2 semanas), 30d (mes)"
+          default: "7d"
+
+    GetApiKeyArgs:
+      description: |
+        **get_api_key** [advanced] (query)
+        Muestra la API key actual de la tienda (token_ext) y la URL del servidor MCP. Usa esta accion cuando el usuario pregunte por su API key, token, como conectar MCP, o como configurar Claude/Cursor/VS Code.
+      type: object
+
+    GetApiUsageStatsArgs:
+      description: |
+        **get_api_usage_stats** [activity] (query)
+        Consumo de tokens y costes por modelo de IA
+      type: object
+      properties:
+        action:
+          type: string
+        days:
+          type: integer
+          description: "Dias a analizar (default 30)"
+      required: ["action"]
+
+    GetAutolearningMetricsArgs:
+      description: |
+        **get_autolearning_metrics** [stats] (query)
+        Muestra las metricas del sistema de aprendizaje automatico
+      type: object
+
+    GetAutolearningStatsArgs:
+      description: |
+        **get_autolearning_stats** [stats] (query)
+        Obtiene estadisticas detalladas del sistema de auto-learning: snippets activos, pendientes, rechazados, etc.
+      type: object
+
+    GetBusiestHoursArgs:
+      description: |
+        **get_busiest_hours** [activity] (query)
+        Analiza a que horas del dia se reciben mas mensajes de clientes
+      type: object
+      properties:
+        action:
+          type: string
+        days:
+          type: integer
+          description: "Dias a analizar (default 7)"
+          default: 7
+      required: ["action"]
+
+    GetCampaignArgs:
+      description: |
+        **get_campaign** [mass_marketing] (query)
+        Obtiene los detalles completos de una campaña de marketing masivo
+      type: object
+      properties:
+        action:
+          type: string
+        campaign_id:
+          type: integer
+          description: "ID de la campaña"
+      required: ["action", "campaign_id"]
+
+    GetCampaignLogsArgs:
+      description: |
+        **get_campaign_logs** [mass_marketing] (query)
+        Obtiene el progreso y logs de envio de una campana especifica
+      type: object
+      properties:
+        campaign_id:
+          type: integer
+          description: "ID de la campana"
+        page:
+          type: integer
+          description: "Numero de pagina"
+        limit:
+          type: integer
+          description: "Resultados por pagina"
+      required: ["campaign_id"]
+
+    GetChatPluginStatsArgs:
+      description: |
+        **get_chat_plugin_stats** [stats] (query)
+        Muestra estadisticas de uso del plugin de chat web: conversaciones, mensajes, sesiones activas, referrers y paises
+      type: object
+
+    GetChatSessionsArgs:
+      description: |
+        **get_chat_sessions** [plugins] (query)
+        Lista las sesiones recientes del widget de chat web
+      type: object
+      properties:
+        action:
+          type: string
+        hours:
+          type: integer
+          description: "Horas a consultar (default 24)"
+        limit:
+          type: integer
+          description: "Maximo resultados (default 20)"
+        plugin_type:
+          type: string
+          description: "Filtrar por tipo de plugin"
+        period:
+          type: string
+          description: "Periodo"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+      required: ["action"]
+
+    GetContactListDetailArgs:
+      description: |
+        **get_contact_list_detail** [mass_marketing] (query)
+        Obtiene los contactos de una lista específica con paginación y búsqueda
+      type: object
+      properties:
+        action:
+          type: string
+        list_id:
+          type: integer
+          description: "ID de la lista"
+        page:
+          type: integer
+          description: "Número de página"
+        search:
+          type: string
+          description: "Buscar contactos por teléfono o nombre"
+      required: ["action", "list_id"]
+
+    GetConversationAnalyticsArgs:
+      description: |
+        **get_conversation_analytics** [activity] (query)
+        Distribucion de satisfaccion, urgencia e intenciones en conversaciones analizadas
+      type: object
+      properties:
+        action:
+          type: string
+        days:
+          type: integer
+          description: "Dias a analizar (default 30)"
+        date:
+          type: string
+          description: "Fecha especifica YYYY-MM-DD"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["last_7_days", "last_30_days", "this_month"]
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+      required: ["action"]
+
+    GetConversationCountArgs:
+      description: |
+        **get_conversation_count** [conversations] (query)
+        Cuenta conversaciones que coinciden con criterios de busqueda, fecha o periodo
+      type: object
+      properties:
+        action:
+          type: string
+        query:
+          type: string
+          description: "Texto a buscar"
+        period:
+          type: string
+          description: "Periodo predefinido"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        hours:
+          type: integer
+          description: "Ultimas N horas"
+        conversation_id:
+          type: integer
+          description: "ID de conversacion especifica"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        message:
+          type: string
+          description: "Texto del mensaje a enviar o eliminar"
+        format:
+          type: string
+          description: "Formato de respuesta"
+      required: ["action"]
+
+    GetConversationDetailArgs:
+      description: |
+        **get_conversation_detail** [conversations] (query)
+        Muestra los mensajes completos de una conversacion especifica, incluyendo datos del cliente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono del cliente"
+        conversation_id:
+          type: integer
+          description: "ID de la conversacion (alternativa a phone)"
+        last_n:
+          type: integer
+          description: "Cantidad de ultimos mensajes a mostrar (default 50, max 200)"
+          default: 50
+        query:
+          type: string
+          description: "Texto de busqueda"
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        hours:
+          type: integer
+          description: "Ultimas N horas"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days"]
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        message:
+          type: string
+          description: "Texto del mensaje a enviar o eliminar"
+        format:
+          type: string
+          description: "Formato de respuesta"
+      required: ["action"]
+
+    GetConversationsByAgentArgs:
+      description: |
+        **get_conversations_by_agent** [conversations] (query)
+        Muestra las conversaciones asignadas a un agente especifico
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        limit:
+          type: integer
+          description: "Maximo de resultados (default 20)"
+          default: 20
+        query:
+          type: string
+          description: "Texto de busqueda"
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        hours:
+          type: integer
+          description: "Ultimas N horas"
+        conversation_id:
+          type: integer
+          description: "ID de conversacion especifica"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days"]
+        message:
+          type: string
+          description: "Texto del mensaje a enviar o eliminar"
+        format:
+          type: string
+          description: "Formato de respuesta"
+      required: ["action", "agent_id"]
+
+    GetConversationsSummaryArgs:
+      description: |
+        **get_conversations_summary** [conversations] (query)
+        Resumen estadistico de las conversaciones de un periodo: total, satisfaccion media, urgencia, etc.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        period:
+          type: string
+          description: "Periodo (default today)"
+          enum: ["today", "yesterday", "last_7_days"]
+          default: "today"
+        query:
+          type: string
+          description: "Texto de busqueda"
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        hours:
+          type: integer
+          description: "Ultimas N horas"
+        conversation_id:
+          type: integer
+          description: "ID de conversacion especifica"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        message:
+          type: string
+          description: "Texto del mensaje a enviar o eliminar"
+        format:
+          type: string
+          description: "Formato de respuesta"
+      required: ["action"]
+
+    GetCreditHistoryArgs:
+      description: |
+        **get_credit_history** [activity] (query)
+        Muestra el consumo de creditos OpenAI por dia y por endpoint
+      type: object
+      properties:
+        action:
+          type: string
+        days:
+          type: integer
+          description: "Dias a analizar (default 30)"
+        date:
+          type: string
+          description: "Fecha especifica YYYY-MM-DD"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["last_7_days", "last_30_days", "this_month"]
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+      required: ["action"]
+
+    GetCreditsInfoArgs:
+      description: |
+        **get_credits_info** [stats] (query)
+        Muestra informacion detallada sobre los creditos disponibles: gratuitos, comprados, porcentaje usado y fecha de renovacion. Usa esta accion cuando el usuario pregunte especificamente por creditos.
+      type: object
+
+    GetCrmHealthStatusArgs:
+      description: |
+        **get_crm_health_status** [advanced] (query)
+        Muestra el estado actual de los endpoints CRM configurados: si estan activos o deshabilitados por errores consecutivos, contador de errores y lista de endpoints
+      type: object
+
+    GetCustomerCommentsArgs:
+      description: |
+        **get_customer_comments** [customers] (query)
+        Obtiene los comentarios y tags asociados a un cliente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono del cliente"
+        comment:
+          type: string
+          description: "Texto del comentario"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        query:
+          type: string
+          description: "Texto de busqueda"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        tag_name:
+          type: string
+          description: "Nombre del tag"
+        tag_color:
+          type: string
+          description: "Color del tag en formato hexadecimal"
+        primary_phone:
+          type: string
+          description: "Telefono principal para merge"
+        secondary_phone:
+          type: string
+          description: "Telefono secundario para merge"
+      required: ["action", "phone"]
+
+    GetCustomerInfoArgs:
+      description: |
+        **get_customer_info** [customers] (query)
+        Obtiene perfil completo de un cliente: datos CRM, comentarios, tags, conversacion, archivos y tareas
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono del cliente"
+        query:
+          type: string
+          description: "Buscar cliente por nombre o teléfono"
+        comment:
+          type: string
+          description: "Texto del comentario"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        tag_name:
+          type: string
+          description: "Nombre del tag"
+        tag_color:
+          type: string
+          description: "Color del tag en formato hexadecimal"
+        primary_phone:
+          type: string
+          description: "Telefono principal para merge"
+        secondary_phone:
+          type: string
+          description: "Telefono secundario para merge"
+      required: ["action", "phone"]
+
+    GetCustomerJourneyArgs:
+      description: |
+        **get_customer_journey** [customers] (query)
+        Timeline completo de un cliente: mensajes, comentarios, archivos, tareas, pedidos, follow-ups
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono del cliente"
+        date:
+          type: string
+          description: "Fecha especifica YYYY-MM-DD"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["last_7_days", "last_30_days", "this_month"]
+        days:
+          type: integer
+          description: "Numero de dias a consultar"
+      required: ["action", "phone"]
+
+    GetCustomerLifetimeValueArgs:
+      description: |
+        **get_customer_lifetime_value** [customers] (query)
+        Calcula metricas de valor del cliente: pedidos, gasto, antiguedad, interacciones
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del cliente"
+      required: ["action", "phone"]
+
+    GetDailySummaryArgs:
+      description: |
+        **get_daily_summary** [activity] (query)
+        Resumen completo de actividad de un dia: conversaciones, mensajes, plugins, workflows, follow-ups, tareas
+      type: object
+      properties:
+        action:
+          type: string
+        date:
+          type: string
+          description: "Fecha (YYYY-MM-DD, default hoy)"
+      required: ["action"]
+
+    GetDocqaStatsArgs:
+      description: |
+        **get_docqa_stats** [stats] (query)
+        Muestra estadisticas detalladas de un asistente de documentacion. Requiere assistant_id: usa list_docqa_assistants primero para obtener los IDs disponibles.
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente (obtenlo llamando a list_docqa_assistants)"
+        days:
+          type: integer
+          description: "Periodo en dias (1-365)"
+          default: 30
+      required: ["assistant_id"]
+
+    GetEcommerceSyncStatusArgs:
+      description: |
+        **get_ecommerce_sync_status** [activity] (query)
+        Estado de conexion con la plataforma e-commerce y estadisticas de clientes CRM sincronizados
+      type: object
+      properties:
+        action:
+          type: string
+      required: ["action"]
+
+    GetKnowledgeProcessingStatusArgs:
+      description: |
+        **get_knowledge_processing_status** [knowledge] (query)
+        Obtiene el estado de procesamiento de todos los archivos de conocimiento (polling endpoint)
+      type: object
+
+    GetMarketingSessionsArgs:
+      description: |
+        **get_marketing_sessions** [mass_marketing] (query)
+        Obtiene las sesiones de WhatsApp disponibles para envío de campañas
+      type: object
+      properties:
+        action:
+          type: string
+      required: ["action"]
+
+    GetMassMarketingConfigArgs:
+      description: |
+        **get_mass_marketing_config** [mass_marketing] (query)
+        Obtiene la configuracion actual de marketing masivo: auto-respuesta, traduccion automatica, texto personalizado de baja
+      type: object
+
+    GetMassMarketingStatsArgs:
+      description: |
+        **get_mass_marketing_stats** [stats] (query)
+        Estadisticas de campanas masivas: rendimiento por campana, desglose de fallos, distribucion horaria de envios, calidad de listas y balance de creditos disponibles
+      type: object
+      properties:
+        date_from:
+          type: string
+          description: "Fecha inicio (YYYY-MM-DD). Default: hace 30 dias"
+        date_to:
+          type: string
+          description: "Fecha fin (YYYY-MM-DD). Default: hoy"
+
+    GetOnboardingStatusArgs:
+      description: |
+        **get_onboarding_status** [general] (query)
+        Muestra el progreso de configuracion inicial del usuario (setup guide)
+      type: object
+
+    GetOverdueTasksArgs:
+      description: |
+        **get_overdue_tasks** [tasks] (query)
+        Muestra todas las tareas pendientes cuya fecha limite ya paso
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        status:
+          type: string
+          description: "Estado de la tarea"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        task_text:
+          type: string
+          description: "Texto de la tarea"
+        due_date:
+          type: string
+          description: "Fecha limite YYYY-MM-DD"
+        priority:
+          type: string
+          description: "Prioridad de la tarea"
+          enum: ["low", "medium", "high"]
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente asignado"
+        task_id:
+          type: integer
+          description: "ID de la tarea"
+        include_completed:
+          type: boolean
+          description: "Incluir tareas completadas"
+      required: ["action"]
+
+    GetPeriodStatsArgs:
+      description: |
+        **get_period_stats** [activity] (query)
+        Evolucion diaria de conversaciones y mensajes en un periodo
+      type: object
+      properties:
+        action:
+          type: string
+        period:
+          type: string
+          enum: ["last_7_days", "last_30_days", "this_month"]
+          default: "last_7_days"
+      required: ["action"]
+
+    GetPluginChatSessionsArgs:
+      description: |
+        **get_plugin_chat_sessions** [plugins] (query)
+        Obtiene las conversaciones cerradas del plugin de chat web para un teléfono específico. Útil cuando un agente quiere ver qué ha preguntado un cliente por el chat de la web.
+      type: object
+      properties:
+        phone:
+          type: string
+          description: "Teléfono del cliente con prefijo + (ej: +34616083226)"
+        page:
+          type: integer
+          description: "Número de página (default 1, 10 resultados por página)"
+      required: ["phone"]
+
+    GetPluginConversationDetailArgs:
+      description: |
+        **get_plugin_conversation_detail** [plugins] (query)
+        Muestra los mensajes completos de una conversacion del plugin de chat web
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: "ID de la sesion de chat del plugin"
+      required: ["session_id"]
+
+    GetPluginConversationsArgs:
+      description: |
+        **get_plugin_conversations** [stats] (query)
+        Muestra las conversaciones del plugin de chat web. Soporta filtros por periodo de tiempo.
+      type: object
+      properties:
+        limit:
+          type: integer
+          description: "Numero maximo de conversaciones"
+          default: 20
+        period:
+          type: string
+          description: "Periodo: 1 (ultimo dia/hoy), 7 (ultima semana), 30 (ultimo mes), 90 (ultimos 3 meses), all (todas)"
+          enum: ["1", "7", "30", "90", "all"]
+          default: "30"
+        date_from:
+          type: string
+          description: "Fecha inicio en formato YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin en formato YYYY-MM-DD"
+        page:
+          type: integer
+          description: "Numero de pagina"
+
+    GetPluginEmbedCodeArgs:
+      description: |
+        **get_plugin_embed_code** [plugins] (query)
+        Genera el codigo de instalacion (embed code) para un plugin. Usalo cuando el usuario necesite el codigo para instalar Chat Web, Product Q&A o Doc Q&A en su web.
+      type: object
+      properties:
+        plugin_type:
+          type: string
+          description: "Tipo de plugin: chat (Chat Web), product-qa (Product Q&A), doc-qa (Doc Q&A)"
+          enum: ["chat", "product-qa", "doc-qa"]
+      required: ["plugin_type"]
+
+    GetPluginStatsArgs:
+      description: |
+        **get_plugin_stats** [plugins] (query)
+        Metricas del plugin Product Q&A: preguntas, visitantes, productos mas consultados
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        period:
+          type: string
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+          default: "last_7_days"
+        plugin_type:
+          type: string
+          description: "Filtrar por tipo de plugin"
+        limit:
+          type: integer
+          description: "Máximo de resultados"
+        hours:
+          type: integer
+          description: "Ultimas N horas a analizar"
+      required: ["action"]
+
+    GetProductQaFaqsArgs:
+      description: |
+        **get_product_qa_faqs** [plugins] (query)
+        Lista las FAQs publicadas del plugin Product Q&A, agrupadas por producto. Requiere que el plugin Product Q&A este configurado/activado.
+      type: object
+      properties:
+        status:
+          type: string
+          description: "Filtrar por estado de la FAQ"
+          enum: ["published", "unpublished", "all"]
+          default: "published"
+        product_id:
+          type: string
+          description: "Filtrar por ID de producto especifico"
+        page:
+          type: integer
+          description: "Numero de pagina"
+          default: 1
+        limit:
+          type: integer
+          description: "FAQs por pagina (max 50)"
+          default: 20
+
+    GetProductQaQuestionsArgs:
+      description: |
+        **get_product_qa_questions** [stats] (query)
+        Muestra las preguntas sobre productos. Soporta filtros por periodo de tiempo.
+      type: object
+      properties:
+        limit:
+          type: integer
+          description: "Numero maximo de preguntas"
+          default: 20
+        period:
+          type: string
+          description: "Periodo de tiempo: today (solo hoy), 7 (ultimos 7 dias), 30 (ultimos 30 dias), 90 (ultimos 90 dias), all (todas)"
+          enum: ["today", "7", "30", "90", "all"]
+          default: "30"
+        date_from:
+          type: string
+          description: "Fecha inicio en formato YYYY-MM-DD (tiene prioridad sobre period)"
+        date_to:
+          type: string
+          description: "Fecha fin en formato YYYY-MM-DD (tiene prioridad sobre period)"
+        page:
+          type: integer
+          description: "Numero de pagina"
+
+    GetProductQaStatsArgs:
+      description: |
+        **get_product_qa_stats** [stats] (query)
+        Muestra estadisticas del plugin de preguntas sobre productos
+      type: object
+
+    GetPromptArgs:
+      description: |
+        **get_prompt** [prompt] (query)
+        Muestra el prompt actual de la IA
+      type: object
+
+    GetPromptHistoryArgs:
+      description: |
+        **get_prompt_history** [prompt] (query)
+        Muestra las versiones anteriores del prompt
+      type: object
+
+    GetPurchaseHistoryArgs:
+      description: |
+        **get_purchase_history** [account] (query)
+        Muestra el historial de compras de creditos
+      type: object
+      properties:
+        page:
+          type: integer
+          description: "Pagina a mostrar (default: 1)"
+        limit:
+          type: integer
+          description: "Registros por pagina (default: 20, max: 50)"
+
+    GetRecentConversationsArgs:
+      description: |
+        **get_recent_conversations** [conversations] (query)
+        Obtiene las conversaciones mas recientes ordenadas por ultima actividad
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        limit:
+          type: integer
+          description: "Cantidad de conversaciones (default 10, max 50)"
+          default: 10
+        hours:
+          type: integer
+          description: "Ventana de tiempo en horas (default 48)"
+          default: 48
+        query:
+          type: string
+          description: "Texto de busqueda"
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        conversation_id:
+          type: integer
+          description: "ID de conversacion especifica"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days"]
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        message:
+          type: string
+          description: "Texto del mensaje a enviar o eliminar"
+        format:
+          type: string
+          description: "Formato de respuesta"
+      required: ["action"]
+
+    GetRecentPluginQuestionsArgs:
+      description: |
+        **get_recent_plugin_questions** [plugins] (query)
+        Muestra las ultimas preguntas que los clientes hicieron al plugin de Product Q&A
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        hours:
+          type: integer
+          default: 48
+        limit:
+          type: integer
+          default: 20
+        plugin_type:
+          type: string
+          description: "Filtrar por tipo de plugin"
+        period:
+          type: string
+          description: "Periodo"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+      required: ["action"]
+
+    GetReferralDataArgs:
+      description: |
+        **get_referral_data** [referrals] (query)
+        Muestra los referidos del usuario, comisiones pendientes y pagadas, y estado de solicitudes de pago
+      type: object
+
+    GetSentimentAnalysisArgs:
+      description: |
+        **get_sentiment_analysis** [ai_analysis] (query)
+        Analiza el sentimiento e intencion del cliente en una conversacion usando IA. Devuelve score (0-10), categoria, intencion, consejo y urgencia. Consume creditos de IA.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Telefono del cliente (con o sin +)"
+        summary_type:
+          type: string
+          description: "Tipo de resumen: quick (rapido), actionable (con acciones), detailed (detallado)"
+          enum: ["quick", "actionable", "detailed"]
+        days:
+          type: integer
+          description: "Numero de dias a analizar"
+        tone:
+          type: string
+          description: "Tono para la respuesta"
+        hours:
+          type: integer
+          description: "Ultimas N horas a analizar"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        target_language:
+          type: string
+          description: "Idioma destino para traduccion"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes a procesar"
+      required: ["action", "phone"]
+
+    GetSentimentTrendArgs:
+      description: |
+        **get_sentiment_trend** [ai_analysis] (query)
+        Muestra la evolucion del sentimiento a lo largo del tiempo. Sin phone muestra tendencia global de todas las conversaciones.
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del cliente. Omitir para tendencia global."
+        days:
+          type: integer
+          description: "Dias a analizar (default 30)"
+        summary_type:
+          type: string
+          description: "Tipo de resumen: quick (rapido), actionable (con acciones), detailed (detallado)"
+          enum: ["quick", "actionable", "detailed"]
+        tone:
+          type: string
+          description: "Tono para la respuesta"
+        hours:
+          type: integer
+          description: "Ultimas N horas a analizar"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        target_language:
+          type: string
+          description: "Idioma destino para traduccion"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes a procesar"
+      required: ["action"]
+
+    GetShopStatusArgs:
+      description: |
+        **get_shop_status** [general] (query)
+        Obtiene el estado actual de la tienda: idioma, creditos, configuracion basica
+      type: object
+
+    GetSmartFollowupConfigArgs:
+      description: |
+        **get_smart_followup_config** [smart_followup] (query)
+        Obtiene la configuracion actual de seguimiento inteligente. Incluye: hora de ejecucion, nivel de intencion minimo, intentos, envio automatico, tono, dias activos, etc.
+      type: object
+
+    GetSmartFollowupLogsArgs:
+      description: |
+        **get_smart_followup_logs** [smart_followup] (query)
+        Lista las acciones recientes de seguimiento inteligente: que clientes se contactaron, nivel de intencion, producto mencionado, resultado y mensaje enviado
+      type: object
+      properties:
+        action:
+          type: string
+        page:
+          type: integer
+          description: "Numero de pagina (20 resultados por pagina, default 1)"
+        intent_level:
+          type: string
+          description: "Filtrar por nivel de intencion: 'low', 'medium' o 'high'"
+        action_taken:
+          type: string
+          description: "Filtrar por accion: 'message_sent', 'webhook_fired', 'logged_only' o 'skipped'"
+        outcome:
+          type: string
+          description: "Filtrar por resultado: 'abandoned', 'unclear', 'converted' o 'support_only'"
+        search:
+          type: string
+          description: "Buscar por telefono o producto mencionado"
+        period:
+          type: string
+          description: "Periodo: 'today', 'yesterday', 'last_7_days', 'last_30_days', 'this_month', 'last_month', 'last_90_days', 'all_time' o 'custom'"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "last_365_days", "all_time", "custom"]
+        date_from:
+          type: string
+          description: "Fecha inicio (YYYY-MM-DD). Solo con period='custom'"
+        date_to:
+          type: string
+          description: "Fecha fin (YYYY-MM-DD). Solo con period='custom'"
+      required: ["action"]
+
+    GetSmartFollowupStatsArgs:
+      description: |
+        **get_smart_followup_stats** [smart_followup] (query)
+        Estadisticas de recuperacion de ventas: embudo de conversion, tasa de respuesta, productos mas mencionados, rendimiento por intento y desglose de motivos de omision
+      type: object
+      properties:
+        action:
+          type: string
+        period:
+          type: string
+          description: "Periodo: 'today', 'yesterday', 'last_7_days', 'last_30_days', 'this_month', 'last_month', 'last_90_days', 'last_365_days', 'all_time' o 'custom'. Default: 'last_30_days'"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "last_365_days", "all_time", "custom"]
+        date_from:
+          type: string
+          description: "Fecha inicio (YYYY-MM-DD). Solo con period='custom'"
+        date_to:
+          type: string
+          description: "Fecha fin (YYYY-MM-DD). Solo con period='custom'"
+        page:
+          type: integer
+          description: "Numero de pagina"
+        intent_level:
+          type: string
+          description: "Filtrar por nivel de intencion"
+          enum: ["low", "medium", "high"]
+        outcome:
+          type: string
+          description: "Filtrar por resultado"
+        action_taken:
+          type: string
+          description: "Filtrar por accion tomada"
+        search:
+          type: string
+          description: "Buscar en los registros"
+      required: ["action"]
+
+    GetSmartReplySuggestionsArgs:
+      description: |
+        **get_smart_reply_suggestions** [ai_analysis] (query)
+        Genera 3 sugerencias de respuesta basadas en la conversacion actual
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        tone:
+          type: string
+          description: "Tono de las respuestas (default professional)"
+          enum: ["professional", "friendly", "empathetic", "direct"]
+        summary_type:
+          type: string
+          description: "Tipo de resumen: quick (rapido), actionable (con acciones), detailed (detallado)"
+          enum: ["quick", "actionable", "detailed"]
+        days:
+          type: integer
+          description: "Numero de dias a analizar"
+        hours:
+          type: integer
+          description: "Ultimas N horas a analizar"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        target_language:
+          type: string
+          description: "Idioma destino para traduccion"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes a procesar"
+      required: ["action", "phone"]
+
+    GetStorageStatusArgs:
+      description: |
+        **get_storage_status** [storage] (query)
+        Muestra el uso actual de almacenamiento y el plan activo
+      type: object
+
+    GetStructuredAnalyticsArgs:
+      description: |
+        **get_structured_analytics** [stats] (query)
+        Obtiene analytics detallados de conversaciones usando structured outputs: KPIs, distribucion por intencion, sentimiento, urgencia, tendencia de satisfaccion y conversaciones recientes. Requiere que structured outputs este activado.
+      type: object
+      properties:
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD (default: hace 30 dias)"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD (default: hoy)"
+        limit:
+          type: integer
+          description: "Cantidad de conversaciones recientes a incluir (default 50)"
+          default: 50
+
+    GetTeamSummaryArgs:
+      description: |
+        **get_team_summary** [agents] (query)
+        Vista general de todos los agentes con su carga de trabajo actual
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        agent_id:
+          type: integer
+          description: "ID del agente para filtrar"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+        days:
+          type: integer
+          description: "Numero de dias a consultar"
+      required: ["action"]
+
+    GetTopAskedProductsArgs:
+      description: |
+        **get_top_asked_products** [products] (query)
+        Muestra los productos sobre los que mas preguntan los clientes en el plugin Q&A
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        days:
+          type: integer
+          description: "Periodo en dias (default 30)"
+          default: 30
+        limit:
+          type: integer
+          default: 10
+      required: ["action"]
+
+    GetTopTopicsArgs:
+      description: |
+        **get_top_topics** [activity] (query)
+        Muestra los temas/intenciones mas comunes en las conversaciones
+      type: object
+      properties:
+        action:
+          type: string
+        days:
+          type: integer
+          description: "Dias a analizar (default 30)"
+          default: 30
+      required: ["action"]
+
+    GetUnansweredConversationsArgs:
+      description: |
+        **get_unanswered_conversations** [conversations] (query)
+        Muestra conversaciones donde el ultimo mensaje es del cliente (sin respuesta del agente/IA)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        hours:
+          type: integer
+          description: "Buscar en las ultimas N horas (default 24)"
+          default: 24
+        limit:
+          type: integer
+          description: "Maximo de resultados (default 20)"
+          default: 20
+        query:
+          type: string
+          description: "Texto de busqueda"
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        conversation_id:
+          type: integer
+          description: "ID de conversacion especifica"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days"]
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        message:
+          type: string
+          description: "Texto del mensaje a enviar o eliminar"
+        format:
+          type: string
+          description: "Formato de respuesta"
+      required: ["action"]
+
+    GetUnansweredPluginQuestionsArgs:
+      description: |
+        **get_unanswered_plugin_questions** [plugins] (query)
+        Identifica preguntas donde el bot no pudo dar una respuesta satisfactoria
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        limit:
+          type: integer
+          default: 20
+        plugin_type:
+          type: string
+          description: "Filtrar por tipo de plugin"
+        period:
+          type: string
+          description: "Periodo"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+        hours:
+          type: integer
+          description: "Horas a analizar"
+      required: ["action"]
+
+    GetUnreadNotificationCountArgs:
+      description: |
+        **get_unread_notification_count** [notifications] (query)
+        Obtiene el numero de notificaciones pendientes de leer
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio"
+        filter:
+          type: string
+          description: "Filtro de notificaciones"
+        type:
+          type: string
+          description: "Tipo de notificacion"
+        notification_id:
+          type: integer
+          description: "ID de la notificacion"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+      required: ["action"]
+
+    GetUnsubscribedListArgs:
+      description: |
+        **get_unsubscribed_list** [mass_marketing] (query)
+        Obtiene la lista de contactos que se han dado de baja de los envios masivos de la tienda
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: get_unsubscribed"
+        page:
+          type: integer
+          description: "Numero de pagina para paginacion (default: 1)"
+        search:
+          type: string
+          description: "Filtrar por numero de telefono"
+        date_from:
+          type: string
+          description: "Fecha inicio filtro (formato YYYY-MM-DD)"
+        date_to:
+          type: string
+          description: "Fecha fin filtro (formato YYYY-MM-DD)"
+      required: ["action"]
+
+    GetUsageStatsArgs:
+      description: |
+        **get_usage_stats** [stats] (query)
+        Muestra el uso de creditos, tokens y costes de los ultimos dias
+      type: object
+      properties:
+        action:
+          type: string
+          description: "summary para resumen diario, detail para detalle individual"
+          default: "summary"
+        from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD (default: hace 7 dias)"
+        to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD (default: hoy)"
+        page:
+          type: integer
+          description: "Numero de pagina"
+        limit:
+          type: integer
+          description: "Resultados por pagina"
+
+    GetUsageStatsDetailArgs:
+      description: |
+        **get_usage_stats_detail** [stats] (query)
+        Muestra el detalle individual de cada consulta de IA con tokens y costes
+      type: object
+      properties:
+        action:
+          type: string
+        from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        page:
+          type: integer
+          description: "Número de página"
+        limit:
+          type: integer
+          description: "Resultados por página"
+      required: ["action"]
+
+    GetWebhookConfigArgs:
+      description: |
+        **get_webhook_config** [advanced] (query)
+        Lee la configuracion actual de webhooks de la tienda: si estan activados, URL configurada, eventos suscritos y si tiene secret. Usa esta accion SIEMPRE antes de configurar o modificar webhooks, y cuando el usuario pregunte sobre su configuracion de webhooks.
+      type: object
+
+    GetWhatsappConnectionStatusArgs:
+      description: |
+        **get_whatsapp_connection_status** [whatsapp_ops] (query)
+        Muestra todas las sesiones de WhatsApp de la tienda con su estado actual (conectado, desconectado, pendiente QR)
+      type: object
+
+    GetWhatsappConversationHistoryArgs:
+      description: |
+        **get_whatsapp_conversation_history** [automation] (query)
+        Muestra el historial de mensajes de WhatsApp con un telefono especifico
+      type: object
+      properties:
+        phone:
+          type: string
+          description: "Numero de telefono (con codigo de pais, ej: +34600123456)"
+        limit:
+          type: integer
+          description: "Cantidad maxima de mensajes a mostrar (1-100)"
+          default: 50
+      required: ["phone"]
+
+    GetWhatsappHealthArgs:
+      description: |
+        **get_whatsapp_health** [whatsapp_ops] (query)
+        Estado combinado de sesiones, actividad de mensajes 24h y workflows activos
+      type: object
+      properties:
+        action:
+          type: string
+      required: ["action"]
+
+    GetWhatsappMessageLogsArgs:
+      description: |
+        **get_whatsapp_message_logs** [whatsapp_ops] (query)
+        Muestra los ultimos mensajes enviados y recibidos por WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+        direction:
+          type: string
+          description: "Filtrar por direccion del mensaje"
+          enum: ["incoming", "outgoing"]
+        phone:
+          type: string
+          description: "Filtrar por numero de telefono"
+        hours:
+          type: integer
+          description: "Ultimas N horas (default 24)"
+          default: 24
+        limit:
+          type: integer
+          default: 50
+        session_id:
+          type: integer
+          description: "ID de la sesión WhatsApp"
+      required: ["action"]
+
+    GetWhatsappProfileArgs:
+      description: |
+        **get_whatsapp_profile** [whatsapp_ops] (query)
+        Obtiene el perfil de WhatsApp de una sesion conectada: nombre, foto, estado/info, y datos de empresa si es WhatsApp Business (descripcion, direccion, email, web, horario)
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: "ID de la sesion WhatsApp conectada"
+      required: ["session_id"]
+
+    GetWhatsappQrArgs:
+      description: |
+        **get_whatsapp_qr** [automation] (query)
+        Obtiene el codigo QR de WhatsApp para que el usuario lo escanee. IMPORTANTE: Requiere que exista una sesion previa (estado qr_pending). Si no hay sesion, usa connect_whatsapp primero para crear una. Si ya esta conectado, informa del estado. Devuelve una URL de imagen que puedes mostrar inline con ![QR WhatsApp](url).
+      type: object
+
+    GetWhatsappResponseTimeStatsArgs:
+      description: |
+        **get_whatsapp_response_time_stats** [whatsapp_ops] (query)
+        Muestra la distribucion horaria de mensajes entrantes y salientes de WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+        days:
+          type: integer
+          description: "Dias a analizar (default 7)"
+        session_id:
+          type: integer
+          description: "ID de la sesión WhatsApp"
+      required: ["action"]
+
+    GetWhatsappStatusArgs:
+      description: |
+        **get_whatsapp_status** [whatsapp_ops] (query)
+        Muestra el estado de todas las sesiones de WhatsApp conectadas
+      type: object
+      properties:
+        action:
+          type: string
+      required: ["action"]
+
+    GetWhatsappTemplateArgs:
+      description: |
+        **get_whatsapp_template** [whatsapp_ops] (query)
+        Obtiene el detalle de una plantilla de mensaje especifica
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID de la plantilla"
+      required: ["action", "id"]
+
+    GetWhatsappWorkflowActivityArgs:
+      description: |
+        **get_whatsapp_workflow_activity** [whatsapp_ops] (query)
+        Muestra estadísticas de ejecución de los workflows de WhatsApp en un periodo
+      type: object
+      properties:
+        action:
+          type: string
+        days:
+          type: integer
+          description: "Días a analizar (default: 7)"
+        session_id:
+          type: integer
+          description: "ID de la sesion WhatsApp"
+      required: ["action"]
+
+    GetWhatsappWorkflowLogsArgs:
+      description: |
+        **get_whatsapp_workflow_logs** [automation] (query)
+        Obtiene el historial de ejecuciones de workflows de WhatsApp Auto con filtros de fecha
+      type: object
+      properties:
+        limit:
+          type: integer
+          description: "Numero maximo de logs a devolver (1-100)"
+          default: 20
+        offset:
+          type: integer
+          description: "Desplazamiento para paginacion"
+          default: 0
+        period:
+          type: string
+          description: "Periodo: 'today' o numero de dias (ej: '7' para ultimos 7 dias)"
+        from:
+          type: string
+          description: "Fecha desde (formato: YYYY-MM-DD)"
+        to:
+          type: string
+          description: "Fecha hasta (formato: YYYY-MM-DD)"
+
+    GetWhatsappWorkflowStatsArgs:
+      description: |
+        **get_whatsapp_workflow_stats** [stats] (query)
+        Get WhatsApp message volume, workflow execution stats, peak hours, and performance metrics
+      type: object
+      properties:
+        action:
+          type: string
+        period:
+          type: integer
+          description: "Number of days: 7, 30, or 90. Default: 7"
+      required: ["action"]
+
+    GetWorkflowLogsArgs:
+      description: |
+        **get_workflow_logs** [whatsapp_ops] (query)
+        Muestra las ejecuciones recientes de workflows automaticos de WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+        hours:
+          type: integer
+          description: "Ultimas N horas (default 24)"
+          default: 24
+        limit:
+          type: integer
+          default: 50
+        session_id:
+          type: integer
+          description: "ID de la sesión WhatsApp"
+      required: ["action"]
+
+    GetWorkflowSessionStatsArgs:
+      description: |
+        **get_workflow_session_stats** [automation] (query)
+        Obtiene estadísticas de workflows para una sesión específica de WhatsApp: mensajes de hoy, ejecuciones, volumen de 7 días
+      type: object
+      properties:
+        action:
+          type: string
+        session_id:
+          type: integer
+          description: "ID de la sesión WhatsApp"
+      required: ["action", "session_id"]
+
+    GlobalSearchArgs:
+      description: |
+        **global_search** [customers] (query)
+        Busca en todas las fuentes de datos de clientes: CRM, contactos, conversaciones. Devuelve resultados unificados sin duplicados.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        query:
+          type: string
+          description: "Texto de busqueda (minimo 2 caracteres). Busca en nombre, email, telefono y comentarios."
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        comment:
+          type: string
+          description: "Texto del comentario"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        tag_name:
+          type: string
+          description: "Nombre del tag"
+        tag_color:
+          type: string
+          description: "Color del tag en formato hexadecimal"
+        primary_phone:
+          type: string
+          description: "Telefono principal para merge"
+        secondary_phone:
+          type: string
+          description: "Telefono secundario para merge"
+      required: ["action", "query"]
+
+    ImportContactsFromConversationsArgs:
+      description: |
+        **import_contacts_from_conversations** [mass_marketing] (mutation)
+        Importa a una lista de marketing masivo todos los telefonos de las conversaciones WhatsApp de la tienda.
+      type: object
+      properties:
+        source:
+          type: string
+        list_id:
+          type: integer
+          description: "ID de la lista donde importar los contactos"
+      required: ["source", "list_id"]
+
+    ImportContactsManualArgs:
+      description: |
+        **import_contacts_manual** [mass_marketing] (mutation)
+        Importa contactos a una lista de marketing masivo escribiendo los telefonos. Un telefono por linea o separados por comas.
+      type: object
+      properties:
+        source:
+          type: string
+        list_id:
+          type: integer
+          description: "ID de la lista donde importar los contactos"
+        phones:
+          type: string
+          description: "Telefonos a importar, uno por linea o separados por comas. Incluir prefijo internacional (ej: +34600000000)"
+      required: ["source", "list_id", "phones"]
+
+    ImportMarketingContactsArgs:
+      description: |
+        **import_marketing_contacts** [mass_marketing] (mutation)
+        Importa contactos a una lista de marketing masivo. Soporta entrada manual de telefonos o importacion desde conversaciones.
+      type: object
+      properties:
+        source:
+          type: string
+          description: "Origen de importacion: manual (texto libre), conversations (desde historial WhatsApp), csv (archivo CSV), txt (archivo de texto)"
+          enum: ["manual", "conversations", "csv", "txt"]
+        list_id:
+          type: integer
+          description: "ID de la lista destino"
+        phones_text:
+          type: string
+          description: "Para source=manual: telefonos separados por saltos de linea, uno por linea"
+        phones:
+          type: array
+          description: "Array de teléfonos a importar (para source=manual)"
+        tmp_id:
+          type: string
+          description: "ID temporal del archivo previamente subido (para importación con mapeo)"
+        phone_column:
+          type: string
+          description: "Nombre de la columna de teléfono en el CSV"
+        name_column:
+          type: string
+          description: "Nombre de la columna de nombre en el CSV"
+      required: ["source", "list_id"]
+
+    ImprovePromptArgs:
+      description: |
+        **improve_prompt** [prompt] (query)
+        Analiza el prompt actual con IA y devuelve puntuaciones por categoria, sugerencias de mejora y una version mejorada del prompt. Util cuando el usuario quiere saber si su prompt es bueno o como mejorarlo.
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: "El prompt a analizar. Si no lo proporciona el usuario, usar el prompt actual (obtener con get_prompt primero)"
+      required: ["prompt"]
+
+    ListAgentsArgs:
+      description: |
+        **list_agents** [agents] (query)
+        Muestra todos los agentes de atencion configurados con sus nombres y colores
+      type: object
+
+    ListBlacklistArgs:
+      description: |
+        **list_blacklist** [mass_marketing] (query)
+        Obtiene los numeros bloqueados manualmente que no recibiran campanas masivas, distinta de las bajas voluntarias
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: list"
+        search:
+          type: string
+          description: "Filtrar por numero de telefono"
+        page:
+          type: integer
+          description: "Pagina de resultados"
+          default: 1
+      required: ["action"]
+
+    ListCalendarEventsArgs:
+      description: |
+        **list_calendar_events** [calendar] (query)
+        Muestra los eventos programados en un rango de fechas
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        date_from:
+          type: string
+          description: "Fecha inicio (YYYY-MM-DD, default lunes de esta semana)"
+        date_to:
+          type: string
+          description: "Fecha fin (YYYY-MM-DD, default domingo de esta semana)"
+        agent_id:
+          type: integer
+          description: "Filtrar por agente"
+        phone:
+          type: string
+          description: "Filtrar por cliente"
+        title:
+          type: string
+          description: "Titulo del evento"
+        description:
+          type: string
+          description: "Descripcion del evento"
+        start_datetime:
+          type: string
+          description: "Fecha/hora inicio YYYY-MM-DD HH:MM:SS"
+        end_datetime:
+          type: string
+          description: "Fecha/hora fin YYYY-MM-DD HH:MM:SS"
+        all_day:
+          type: boolean
+          description: "Evento de dia completo"
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente asignado"
+        event_id:
+          type: integer
+          description: "ID del evento"
+      required: ["action"]
+
+    ListCampaignsArgs:
+      description: |
+        **list_campaigns** [mass_marketing] (query)
+        Obtiene todas las campanas de marketing masivo de la tienda
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: list"
+      required: ["action"]
+
+    ListContactListsArgs:
+      description: |
+        **list_contact_lists** [mass_marketing] (query)
+        Obtiene todas las listas de contactos de marketing masivo de la tienda
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: list"
+      required: ["action"]
+
+    ListConversationFilesArgs:
+      description: |
+        **list_conversation_files** [storage] (query)
+        Lista los archivos compartidos en una conversacion con un cliente
+      type: object
+      properties:
+        phone:
+          type: string
+          description: "Telefono del cliente para filtrar archivos"
+        limit:
+          type: integer
+          default: 50
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+          default: 0
+
+    ListDocqaAssistantsArgs:
+      description: |
+        **list_docqa_assistants** [plugins] (query)
+        Muestra todos los asistentes de documentacion creados con el plugin Doc Q&A
+      type: object
+
+    ListKnowledgeFilesArgs:
+      description: |
+        **list_knowledge_files** [storage] (query)
+        Muestra todos los archivos subidos a la base de conocimiento (PDFs, documentos, etc.)
+      type: object
+
+    ListKnowledgeSnippetsArgs:
+      description: |
+        **list_knowledge_snippets** [prompt] (query)
+        Muestra los datos (facts) que la IA ha aprendido automaticamente de las conversaciones. Estos son datos concretos del negocio como horarios, precios, politicas, etc.
+      type: object
+      properties:
+        filter:
+          type: string
+          description: "Filtrar por estado: pending (pendientes de revision), active (aprobados), conflicts (en conflicto), stale (obsoletos), rejected (rechazados), all (todos)"
+          enum: ["pending", "active", "conflicts", "stale", "rejected", "all"]
+          default: "all"
+        category:
+          type: string
+          description: "Filtrar por categoria (ej: horarios, precios, envios)"
+        search:
+          type: string
+          description: "Buscar en el contenido de los snippets"
+        limit:
+          type: integer
+          description: "Cantidad por pagina (max 100)"
+          default: 50
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+          default: 0
+
+    ListNotificationsArgs:
+      description: |
+        **list_notifications** [notifications] (query)
+        Obtiene las notificaciones del sistema con filtros opcionales
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        filter:
+          type: string
+          description: "Filtro: all (default), unread, read"
+        type:
+          type: string
+          description: "Filtrar por tipo de notificacion"
+        limit:
+          type: integer
+          description: "Maximo de resultados (default 20, max 100)"
+        offset:
+          type: integer
+          description: "Paginacion"
+        notification_id:
+          type: integer
+          description: "ID de la notificacion"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+      required: ["action"]
+
+    ListPluginConfigsArgs:
+      description: |
+        **list_plugin_configs** [plugins] (query)
+        Lista todos los plugins instalados con su configuracion y estado
+      type: object
+      properties:
+        action:
+          type: string
+        plugin_type:
+          type: string
+          description: "Filtrar por tipo de plugin"
+        hours:
+          type: integer
+          description: "Ultimas N horas a analizar"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        period:
+          type: string
+          description: "Periodo de tiempo para las estadisticas"
+          enum: ["today", "yesterday", "last_7_days", "last_30_days"]
+      required: ["action"]
+
+    ListScheduledMessagesArgs:
+      description: |
+        **list_scheduled_messages** [whatsapp_ops] (query)
+        Muestra los mensajes de WhatsApp programados para envio futuro
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        status:
+          type: string
+          description: "Filtrar por estado (default: pending, all para ver todos)"
+          enum: ["pending", "sent", "cancelled", "failed", "all"]
+          default: "pending"
+        page:
+          type: integer
+          description: "Pagina de resultados"
+        period:
+          type: string
+          description: "Periodo de tiempo para filtrar: today (hoy), 7/30/90 (ultimos N dias), custom (requiere date_from y date_to)"
+          enum: ["today", "7", "30", "90", "custom"]
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+      required: ["action"]
+
+    ListStorageFilesArgs:
+      description: |
+        **list_storage_files** [storage] (query)
+        Muestra la lista de archivos subidos a la base de conocimiento con su tamano y fecha
+      type: object
+      properties:
+        limit:
+          type: integer
+          description: "Numero maximo de archivos a mostrar (1-50)"
+          default: 20
+
+    ListTasksArgs:
+      description: |
+        **list_tasks** [tasks] (query)
+        Lista las tareas de la tienda con filtros opcionales por estado, agente o telefono
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        status:
+          type: string
+          description: "Filtrar por estado"
+          enum: ["pending", "in_progress", "completed", "cancelled"]
+        agent_id:
+          type: integer
+          description: "Filtrar por agente asignado"
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+        limit:
+          type: integer
+          default: 20
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        task_text:
+          type: string
+          description: "Texto de la tarea"
+        due_date:
+          type: string
+          description: "Fecha limite YYYY-MM-DD"
+        priority:
+          type: string
+          description: "Prioridad de la tarea"
+          enum: ["low", "medium", "high"]
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente asignado"
+        task_id:
+          type: integer
+          description: "ID de la tarea"
+        include_completed:
+          type: boolean
+          description: "Incluir tareas completadas"
+      required: ["action"]
+
+    ListWhatsappAgentsArgs:
+      description: |
+        **list_whatsapp_agents** [agents] (query)
+        Muestra todos los agentes disponibles para asignar en workflows de WhatsApp
+      type: object
+
+    ListWhatsappOptoutArgs:
+      description: |
+        **list_whatsapp_optout** [whatsapp_ops] (query)
+        Muestra los contactos que han solicitado no recibir mensajes automaticos de WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        page:
+          type: integer
+          description: "Pagina de resultados (default 1)"
+        search:
+          type: string
+          description: "Filtrar por numero de telefono"
+      required: ["action"]
+
+    ListWhatsappTemplatesArgs:
+      description: |
+        **list_whatsapp_templates** [whatsapp_ops] (query)
+        Muestra las plantillas de mensajes guardadas para WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        category:
+          type: string
+          description: "Filtrar por categoria de plantilla"
+      required: ["action"]
+
+    ListWhatsappWorkflowsArgs:
+      description: |
+        **list_whatsapp_workflows** [automation] (query)
+        Obtiene la lista de todos los workflows de automatizacion de WhatsApp
+      type: object
+
+    ManageFaqArgs:
+      description: |
+        **manage_faq** [plugins] (mutation)
+        Permite despublicar, republicar o eliminar FAQs del plugin Product Q&A. Util para gestionar contenido que ya no es relevante.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        faq_ids:
+          type: array
+          description: "Array de IDs de FAQs a gestionar (obtener de get_product_qa_faqs)"
+        action:
+          type: string
+          description: "Acción a realizar: unpublish (despublicar FAQs), republish (republicar), delete (eliminar)"
+          enum: ["unpublish", "republish", "delete"]
+      required: ["faq_ids", "action"]
+
+    MarkAllNotificationsReadArgs:
+      description: |
+        **mark_all_notifications_read** [notifications] (mutation)
+        Marca todas las notificaciones no leidas como leidas
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        agent_id:
+          type: integer
+          description: "ID del agente (opcional)"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio"
+        filter:
+          type: string
+          description: "Filtro de notificaciones"
+        type:
+          type: string
+          description: "Tipo de notificacion"
+        notification_id:
+          type: integer
+          description: "ID de la notificacion"
+      required: ["action"]
+
+    MarkNotificationReadArgs:
+      description: |
+        **mark_notification_read** [notifications] (mutation)
+        Marca una notificacion especifica como leida
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        notification_id:
+          type: integer
+          description: "ID de la notificacion"
+        agent_id:
+          type: integer
+          description: "ID del agente que lee (opcional)"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio"
+        filter:
+          type: string
+          description: "Filtro de notificaciones"
+        type:
+          type: string
+          description: "Tipo de notificacion"
+      required: ["action", "notification_id"]
+
+    MergeCustomersArgs:
+      description: |
+        **merge_customers** [customers] (mutation)
+        Fusiona dos registros de cliente en uno, combinando comentarios, tags y datos CRM
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+        primary_phone:
+          type: string
+          description: "Telefono del cliente principal (se mantiene)"
+        secondary_phone:
+          type: string
+          description: "Telefono del cliente secundario (se fusiona y elimina)"
+      required: ["action", "primary_phone", "secondary_phone"]
+
+    PauseCampaignArgs:
+      description: |
+        **pause_campaign** [mass_marketing] (mutation)
+        Pausa temporalmente una campana de marketing masivo en curso
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: pause"
+        campaign_id:
+          type: integer
+          description: "ID de la campana a pausar"
+      required: ["action", "campaign_id"]
+
+    PrecheckDeleteWhatsappSessionArgs:
+      description: |
+        **precheck_delete_whatsapp_session** [whatsapp_ops] (query)
+        Muestra qué configuraciones se verían afectadas al eliminar una sesión de WhatsApp (workflows, campañas, seguimiento inteligente) y lista las sesiones alternativas disponibles para migración.
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: "ID de la sesión a verificar"
+      required: ["session_id"]
+
+    PreviewSmartFollowupArgs:
+      description: |
+        **preview_smart_followup** [smart_followup] (query)
+        Genera una vista previa del mensaje de seguimiento que se enviaria a un cliente sin enviarlo realmente
+      type: object
+      properties:
+        conversation_hash:
+          type: string
+          description: "Hash de la conversacion a analizar"
+      required: ["conversation_hash"]
+
+    PublishQuestionAsFaqArgs:
+      description: |
+        **publish_question_as_faq** [plugins] (mutation)
+        Publica manualmente una pregunta del historial como FAQ en tu tienda online. Util para promover preguntas importantes que no fueron detectadas automaticamente.
+      type: object
+      properties:
+        question_id:
+          type: integer
+          description: "ID de la pregunta a publicar (obtener de get_product_qa_questions)"
+      required: ["question_id"]
+
+    ReconnectWhatsappArgs:
+      description: |
+        **reconnect_whatsapp** [automation] (mutation)
+        Intenta reconectar una sesion de WhatsApp existente (puede requerir escanear QR manualmente). Si hay multiples numeros, requiere session_id.
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: "ID de la sesion a reconectar. Obligatorio si hay mas de un numero. Usa get_whatsapp_status para obtener los IDs."
+
+    RegenerateApiKeyArgs:
+      description: |
+        **regenerate_api_key** [advanced] (mutation)
+        Genera una nueva API key (token_ext) para la tienda. Esto invalida la key actual e impide el acceso de cualquier conexion MCP o aplicacion que la use. Usar solo si el usuario lo pide explicitamente.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        confirmation:
+          type: boolean
+          description: "Debe ser true para confirmar la regeneracion"
+      required: ["confirmation"]
+
+    RegeneratePluginTokenArgs:
+      description: |
+        **regenerate_plugin_token** [plugins] (mutation)
+        Genera un nuevo token para los plugins (invalida el anterior)
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        plugin_type:
+          type: string
+          description: "Tipo de plugin cuyo token regenerar"
+          enum: ["chat", "product-qa"]
+          default: "chat"
+
+    RemoveContactFromListArgs:
+      description: |
+        **remove_contact_from_list** [mass_marketing] (mutation)
+        Elimina un contacto individual de una lista de marketing
+      type: object
+      properties:
+        action:
+          type: string
+        contact_id:
+          type: integer
+          description: "ID del contacto a eliminar"
+      required: ["action", "contact_id"]
+
+    RemoveContactsBulkArgs:
+      description: |
+        **remove_contacts_bulk** [mass_marketing] (mutation)
+        Elimina múltiples contactos de una lista de marketing
+      type: object
+      properties:
+        action:
+          type: string
+        list_id:
+          type: integer
+          description: "ID de la lista"
+        contact_ids:
+          type: array
+          description: "Array de IDs de contactos a eliminar"
+        select_all:
+          type: boolean
+          description: "Seleccionar todos los contactos"
+        exclude_ids:
+          type: array
+          description: "IDs a excluir cuando select_all=true"
+        search:
+          type: string
+          description: "Filtro de búsqueda aplicado"
+      required: ["action", "list_id"]
+
+    RemoveCustomerTagArgs:
+      description: |
+        **remove_customer_tag** [customers] (mutation)
+        Elimina una etiqueta (tag) de un cliente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono del cliente"
+        tag_name:
+          type: string
+          description: "Nombre del tag a eliminar"
+        comment:
+          type: string
+          description: "Texto del comentario"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        query:
+          type: string
+          description: "Texto de busqueda"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        tag_color:
+          type: string
+          description: "Color del tag en formato hexadecimal"
+        primary_phone:
+          type: string
+          description: "Telefono principal para merge"
+        secondary_phone:
+          type: string
+          description: "Telefono secundario para merge"
+      required: ["action", "phone", "tag_name"]
+
+    RemoveFromBlacklistArgs:
+      description: |
+        **remove_from_blacklist** [mass_marketing] (mutation)
+        Desbloquea un numero de telefono de la lista negra de marketing masivo
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: remove"
+        phone:
+          type: string
+          description: "Numero de telefono a desbloquear"
+      required: ["action", "phone"]
+
+    RemoveUnsubscribedBulkArgs:
+      description: |
+        **remove_unsubscribed_bulk** [mass_marketing] (mutation)
+        Elimina registros de bajas de marketing masivo
+      type: object
+      properties:
+        action:
+          type: string
+        ids:
+          type: array
+          description: "Array de IDs de registros de baja a eliminar"
+        select_all:
+          type: boolean
+          description: "Seleccionar todos los registros (usa filtros search/date_from/date_to para limitar)"
+        search:
+          type: string
+          description: "Filtro por telefono (usado con select_all=true para limitar el alcance)"
+        date_from:
+          type: string
+          description: "Fecha inicio filtro (formato YYYY-MM-DD, usado con select_all=true)"
+        date_to:
+          type: string
+          description: "Fecha fin filtro (formato YYYY-MM-DD, usado con select_all=true)"
+        exclude_ids:
+          type: array
+          description: "IDs a excluir de la eliminacion masiva (usado con select_all=true)"
+      required: ["action"]
+
+    RemoveWhatsappOptoutArgs:
+      description: |
+        **remove_whatsapp_optout** [whatsapp_ops] (mutation)
+        Elimina un numero de la lista de opt-out para que pueda recibir mensajes automaticos de nuevo
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Numero de telefono a quitar de opt-out"
+      required: ["action", "phone"]
+
+    ReorderWhatsappWorkflowsArgs:
+      description: |
+        **reorder_whatsapp_workflows** [automation] (mutation)
+        Cambia el orden de ejecucion de los workflows de WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+        order:
+          type: array
+          description: "Array de objetos {id, priority} con el nuevo orden de los workflows"
+      required: ["action", "order"]
+
+    RequestReferralPayoutArgs:
+      description: |
+        **request_referral_payout** [referrals] (mutation)
+        Solicita el pago de las comisiones pendientes (mínimo 50€). Solo disponible si no hay otra solicitud abierta.
+        ⚠️ Requires confirmation
+      type: object
+
+    ResetCrmErrorsArgs:
+      description: |
+        **reset_crm_errors** [advanced] (mutation)
+        Resetea el contador de errores CRM y reactiva los endpoints si estaban deshabilitados por errores consecutivos
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+      required: ["action"]
+
+    RestoreDefaultPromptArgs:
+      description: |
+        **restore_default_prompt** [prompt] (query)
+        Obtiene el prompt por defecto segun el idioma
+      type: object
+
+    ResumeCampaignArgs:
+      description: |
+        **resume_campaign** [mass_marketing] (mutation)
+        Reanuda una campana de marketing masivo que fue pausada
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: resume"
+        campaign_id:
+          type: integer
+          description: "ID de la campana a reanudar"
+      required: ["action", "campaign_id"]
+
+    RollbackPromptArgs:
+      description: |
+        **rollback_prompt** [prompt] (mutation)
+        Revierte la parte autogenerada del prompt a una version anterior del historial. La parte personalizada del usuario se mantiene. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false - esto NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente al usuario que version se va a restaurar y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones automaticamente.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        version_id:
+          type: integer
+          description: "ID de la version a restaurar. Obtenerlo llamando a get_prompt_history primero"
+      required: ["version_id"]
+
+    SaveAgentPermissionsArgs:
+      description: |
+        **save_agent_permissions** [agents] (mutation)
+        Actualiza los permisos de un agente. Enviar null para dar todos los permisos, o un objeto con los permisos especificos en true/false
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+        id:
+          type: integer
+          description: "ID del agente"
+        permissions:
+          type: object_or_null
+          description: "Objeto con permisos (ej: {"ai_generate": true, "notes_view": true, "crm_edit": false}). null = todos los permisos"
+      required: ["action", "id", "permissions"]
+
+    SaveAsWhatsappTemplateArgs:
+      description: |
+        **save_as_whatsapp_template** [whatsapp_ops] (mutation)
+        Guarda un mensaje como plantilla reutilizable de WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        name:
+          type: string
+          description: "Nombre de la plantilla"
+        category:
+          type: string
+          description: "Categoria de la plantilla"
+        workflow_id:
+          type: integer
+          description: "ID del workflow del que extraer el mensaje para guardar como plantilla"
+      required: ["action", "name"]
+
+    SaveMassMarketingConfigArgs:
+      description: |
+        **save_mass_marketing_config** [mass_marketing] (mutation)
+        Guarda la configuracion de marketing masivo: auto-respuesta, traduccion y opciones de envio
+      type: object
+      properties:
+        auto_reply_enabled:
+          type: boolean
+          description: "true para activar la auto-respuesta, false para desactivarla"
+        auto_reply_text:
+          type: string
+          description: "Texto de auto-respuesta cuando un destinatario responde a un mensaje masivo"
+        auto_reply_translate:
+          type: boolean
+          description: "Si true, la auto-respuesta se traduce al idioma del destinatario segun su prefijo telefonico"
+        auto_reply_unsubscribe:
+          type: boolean
+          description: "Si true, incluye un enlace de baja en la auto-respuesta"
+        custom_unsubscribe_text:
+          type: string
+          description: "Texto personalizado para el enlace de baja en campanas. Maximo 500 caracteres. Enviar vacio o null para usar el texto predeterminado."
+        require_approval:
+          type: boolean
+          description: "Si true, las campanas creadas por agentes requieren aprobacion del administrador antes de enviarse"
+
+    SavePluginConversationNoteArgs:
+      description: |
+        **save_plugin_conversation_note** [plugins] (mutation)
+        Genera un resumen IA de una conversacion del plugin de chat web y lo guarda como nota en el perfil del cliente. Requiere que el visitante se haya identificado con telefono o email para poder asociarlo a un cliente existente.
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: "ID de la sesion de chat del plugin"
+      required: ["session_id"]
+
+    SavePromptArgs:
+      description: |
+        **save_prompt** [prompt] (mutation)
+        Guarda un nuevo prompt para la IA. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false - esto NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente al usuario que el prompt esta listo para guardarse y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: "El nuevo prompt para la IA. Si el usuario quiere modificar el prompt existente (ej: 'anade horario de 9 a 18h'), usa apply_prompt_instruction en su lugar - esa accion genera el prompt modificado y luego tu llamas a save_prompt con el resultado"
+        enable_web_search:
+          type: boolean
+          description: "Opcionalmente, activar o desactivar la busqueda web al guardar el prompt"
+      required: ["prompt"]
+
+    SaveSmartFollowupConfigArgs:
+      description: |
+        **save_smart_followup_config** [smart_followup] (mutation)
+        Actualiza la configuracion de seguimiento inteligente. Solo envia los campos que quieras cambiar. El sistema verifica automaticamente que el contacto no este dado de baja (mass marketing) y no tenga sentimiento negativo antes de enviar.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: "Enable or disable smart follow-up"
+        run_hour:
+          type: integer
+          description: "Hour to run (0-23) in shop's timezone"
+        lookback_hours:
+          type: integer
+          description: "How many hours back to look for conversations (default 24)"
+        min_intent_level:
+          type: string
+          description: "Minimum intent level to follow up: 'low', 'medium', or 'high'"
+        max_attempts:
+          type: integer
+          description: "Maximum follow-up attempts per conversation (1-5)"
+        retry_interval_hours:
+          type: integer
+          description: "Hours to wait between retry attempts for the same conversation"
+        max_conversations:
+          type: integer
+          description: "Maximum conversations to process per cron run"
+        auto_send_enabled:
+          type: boolean
+          description: "Whether to automatically send WhatsApp follow-up messages"
+        archive_after_send:
+          type: boolean
+          description: "Whether to archive the WhatsApp chat after sending follow-up"
+        delay_days:
+          type: integer
+          description: "Days to wait before sending follow-up (0-7)"
+        run_days:
+          type: array
+          description: "Days of the week to run (0=Sunday, 1=Monday, ..., 6=Saturday). JSON array of integers."
+        tracking_days:
+          type: integer
+          description: "Days to track conversions after follow-up is sent"
+        reset_attempts_days:
+          type: integer
+          description: "Days after which attempt count resets for a conversation"
+        custom_instructions:
+          type: string
+          description: "Instrucciones personalizadas para la IA al generar mensajes de seguimiento"
+        followup_tone:
+          type: string
+          description: "Tono de los mensajes de seguimiento: 'friendly' (amigable), 'professional' (profesional) o 'casual'"
+        whatsapp_session_id:
+          type: integer
+          description: "ID de la sesion de WhatsApp a usar para enviar los mensajes de seguimiento"
+        exclude_phones:
+          type: array
+          description: "Lista de telefonos a excluir del seguimiento (maximo 200). Formato: array de strings con prefijo +"
+        sending_window_start:
+          type: integer
+          description: "Hora de inicio de la ventana de envio (0-23). null para desactivar ventana"
+        sending_window_end:
+          type: integer
+          description: "Hora de fin de la ventana de envio (0-23). null para desactivar ventana"
+
+    SearchConversationsArgs:
+      description: |
+        **search_conversations** [conversations] (query)
+        Busca conversaciones por texto, telefono o rango de fechas. Ejemplo: 'busca conversaciones que mencionen devolucion'
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        query:
+          type: string
+          description: "Texto a buscar en los mensajes de las conversaciones"
+        phone:
+          type: string
+          description: "Numero de telefono del cliente (con o sin +)"
+        date_from:
+          type: string
+          description: "Fecha inicio (YYYY-MM-DD)"
+        date_to:
+          type: string
+          description: "Fecha fin (YYYY-MM-DD)"
+        limit:
+          type: integer
+          description: "Maximo de resultados (default 20, max 50)"
+          default: 20
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        hours:
+          type: integer
+          description: "Ultimas N horas"
+        conversation_id:
+          type: integer
+          description: "ID de conversacion especifica"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes"
+        period:
+          type: string
+          description: "Periodo de tiempo"
+          enum: ["today", "yesterday", "last_7_days"]
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        message:
+          type: string
+          description: "Texto del mensaje a enviar o eliminar"
+        format:
+          type: string
+          description: "Formato de respuesta"
+      required: ["action"]
+
+    SearchCustomerCommentsArgs:
+      description: |
+        **search_customer_comments** [customers] (query)
+        Busca texto en los comentarios de todos los clientes
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        query:
+          type: string
+          description: "Texto a buscar en los comentarios"
+        limit:
+          type: integer
+          default: 20
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        comment:
+          type: string
+          description: "Texto del comentario"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        tag_name:
+          type: string
+          description: "Nombre del tag"
+        tag_color:
+          type: string
+          description: "Color del tag en formato hexadecimal"
+        primary_phone:
+          type: string
+          description: "Telefono principal para merge"
+        secondary_phone:
+          type: string
+          description: "Telefono secundario para merge"
+      required: ["action", "query"]
+
+    SearchCustomersArgs:
+      description: |
+        **search_customers** [customers] (query)
+        Busca clientes por nombre, telefono o email en el CRM y en los contactos
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        query:
+          type: string
+          description: "Texto a buscar (nombre, telefono o email)"
+        limit:
+          type: integer
+          default: 20
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        comment:
+          type: string
+          description: "Texto del comentario"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        tag_name:
+          type: string
+          description: "Nombre del tag"
+        tag_color:
+          type: string
+          description: "Color del tag en formato hexadecimal"
+        primary_phone:
+          type: string
+          description: "Telefono principal para merge"
+        secondary_phone:
+          type: string
+          description: "Telefono secundario para merge"
+      required: ["action", "query"]
+
+    SearchProductsArgs:
+      description: |
+        **search_products** [products] (query)
+        Busca productos en tu tienda online o en el CRM configurado
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        query:
+          type: string
+          description: "Texto a buscar en el nombre del producto"
+        limit:
+          type: integer
+          default: 10
+      required: ["action", "query"]
+
+    SendSupportTicketArgs:
+      description: |
+        **send_support_ticket** [support] (mutation)
+        Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas resolver, quiera reportar un bug, o necesite ayuda del equipo tecnico.
+      type: object
+      properties:
+        type:
+          type: string
+          description: "Tipo de solicitud: bug (problema tecnico), question (consulta general), feature (sugerencia de mejora), billing (facturacion), other (otro)"
+          enum: ["bug", "question", "feature", "billing", "other"]
+        subject:
+          type: string
+          description: "Asunto breve del mensaje (max 100 caracteres)"
+        message:
+          type: string
+          description: "Descripcion detallada del problema o consulta (max 2000 caracteres)"
+      required: ["type", "subject", "message"]
+
+    SendWhatsappMessageArgs:
+      description: |
+        **send_whatsapp_message** [whatsapp_ops] (mutation)
+        Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345678). Si el usuario da un numero sin prefijo, preguntale el pais antes de enviar. IMPORTANTE: Esta accion requiere confirmacion. Cuando la llames, recibiras requires_confirmation=true y success=false - esto es NORMAL, NO es un error. Simplemente describe al usuario lo que se va a enviar y PARA. El sistema mostrara botones de confirmar/cancelar automaticamente. NO reintentes la accion.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono destino en formato E.164 con prefijo internacional (ej: +34612345678). Si el usuario no incluye prefijo, preguntarle el pais. OBLIGATORIO"
+        message:
+          type: string
+          description: "Texto del mensaje a enviar. OBLIGATORIO - no enviar vacio"
+        session_id:
+          type: integer
+          description: "ID de sesion especifica (opcional, usa la primera conectada)"
+        archive_after_send:
+          type: boolean
+          description: "Archivar chat tras enviar"
+      required: ["action", "phone", "message"]
+
+    SmartKnowledgeUpdateArgs:
+      description: |
+        **smart_knowledge_update** [prompt] (mutation)
+        Busca y actualiza datos aprendidos que contradigan o estén desactualizados según la instrucción del usuario. Usa esto cuando el usuario dice cosas como 'ahora aceptamos PayPal', 'hemos cambiado el horario', 'ya no hacemos envíos a X', etc. Primero llama SIN confirm para ver preview, luego con confirm=true y selected_ids para ejecutar.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        instruction:
+          type: string
+          description: "Instrucción en lenguaje natural describiendo el cambio en el negocio"
+        confirm:
+          type: boolean
+          description: "true para ejecutar los cambios (segunda llamada)"
+        selected_ids:
+          type: array
+          description: "IDs de snippets a modificar (solo con confirm=true). Si no se pasa, se aplican todos los cambios propuestos"
+        changes:
+          type: array
+          description: "Lista de cambios propuestos del preview (para Phase 2 con confirm=true). Cada elemento: {id, action, proposed}"
+      required: ["instruction"]
+
+    StartCampaignArgs:
+      description: |
+        **start_campaign** [mass_marketing] (mutation)
+        Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija: start"
+        campaign_id:
+          type: integer
+          description: "ID de la campana a iniciar"
+      required: ["action", "campaign_id"]
+
+    SyncKnowledgeNowArgs:
+      description: |
+        **sync_knowledge_now** [storage] (mutation)
+        Fuerza la sincronizacion inmediata de los facts aprendidos al Vector Store (normalmente se hace automaticamente)
+      type: object
+
+    TestCrmEndpointArgs:
+      description: |
+        **test_crm_endpoint** [advanced] (mutation)
+        Envia una peticion de prueba a un endpoint CRM para verificar que funciona correctamente
+      type: object
+      properties:
+        type:
+          type: string
+          description: "Tipo de endpoint CRM a probar"
+          enum: ["sidePanel_CustomerInfo", "ai_CustomerInitialInfo", "sidePanel_CustomerFindToJoin", "search_Products", "globalSearch"]
+        url:
+          type: string
+          description: "URL del endpoint CRM a probar"
+        method:
+          type: string
+          description: "Metodo HTTP del endpoint (GET o POST)"
+          enum: ["GET", "POST"]
+          default: "GET"
+        auth:
+          type: object
+          description: "Configuración de autenticación. Objeto con 'type' (header, basic, body, query) y 'fields' (objeto con credenciales). Para 'header': headers HTTP. Para 'basic': username+password. Para 'body'/'query': se añaden a los datos"
+        test_phone:
+          type: string
+          description: "Número de teléfono de prueba"
+      required: ["type", "url"]
+
+    TestEcommerceConnectionArgs:
+      description: |
+        **test_ecommerce_connection** [integrations] (query)
+        Verifica que la conexion con la plataforma e-commerce (Shopify, WooCommerce, PrestaShop o VTEX) funciona correctamente. Usa las credenciales guardadas si no se proporcionan.
+      type: object
+
+    TestShopifyConnectionArgs:
+      description: |
+        **test_shopify_connection** [integrations] (query)
+        Valida la conexion con una tienda Shopify verificando las credenciales y los permisos OAuth. Si no se proporcionan credenciales, usa las almacenadas en la configuracion de la tienda.
+      type: object
+      properties:
+        shopify_url:
+          type: string
+          description: "URL de la tienda Shopify (ej: mitienda.myshopify.com). Si no se proporciona, usa las credenciales guardadas"
+        shopify_token:
+          type: string
+          description: "Token de acceso Shopify. Si no se proporciona, usa el token guardado"
+
+    TestWebhookArgs:
+      description: |
+        **test_webhook** [advanced] (mutation)
+        Envia un webhook de prueba. Usa automaticamente la URL y secret configurados en la tienda si no se proporcionan parametros.
+      type: object
+      properties:
+        webhook_url:
+          type: string
+          description: "URL del webhook a probar. Si no se envia, usa la URL guardada en la configuracion"
+        webhook_secret:
+          type: string
+          description: "Secret para firmar el webhook. Si no se envia, usa el secret guardado en la configuracion"
+
+    ToggleAnalyticsArgs:
+      description: |
+        **toggle_analytics** [stats] (mutation)
+        Activa o desactiva el registro de analytics con structured outputs para esta tienda
+      type: object
+      properties:
+        enable_structured_outputs:
+          type: boolean
+          description: "true para activar analytics con structured outputs, false para desactivar"
+      required: ["enable_structured_outputs"]
+
+    ToggleAutoDescribeImagesArgs:
+      description: |
+        **toggle_auto_describe_images** [general] (mutation)
+        Activa o desactiva el analisis automatico de imagenes, documentos PDF y audios enviados por clientes via WhatsApp. Afecta a todos los sistemas de IA (Piloto Automatico, WhatsApp Auto, respuestas manuales)
+      type: object
+      properties:
+        auto_describe_images:
+          type: boolean
+          description: "true para activar, false para desactivar"
+      required: ["auto_describe_images"]
+
+    ToggleAutoSentimentAnalysisArgs:
+      description: |
+        **toggle_auto_sentiment_analysis** [general] (mutation)
+        Activa o desactiva el análisis automático de sentimiento en las conversaciones de WhatsApp. Cuando esta activado, la IA analiza el sentimiento del cliente y muestra indicadores de satisfaccion, urgencia e intencion en la extension de Chrome.
+      type: object
+      properties:
+        auto_sentiment_analysis:
+          type: boolean
+          description: "true para activar, false para desactivar"
+      required: ["auto_sentiment_analysis"]
+
+    ToggleAutoTranslateArgs:
+      description: |
+        **toggle_auto_translate** [general] (mutation)
+        Activa o desactiva la traduccion automatica de mensajes
+      type: object
+      properties:
+        translateallways:
+          type: boolean
+          description: "true para activar, false para desactivar"
+      required: ["translateallways"]
+
+    ToggleAutolearningArgs:
+      description: |
+        **toggle_autolearning** [prompt] (mutation)
+        Activa o desactiva el aprendizaje automatico de la IA
+      type: object
+      properties:
+        autolearning_enabled:
+          type: boolean
+          description: "true para activar, false para desactivar"
+      required: ["autolearning_enabled"]
+
+    ToggleKnowledgeFileArgs:
+      description: |
+        **toggle_knowledge_file** [storage] (mutation)
+        Activa o pausa un archivo sin eliminarlo (la IA solo usa archivos activos)
+      type: object
+      properties:
+        file_id:
+          type: integer
+          description: "ID del archivo"
+        is_active:
+          type: boolean
+          description: "true para activar, false para pausar"
+      required: ["file_id", "is_active"]
+
+    ToggleWebSearchArgs:
+      description: |
+        **toggle_web_search** [prompt] (mutation)
+        Activa o desactiva la busqueda en internet de la IA. Cuando esta activa, la IA puede buscar informacion actualizada en internet para responder preguntas sobre tendencias, precios del mercado, noticias o datos que cambian frecuentemente.
+      type: object
+      properties:
+        enable_web_search:
+          type: boolean
+          description: "true para activar busqueda web, false para desactivar"
+      required: ["enable_web_search"]
+
+    ToggleWhatsappWorkflowArgs:
+      description: |
+        **toggle_whatsapp_workflow** [automation] (mutation)
+        Activa o pausa un workflow de WhatsApp existente
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID del workflow a modificar"
+        enabled:
+          type: boolean
+          description: "true para activar, false para pausar"
+      required: ["id", "enabled"]
+
+    TranslateConversationArgs:
+      description: |
+        **translate_conversation** [ai_analysis] (query)
+        Traduce los ultimos mensajes de una conversacion a otro idioma usando IA
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        target_language:
+          type: string
+          description: "Idioma destino (es, en, de, fr, pt, it, etc.)"
+        last_n:
+          type: integer
+          description: "Ultimos N mensajes a traducir (default 20, max 50)"
+        summary_type:
+          type: string
+          description: "Tipo de resumen: quick (rapido), actionable (con acciones), detailed (detallado)"
+          enum: ["quick", "actionable", "detailed"]
+        days:
+          type: integer
+          description: "Numero de dias a analizar"
+        tone:
+          type: string
+          description: "Tono para la respuesta"
+        hours:
+          type: integer
+          description: "Ultimas N horas a analizar"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+      required: ["action", "phone", "target_language"]
+
+    TriggerSmartFollowupArgs:
+      description: |
+        **trigger_smart_followup** [smart_followup] (mutation)
+        Lanza manualmente el analisis de seguimiento inteligente para esta tienda. Si ya hay una ejecucion en curso (cron o manual), devuelve error.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        conversation_hash:
+          type: string
+          description: "Hash de conversación específica"
+
+    UnarchiveCampaignArgs:
+      description: |
+        **unarchive_campaign** [mass_marketing] (mutation)
+        Restaura una campaña archivada a la lista principal
+      type: object
+      properties:
+        action:
+          type: string
+        campaign_id:
+          type: integer
+          description: "ID de la campaña a desarchivar"
+      required: ["action", "campaign_id"]
+
+    UpdateAgentArgs:
+      description: |
+        **update_agent** [agents] (mutation)
+        Modifica los datos de un agente existente
+      type: object
+      properties:
+        action:
+          type: string
+        id:
+          type: integer
+          description: "ID del agente a editar"
+        nickname:
+          type: string
+          description: "Nuevo nombre corto del agente"
+        full_name:
+          type: string
+          description: "Nuevo nombre completo del agente"
+        email:
+          type: string
+          description: "Nuevo email del agente"
+        color:
+          type: string
+          description: "Nuevo color en formato hexadecimal"
+        phone:
+          type: string
+          description: "Nuevo telefono del agente"
+        pin:
+          type: string
+          description: "Nuevo PIN numerico para identificacion en la extension de Chrome"
+        permissions_json:
+          type: string
+          description: "JSON string con los permisos del agente (ej: {"ai_generate": true, "notes_view": true}). Alternativa a save_agent_permissions."
+      required: ["action", "id"]
+
+    UpdateBillingInfoArgs:
+      description: |
+        **update_billing_info** [account] (mutation)
+        Actualiza los datos de facturacion para las facturas
+      type: object
+      properties:
+        billing_name:
+          type: string
+          description: "Nombre o razon social para facturacion"
+        billing_tax_id:
+          type: string
+          description: "NIF/CIF/VAT ID"
+        billing_address:
+          type: string
+          description: "Direccion linea 1"
+        billing_address2:
+          type: string
+          description: "Direccion linea 2 (piso, puerta, etc.)"
+        billing_city:
+          type: string
+          description: "Ciudad"
+        billing_state:
+          type: string
+          description: "Provincia o estado"
+        billing_postal_code:
+          type: string
+          description: "Codigo postal"
+        billing_country:
+          type: string
+          description: "Pais"
+        client_name:
+          type: string
+          description: "Nombre del titular de la cuenta"
+        client_phone:
+          type: string
+          description: "Telefono de contacto de la cuenta"
+
+    UpdateBusinessInfoArgs:
+      description: |
+        **update_business_info** [general] (mutation)
+        Actualiza el tipo de negocio, tipo de venta y descripcion del negocio. Esta informacion ayuda a la IA a entender mejor tu negocio y dar respuestas mas relevantes.
+      type: object
+      properties:
+        business_type:
+          type: string
+          description: "Tipo de negocio"
+          enum: ["ecommerce", "professional_services", "restaurant_hospitality", "health_wellness", "education", "real_estate", "automotive", "other"]
+        sale_type:
+          type: string
+          description: "Tipo de venta: products (productos), services (servicios), mixed (ambos), support_only (solo soporte)"
+          enum: ["products", "services", "mixed", "support_only"]
+        business_description:
+          type: string
+          description: "Descripcion breve del negocio (max 500 caracteres)"
+
+    UpdateBusinessNameArgs:
+      description: |
+        **update_business_name** [general] (mutation)
+        Actualiza el nombre publico de tu negocio. Se muestra en los mensajes de marketing y en la pagina de baja de WhatsApp.
+      type: object
+      properties:
+        business_name:
+          type: string
+          description: "Nombre del negocio (max 255 caracteres)"
+      required: ["business_name"]
+
+    UpdateCalendarEventArgs:
+      description: |
+        **update_calendar_event** [calendar] (mutation)
+        Modifica un evento existente del calendario
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        event_id:
+          type: integer
+          description: "ID del evento"
+        title:
+          type: string
+        description:
+          type: string
+        start_datetime:
+          type: string
+        end_datetime:
+          type: string
+        assigned_agent_id:
+          type: integer
+        all_day:
+          type: integer
+        date_from:
+          type: string
+          description: "Fecha inicio para filtrar"
+        date_to:
+          type: string
+          description: "Fecha fin para filtrar"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        phone:
+          type: string
+          description: "Telefono del cliente"
+      required: ["action", "event_id"]
+
+    UpdateCampaignArgs:
+      description: |
+        **update_campaign** [mass_marketing] (mutation)
+        Modifica los datos de una campaña de marketing masivo existente (solo en estado borrador)
+      type: object
+      properties:
+        action:
+          type: string
+        campaign_id:
+          type: integer
+          description: "ID de la campaña a actualizar"
+        name:
+          type: string
+          description: "Nuevo nombre de la campaña"
+        list_id:
+          type: integer
+          description: "ID de la lista de contactos"
+        message_text:
+          type: string
+          description: "Texto del mensaje"
+        send_interval_seconds:
+          type: integer
+          description: "Intervalo entre mensajes en segundos"
+        translate_by_prefix:
+          type: boolean
+          description: "Traducir según prefijo telefónico"
+        include_unsubscribe_link:
+          type: boolean
+          description: "Incluir enlace de baja"
+        archive_after_send:
+          type: boolean
+          description: "Archivar chat tras enviar"
+        scheduled_at:
+          type: string
+          description: "Fecha/hora de envío programado (ISO 8601)"
+        session_ids:
+          type: array
+          description: "IDs de sesiones WhatsApp a usar"
+        media_url:
+          type: string
+          description: "URL del archivo multimedia"
+        media_type:
+          type: string
+          description: "Tipo de multimedia (image, video, document)"
+        media_filename:
+          type: string
+          description: "Nombre del archivo multimedia"
+        segment_filters:
+          type: object
+          description: "Filtros de segmentacion para enviar solo a contactos que cumplan criterios"
+        is_recurring:
+          type: boolean
+          description: "Si true, la campana se ejecuta de forma recurrente segun recurring_cron"
+        recurring_cron:
+          type: string
+          description: "Expresion cron para campanas recurrentes. Requerido si is_recurring es true."
+      required: ["action", "campaign_id"]
+
+    UpdateContactInfoArgs:
+      description: |
+        **update_contact_info** [account] (mutation)
+        Actualiza nombre, email y telefono de la cuenta
+      type: object
+      properties:
+        client_name:
+          type: string
+          description: "Nombre del titular de la cuenta"
+        client_email:
+          type: string
+          description: "NO USAR - El email requiere verificacion OTP y solo se puede cambiar desde la pagina Mi Cuenta del dashboard. El asistente no puede cambiar el email."
+        client_phone:
+          type: string
+          description: "Telefono de contacto"
+        billing_name:
+          type: string
+          description: "Nombre fiscal"
+        billing_tax_id:
+          type: string
+          description: "NIF/CIF/Tax ID"
+        billing_address:
+          type: string
+          description: "Direccion fiscal"
+        billing_address2:
+          type: string
+          description: "Direccion linea 2 (piso, puerta, etc.)"
+        billing_city:
+          type: string
+          description: "Ciudad"
+        billing_state:
+          type: string
+          description: "Provincia o estado"
+        billing_postal_code:
+          type: string
+          description: "Codigo postal"
+        billing_country:
+          type: string
+          description: "Pais"
+
+    UpdateCrmEndpointsArgs:
+      description: |
+        **update_crm_endpoints** [advanced] (mutation)
+        Define endpoints para sincronizar datos con tu CRM
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        add_crm_endpoint:
+          type: string
+          description: "JSON de UN endpoint para ANADIR sin borrar los existentes. Formato: {"type": "TIPO", "url": "https://...", "method": "GET|POST"}. Tipos validos: sidePanel_CustomerInfo, ai_CustomerInitialInfo, sidePanel_CustomerFindToJoin, search_Products, globalSearch, verify_conversion. USAR SIEMPRE ESTE."
+        remove_crm_endpoint:
+          type: string
+          description: "Tipo del endpoint a eliminar"
+
+    UpdateCustomFunctionsArgs:
+      description: |
+        **update_custom_functions** [advanced] (mutation)
+        Define APIs que la IA puede llamar durante conversaciones
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        add_function:
+          type: string
+          description: "JSON de UNA funcion para ANADIR sin borrar las existentes. USAR SIEMPRE ESTE para crear nuevas funciones."
+        remove_function:
+          type: string
+          description: "Nombre de la funcion a eliminar"
+
+    UpdateCustomerTagsArgs:
+      description: |
+        **update_customer_tags** [general] (mutation)
+        Configura las etiquetas para clasificar clientes
+      type: object
+      properties:
+        add_tag:
+          type: string
+          description: "JSON de UNA etiqueta para ANADIR sin borrar las existentes. Formato: {"name": "VIP", "color": "#ff0000"}. USAR SIEMPRE ESTE."
+        remove_tag:
+          type: string
+          description: "Nombre de la etiqueta a eliminar"
+
+    UpdateDateFormatArgs:
+      description: |
+        **update_date_format** [general] (mutation)
+        Cambia el formato en que se muestran las fechas
+      type: object
+      properties:
+        dateformat_pref:
+          type: string
+          description: "Formato de fecha"
+          enum: ["DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"]
+      required: ["dateformat_pref"]
+
+    UpdateDocqaAssistantArgs:
+      description: |
+        **update_docqa_assistant** [plugins] (mutation)
+        Modifica la configuracion de un asistente de documentacion existente
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente a modificar (obtener de list_docqa_assistants)"
+        display_name:
+          type: string
+          description: "Nuevo nombre del asistente"
+        prompt:
+          type: string
+          description: "Nuevas instrucciones para la IA"
+        is_enabled:
+          type: boolean
+          description: "true para activar, false para desactivar"
+        language_mode:
+          type: string
+          description: "Modo de idioma"
+          enum: ["auto", "fixed", "selector"]
+        language_fixed:
+          type: string
+          description: "Idioma fijo"
+        rate_limit_per_session:
+          type: integer
+          description: "Limite de preguntas por sesion"
+        allowed_domains:
+          type: array
+          description: "Dominios permitidos"
+      required: ["assistant_id"]
+
+    UpdateKnowledgeFileArgs:
+      description: |
+        **update_knowledge_file** [storage] (mutation)
+        Cambia el titulo, descripcion y/o contenido de un archivo de conocimiento. Para archivos de texto (txt, md, csv, json, html) tambien permite editar el contenido del archivo.
+      type: object
+      properties:
+        file_id:
+          type: integer
+          description: "ID del archivo"
+        title:
+          type: string
+          description: "Nuevo titulo (max 200 caracteres)"
+        description:
+          type: string
+          description: "Nueva descripcion (max 500 caracteres)"
+        content:
+          type: string
+          description: "Nuevo contenido del archivo (solo para archivos de texto: txt, md, csv, json, html). Si se envia, el archivo se reemplaza en OpenAI y se re-indexa en el Vector Store. No enviar este parametro si solo se quiere cambiar titulo/descripcion."
+      required: ["file_id", "title"]
+
+    UpdateKnowledgeSnippetArgs:
+      description: |
+        **update_knowledge_snippet** [prompt] (mutation)
+        Permite aprobar, rechazar, editar o eliminar un dato aprendido. Usa filter=pending en list_knowledge_snippets para ver los pendientes de revision. IMPORTANTE: Esta accion requiere confirmacion - ver seccion confirmation_flow.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID del snippet a gestionar"
+        action:
+          type: string
+          description: "Acción a realizar: approve (aprobar snippet), reject (rechazar), edit (editar contenido), delete (eliminar), resolve_conflict (resolver conflicto eligiendo uno), keep_both (mantener ambos snippets)"
+          enum: ["approve", "reject", "edit", "delete", "resolve_conflict", "keep_both"]
+        content:
+          type: string
+          description: "Nuevo contenido (solo para action=edit)"
+        category:
+          type: string
+          description: "Nueva categoria (solo para action=edit)"
+        keep_id:
+          type: integer
+          description: "ID del snippet a mantener (solo para action=resolve_conflict)"
+      required: ["id", "action"]
+
+    UpdateLanguageArgs:
+      description: |
+        **update_language** [general] (mutation)
+        Cambia el idioma del dashboard y las respuestas de la IA
+      type: object
+      properties:
+        language:
+          type: string
+          description: "Codigo del idioma (es=Espanol, en=Ingles, de=Aleman, fr=Frances, pt=Portugues, hu=Hungaro, it=Italiano)"
+          enum: ["es", "en", "de", "fr", "pt", "hu", "it"]
+      required: ["language"]
+
+    UpdateOrderSettingsArgs:
+      description: |
+        **update_order_settings** [general] (mutation)
+        Configura prefijos de pedidos y telefonos/emails a ignorar
+      type: object
+      properties:
+        order_prefix:
+          type: string
+          description: "Prefijo para numeros de pedido (ej: #, PED-)"
+          default: "#"
+        order_suffix:
+          type: string
+          description: "Sufijo para numeros de pedido"
+        add_ignore_phone:
+          type: string
+          description: "Telefono a ANADIR sin borrar los existentes. USAR SIEMPRE ESTE para anadir telefonos."
+        remove_ignore_phone:
+          type: string
+          description: "Telefono a eliminar de la lista de ignorados"
+        add_ignore_email:
+          type: string
+          description: "Email a ANADIR sin borrar los existentes. USAR SIEMPRE ESTE para anadir emails."
+        remove_ignore_email:
+          type: string
+          description: "Email a eliminar de la lista de ignorados"
+        add_helper:
+          type: string
+          description: "JSON para crear o actualizar un atajo. Formato: {"name": "NOMBRE_CORTO", "text": "TEXTO_DEL_ATAJO", "send": true/false}. El campo 'send' activa el envio automatico (el atajo se envia al cliente sin que el agente pulse enviar). Si no se incluye 'send', se desactiva por defecto. Ejemplo con envio automatico: {"name": "compra VIN ok", "text": "la compra esta correcta para dicho numero de bastidor", "send": true}. Si ya existe un atajo con el mismo nombre, se actualiza (util para activar/desactivar envio automatico sin recrear el atajo)."
+        remove_helper:
+          type: string
+          description: "Nombre corto del atajo a eliminar (ej: bastidor)"
+
+    UpdateStoreUrlArgs:
+      description: |
+        **update_store_url** [general] (mutation)
+        Actualiza la URL de tu tienda online
+      type: object
+      properties:
+        url_tienda:
+          type: string
+          description: "URL completa de la tienda (ej: https://mitienda.com)"
+      required: ["url_tienda"]
+
+    UpdateTaskArgs:
+      description: |
+        **update_task** [tasks] (mutation)
+        Modifica una tarea existente: cambiar estado, texto, prioridad, fecha limite o asignacion
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        task_id:
+          type: integer
+          description: "ID de la tarea a actualizar"
+        task_text:
+          type: string
+          description: "Nuevo texto de la tarea"
+        status:
+          type: string
+          description: "Nuevo estado"
+          enum: ["pending", "in_progress", "completed", "cancelled"]
+        due_date:
+          type: string
+          description: "Nueva fecha limite (YYYY-MM-DD)"
+        priority:
+          type: string
+          enum: ["low", "medium", "high"]
+        assigned_agent_id:
+          type: integer
+          description: "Nuevo agente asignado"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        limit:
+          type: integer
+          description: "Maximo de resultados"
+        offset:
+          type: integer
+          description: "Posicion de inicio para paginacion"
+        include_completed:
+          type: boolean
+          description: "Incluir tareas completadas"
+      required: ["action", "task_id"]
+
+    UpdateTimezoneArgs:
+      description: |
+        **update_timezone** [general] (mutation)
+        Cambia la zona horaria para mostrar fechas y horas correctamente
+      type: object
+      properties:
+        timezone_pref:
+          type: string
+          description: "Zona horaria en formato IANA (ej: Europe/Madrid, America/Mexico_City)"
+      required: ["timezone_pref"]
+
+    UpdateWhatsappProfileArgs:
+      description: |
+        **update_whatsapp_profile** [whatsapp_ops] (mutation)
+        Actualiza campos del perfil de WhatsApp: info/about, y datos de empresa (descripcion, direccion, email, web, horario). El nombre solo se puede cambiar en cuentas personales (no Business). Opcionalmente aplica los cambios a otras sesiones conectadas.
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: "ID de la sesion WhatsApp"
+        name:
+          type: string
+          description: "Nuevo nombre (min 3 chars, solo cuentas personales, NO funciona en Business)"
+        status:
+          type: string
+          description: "Nuevo texto de info/about (max 139 chars)"
+        description:
+          type: string
+          description: "Descripcion de empresa (solo Business)"
+        address:
+          type: string
+          description: "Direccion de empresa (solo Business)"
+        email:
+          type: string
+          description: "Email de empresa (solo Business)"
+        websites:
+          type: array
+          description: "URLs de la empresa (solo Business)"
+        apply_to_sessions:
+          type: array
+          description: "IDs de otras sesiones conectadas a las que aplicar los mismos cambios"
+      required: ["session_id"]
+
+    UpdateWhatsappSessionArgs:
+      description: |
+        **update_whatsapp_session** [automation] (mutation)
+        Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada. Util para identificar numeros (ej: 'Soporte', 'Ventas').
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: "ID de la sesion a editar. Usa get_whatsapp_status para obtener los IDs."
+        label:
+          type: string
+          description: "Etiqueta para identificar la sesion (max 50 caracteres). Null para quitar la etiqueta."
+      required: ["session_id"]
+
+    UpdateWhatsappWorkflowArgs:
+      description: |
+        **update_whatsapp_workflow** [automation] (mutation)
+        Modifica un workflow existente. Soporta update parcial: solo se sobreescriben los campos que se envian, los demas se mantienen sin cambios
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID del workflow a editar"
+        name:
+          type: string
+          description: "Nombre del workflow (max 100 caracteres)"
+        trigger_type:
+          type: string
+          description: "Tipo de trigger: 'message.received' o 'message.sent'. Si no se envia, se mantiene el valor actual"
+          enum: ["message.received", "message.sent"]
+          default: "message.received"
+        conditions:
+          type: object
+          description: "Objeto con 'logic' (AND/OR) y 'rules' (array de condiciones). Si no se envia, se mantienen las condiciones actuales"
+        actions:
+          type: array
+          description: "Array de acciones a ejecutar. Si no se envia, se mantienen las acciones actuales. Tipos soportados: reply_with_ai (con pre_send_check opcional), reply (con no_repeat opcional), delay, ai_filter (filtro IA que decide si responder, previene bucles, ideal como primera accion). Para ai_filter se puede añadir prompt:'instrucciones' para personalizar criterios."
+        session_id:
+          type: integer
+          description: "ID de la sesion de WhatsApp a la que asignar este workflow. null = todos los numeros. Usa get_whatsapp_status para ver las sesiones."
+        status:
+          type: string
+          description: "Estado del workflow: 'enabled' para activar, 'disabled' para desactivar"
+          enum: ["enabled", "disabled"]
+      required: ["id", "name"]
+
+    VerifyEcommerceWritePermissionArgs:
+      description: |
+        **verify_ecommerce_write_permission** [integrations] (query)
+        Verifica si la conexion con la plataforma e-commerce tiene permisos de escritura para sincronizar FAQs. Requiere plataforma conectada Y plugin Product Q&A configurado.
+      type: object

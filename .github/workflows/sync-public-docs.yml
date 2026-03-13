@@ -1,0 +1,62 @@
+name: Sync Public Docs from WAzion
+
+on:
+  # Daily at 15:00 UTC (after capabilities_sync runs at 14:00 CET = 13:00 UTC)
+  schedule:
+    - cron: '0 15 * * *'
+  # Triggered by WAzion repo after push with relevant changes
+  repository_dispatch:
+    types: [sync-docs]
+  # Manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync from capabilities.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout wazion-api
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Fetch capabilities.json from WAzion repo
+        run: |
+          curl -sf \
+            -H "Authorization: token ${{ secrets.GH_PAT }}" \
+            -H "Accept: application/vnd.github.v3.raw" \
+            "https://api.github.com/repos/wazionapps/WAzion/contents/_public/dashboard/api/assistant/capabilities.json" \
+            -o /tmp/capabilities.json
+          echo "✓ Fetched capabilities.json"
+          jq -r '.version' /tmp/capabilities.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate docs from capabilities
+        run: python scripts/sync-from-capabilities.py /tmp/capabilities.json
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "WAzion Bot"
+          git config user.email "bot@wazion.com"
+          git add docs/tools-catalog.md website/static/openapi.yaml
+          VERSION=$(jq -r '.version' /tmp/capabilities.json)
+          TOOLS=$(jq '[.actions | to_entries[] | select(.value.mcp_hidden != true)] | length' /tmp/capabilities.json)
+          git commit -m "sync: update tools catalog and OpenAPI from capabilities v${VERSION} (${TOOLS} tools)"
+          git push
+
+      - name: No changes
+        if: steps.changes.outputs.changed == 'false'
+        run: echo "No changes detected — docs are up to date"

@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 243 (excluding hidden)
+> Total tools: 246 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -106,6 +106,7 @@
 | `get_onboarding_status` | Configuracion General | query | Muestra el progreso de configuracion inicial del usuario (setup guide) |
 | `get_overdue_tasks` | Tareas | query | Muestra todas las tareas pendientes cuya fecha limite ya paso |
 | `get_period_stats` | Actividad | query | Evolucion diaria de conversaciones y mensajes en un periodo |
+| `get_plugin_chat_sessions` | Plugins | query | Obtiene las conversaciones cerradas del plugin de chat web para un teléfono específico. Útil cuando un agente quiere ... |
 | `get_plugin_conversation_detail` | Plugins | query | Muestra los mensajes completos de una conversacion del plugin de chat web |
 | `get_plugin_conversations` | Estadisticas | query | Muestra las conversaciones del plugin de chat web. Soporta filtros por periodo de tiempo. |
 | `get_plugin_embed_code` | Plugins | query | Genera el codigo de instalacion (embed code) para un plugin. Usalo cuando el usuario necesite el codigo para instalar... |
@@ -143,7 +144,7 @@
 | `get_whatsapp_health` | WhatsApp | query | Estado combinado de sesiones, actividad de mensajes 24h y workflows activos |
 | `get_whatsapp_message_logs` | WhatsApp | query | Muestra los ultimos mensajes enviados y recibidos por WhatsApp |
 | `get_whatsapp_profile` | WhatsApp | query | Obtiene el perfil de WhatsApp de una sesion conectada: nombre, foto, estado/info, y datos de empresa si es WhatsApp B... |
-| `get_whatsapp_qr` | Automatizacion | query | Obtiene el codigo QR de WhatsApp para que el usuario lo escanee y conecte su cuenta. Si WhatsApp ya esta conectado, i... |
+| `get_whatsapp_qr` | Automatizacion | query | Obtiene el codigo QR de WhatsApp para que el usuario lo escanee. IMPORTANTE: Requiere que exista una sesion previa (e... |
 | `get_whatsapp_response_time_stats` | WhatsApp | query | Muestra la distribucion horaria de mensajes entrantes y salientes de WhatsApp |
 | `get_whatsapp_status` | WhatsApp | query | Muestra el estado de todas las sesiones de WhatsApp conectadas |
 | `get_whatsapp_template` | WhatsApp | query | Obtiene el detalle de una plantilla de mensaje especifica |
@@ -219,6 +220,7 @@
 | `test_webhook` | Avanzado | mutation | Envia un webhook de prueba. Usa automaticamente la URL y secret configurados en la tienda si no se proporcionan param... |
 | `toggle_analytics` | Estadisticas | mutation | Activa o desactiva el registro de analytics con structured outputs para esta tienda |
 | `toggle_auto_describe_images` | Configuracion General | mutation | Activa o desactiva el analisis automatico de imagenes, documentos PDF y audios enviados por clientes via WhatsApp. Af... |
+| `toggle_auto_sentiment_analysis` | Configuracion General | mutation | Activa o desactiva el análisis automático de sentimiento en las conversaciones de WhatsApp. Cuando esta activado, la ... |
 | `toggle_auto_translate` | Configuracion General | mutation | Activa o desactiva la traduccion automatica de mensajes |
 | `toggle_autolearning` | Prompt e IA | mutation | Activa o desactiva el aprendizaje automatico de la IA |
 | `toggle_knowledge_file` | Almacenamiento | mutation | Activa o pausa un archivo sin eliminarlo (la IA solo usa archivos activos) |
@@ -230,6 +232,7 @@
 | `update_agent` | Agentes | mutation | Modifica los datos de un agente existente |
 | `update_billing_info` | Cuenta | mutation | Actualiza los datos de facturacion para las facturas |
 | `update_business_info` | Configuracion General | mutation | Actualiza el tipo de negocio, tipo de venta y descripcion del negocio. Esta informacion ayuda a la IA a entender mejo... |
+| `update_business_name` | Configuracion General | mutation | Actualiza el nombre publico de tu negocio. Se muestra en los mensajes de marketing y en la pagina de baja de WhatsApp. |
 | `update_calendar_event` | Calendario | mutation | Modifica un evento existente del calendario |
 | `update_campaign` | Marketing Masivo | mutation | Modifica los datos de una campaña de marketing masivo existente (solo en estado borrador) |
 | `update_contact_info` | Cuenta | mutation | Actualiza nombre, email y telefono de la cuenta |
