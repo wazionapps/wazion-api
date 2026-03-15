@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 248 (excluding hidden)
+> Total tools: 249 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -170,7 +170,7 @@
 | `list_knowledge_snippets` | Prompt e IA | query | Muestra los datos (facts) que la IA ha aprendido automaticamente de las conversaciones. Estos son datos concretos del... |
 | `list_notifications` | Notificaciones | query | Obtiene las notificaciones del sistema con filtros opcionales |
 | `list_plugin_configs` | Plugins | query | Lista todos los plugins instalados con su configuracion y estado |
-| `list_scheduled_messages` | WhatsApp | query | Muestra los mensajes de WhatsApp programados para envio futuro |
+| `list_scheduled_messages` | WhatsApp | query | Lists scheduled WhatsApp messages with optional status filter. Returns id, session info, phone, message text, schedul... |
 | `list_storage_files` | Almacenamiento | query | Muestra la lista de archivos subidos a la base de conocimiento con su tamano y fecha |
 | `list_tasks` | Tareas | query | Lista las tareas de la tienda con filtros opcionales por estado, agente o telefono |
 | `list_whatsapp_agents` | Agentes | query | Muestra todos los agentes disponibles para asignar en workflows de WhatsApp |
@@ -247,6 +247,7 @@
 | `update_knowledge_snippet` | Prompt e IA | mutation | Permite aprobar, rechazar, editar o eliminar un dato aprendido. Usa filter=pending en list_knowledge_snippets para ve... |
 | `update_language` | Configuracion General | mutation | Cambia el idioma del dashboard y las respuestas de la IA |
 | `update_order_settings` | Configuracion General | mutation | Configura prefijos de pedidos y telefonos/emails a ignorar |
+| `update_scheduled_message` | WhatsApp | mutation | Updates a pending scheduled WhatsApp message. Can modify the text, datetime, and/or sending session. Only pending mes... |
 | `update_store_url` | Configuracion General | mutation | Actualiza la URL de tu tienda online |
 | `update_task` | Tareas | mutation | Modifica una tarea existente: cambiar estado, texto, prioridad, fecha limite o asignacion |
 | `update_timezone` | Configuracion General | mutation | Cambia la zona horaria para mostrar fechas y horas correctamente |

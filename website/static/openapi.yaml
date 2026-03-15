@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    248 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    249 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -3664,7 +3664,7 @@ components:
     ListScheduledMessagesArgs:
       description: |
         **list_scheduled_messages** [whatsapp_ops] (query)
-        Muestra los mensajes de WhatsApp programados para envio futuro
+        Lists scheduled WhatsApp messages with optional status filter. Returns id, session info, phone, message text, scheduled time, status, agent name, and sent/error info.
       type: object
       properties:
         action:
@@ -5177,6 +5177,29 @@ components:
         remove_helper:
           type: string
           description: "Nombre corto del atajo a eliminar (ej: bastidor)"
+
+    UpdateScheduledMessageArgs:
+      description: |
+        **update_scheduled_message** [whatsapp_ops] (mutation)
+        Updates a pending scheduled WhatsApp message. Can modify the text, datetime, and/or sending session. Only pending messages can be edited.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+        id:
+          type: integer
+          description: "ID of the scheduled message to update"
+        message_text:
+          type: string
+          description: "New message text"
+        scheduled_at:
+          type: string
+          description: "New date and time in format YYYY-MM-DD HH:MM (shop timezone)"
+        session_id:
+          type: integer
+          description: "New WhatsApp Auto session ID to send from"
+      required: ["action", "id"]
 
     UpdateStoreUrlArgs:
       description: |
