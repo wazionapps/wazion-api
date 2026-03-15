@@ -10,6 +10,10 @@ on:
   # Manual trigger
   workflow_dispatch:
 
+concurrency:
+  group: sync-docs
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -55,6 +59,7 @@ jobs:
           VERSION=$(jq -r '.version' /tmp/capabilities.json)
           TOOLS=$(jq '[.actions | to_entries[] | select(.value.mcp_hidden != true)] | length' /tmp/capabilities.json)
           git commit -m "sync: update tools catalog and OpenAPI from capabilities v${VERSION} (${TOOLS} tools)"
+          git pull --rebase origin main
           git push
 
       - name: No changes
