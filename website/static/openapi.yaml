@@ -1457,7 +1457,7 @@ components:
     DeleteWhatsappWorkflowArgs:
       description: |
         **delete_whatsapp_workflow** [automation] (mutation)
-        Elimina permanentemente un workflow de WhatsApp
+        SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabras, simular ni probar. Si el usuario quiere cambiar algo del workflow, usar update_whatsapp_workflow en su lugar.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -1515,7 +1515,7 @@ components:
     DryRunWorkflowArgs:
       description: |
         **dry_run_workflow** [automation] (query)
-        Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada
+        Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada. Para probar con multiples ejemplos, llamar esta accion varias veces con diferentes test_message.
       type: object
       properties:
         action:
@@ -1525,10 +1525,10 @@ components:
           description: "ID del workflow a probar"
         test_message:
           type: string
-          description: "Texto de mensaje simulado"
+          description: "Texto de mensaje simulado. Para simular multiples escenarios, hacer varias llamadas con diferentes mensajes"
         test_phone:
           type: string
-          description: "Telefono simulado del remitente (con prefijo +)"
+          description: "Telefono simulado del remitente (con prefijo +). Usar diferentes prefijos para probar condiciones de pais"
       required: ["action", "workflow_id", "test_message"]
 
     DuplicateCampaignArgs:
@@ -5263,7 +5263,7 @@ components:
     UpdateWhatsappWorkflowArgs:
       description: |
         **update_whatsapp_workflow** [automation] (mutation)
-        Modifica un workflow existente. Soporta update parcial: solo se sobreescriben los campos que se envian, los demas se mantienen sin cambios
+        Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar). Soporta update parcial: solo se sobreescriben los campos que se envian, los demas se mantienen sin cambios. Para añadir palabras a condiciones: leer primero con list_whatsapp_workflows, modificar el array de rules, y enviar el conditions actualizado.
       type: object
       properties:
         id:

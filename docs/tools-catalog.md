@@ -55,12 +55,12 @@
 | `delete_task` | Tareas | mutation | Elimina una tarea permanentemente |
 | `delete_whatsapp_session` | WhatsApp | mutation | Elimina una sesion de WhatsApp desconectada. Solo funciona con sesiones en estado 'disconnected'. |
 | `delete_whatsapp_template` | WhatsApp | mutation | Elimina una plantilla de mensaje de WhatsApp |
-| `delete_whatsapp_workflow` | Automatizacion | mutation | Elimina permanentemente un workflow de WhatsApp |
+| `delete_whatsapp_workflow` | Automatizacion | mutation | SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabra... |
 | `disconnect_ecommerce` | Integraciones | mutation | Desconecta la integracion con tu plataforma e-commerce (Shopify, WooCommerce, etc.) |
 | `disconnect_whatsapp` | Automatizacion | mutation | Desconecta una sesion de WhatsApp y elimina los datos de autenticacion. Si hay multiples numeros, requiere session_id. |
 | `download_conversation_file` | Almacenamiento | query | Obtiene la URL de descarga de un archivo compartido en una conversacion |
 | `download_knowledge_file` | Base de Conocimiento | query | Obtiene la URL de descarga de un archivo de la base de conocimiento |
-| `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada |
+| `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada. Para probar con multiples ejemplos, llam... |
 | `duplicate_campaign` | Marketing Masivo | mutation | Crea una copia de una campaña existente en estado borrador |
 | `export_campaign_csv` | Marketing Masivo | query | Descarga los logs de envio de una campana completada como archivo CSV. Solo funciona con campanas completadas, cancel... |
 | `export_conversations` | Conversaciones | query | Exporta conversaciones con todos los mensajes en formato estructurado |
@@ -250,7 +250,7 @@
 | `update_timezone` | Configuracion General | mutation | Cambia la zona horaria para mostrar fechas y horas correctamente |
 | `update_whatsapp_profile` | WhatsApp | mutation | Actualiza campos del perfil de WhatsApp: info/about, y datos de empresa (descripcion, direccion, email, web, horario)... |
 | `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada. Util para identificar numeros (ej: 'Soporte', 'Ve... |
-| `update_whatsapp_workflow` | Automatizacion | mutation | Modifica un workflow existente. Soporta update parcial: solo se sobreescriben los campos que se envian, los demas se ... |
+| `update_whatsapp_workflow` | Automatizacion | mutation | Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar). Sopor... |
 | `verify_ecommerce_write_permission` | Integraciones | query | Verifica si la conexion con la plataforma e-commerce tiene permisos de escritura para sincronizar FAQs. Requiere plat... |
 
 ---
