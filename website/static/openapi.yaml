@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    249 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    251 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1771,6 +1771,19 @@ components:
           type: integer
           description: "ID de la tarea"
       required: ["action", "agent_id"]
+
+    GetAiErrorsArgs:
+      description: |
+        **get_ai_errors** [knowledge] (query)
+        List active AI corrections for this assistant. Shows what the assistant has learned from past mistakes. Can filter by category or search by keyword.
+      type: object
+      properties:
+        category:
+          type: string
+          description: "Filter by category: shipping, pricing, warranty, product, tone, policy, communication, general"
+        query:
+          type: string
+          description: "Search term to find relevant corrections"
 
     GetAiSummaryArgs:
       description: |
@@ -4800,6 +4813,26 @@ components:
           type: string
           description: "JSON string con los permisos del agente (ej: {"ai_generate": true, "notes_view": true}). Alternativa a save_agent_permissions."
       required: ["action", "id"]
+
+    UpdateAiErrorArgs:
+      description: |
+        **update_ai_error** [knowledge] (mutation)
+        Update an existing AI correction. Can change the content, category, or status (active/rejected).
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID of the correction to update"
+        fact_content:
+          type: string
+          description: "New corrected text"
+        category:
+          type: string
+          description: "New category: shipping, pricing, warranty, product, tone, policy, communication, general"
+        status:
+          type: string
+          description: "New status: active or rejected"
+      required: ["id"]
 
     UpdateBillingInfoArgs:
       description: |

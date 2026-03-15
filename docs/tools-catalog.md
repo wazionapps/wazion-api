@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 249 (excluding hidden)
+> Total tools: 251 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -73,6 +73,7 @@
 | `get_agent_permissions` | Agentes | query | Obtiene los permisos configurados de un agente y el registro completo de permisos disponibles |
 | `get_agent_stats` | Agentes | query | Metricas de rendimiento del equipo: mensajes enviados, recibidos, tareas completadas |
 | `get_agent_tasks` | Tareas | query | Muestra las tareas asignadas a un agente especifico |
+| `get_ai_errors` | Base de Conocimiento | query | List active AI corrections for this assistant. Shows what the assistant has learned from past mistakes. Can filter by... |
 | `get_ai_summary` | Analisis IA | query | Genera un resumen de una conversacion usando IA. Tipos: quick (breve), detailed (completo), actionable (acciones pend... |
 | `get_analytics` | Estadisticas | query | Muestra metricas de rendimiento: conversaciones, mensajes, actividad diaria |
 | `get_api_key` | Avanzado | query | Muestra la API key actual de la tienda (token_ext) y la URL del servidor MCP. Usa esta accion cuando el usuario pregu... |
@@ -232,6 +233,7 @@
 | `trigger_smart_followup` | Seguimiento Inteligente | mutation | Lanza manualmente el analisis de seguimiento inteligente para esta tienda. Si ya hay una ejecucion en curso (cron o m... |
 | `unarchive_campaign` | Marketing Masivo | mutation | Restaura una campaña archivada a la lista principal |
 | `update_agent` | Agentes | mutation | Modifica los datos de un agente existente |
+| `update_ai_error` | Base de Conocimiento | mutation | Update an existing AI correction. Can change the content, category, or status (active/rejected). |
 | `update_billing_info` | Cuenta | mutation | Actualiza los datos de facturacion para las facturas |
 | `update_business_info` | Configuracion General | mutation | Actualiza el tipo de negocio, tipo de venta y descripcion del negocio. Esta informacion ayuda a la IA a entender mejo... |
 | `update_business_name` | Configuracion General | mutation | Actualiza el nombre publico de tu negocio. Se muestra en los mensajes de marketing y en la pagina de baja de WhatsApp. |
