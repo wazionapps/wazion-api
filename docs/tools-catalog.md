@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 246 (excluding hidden)
+> Total tools: 248 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -45,6 +45,7 @@
 | `create_whatsapp_template_from_workflow` | WhatsApp | mutation | Crea un nuevo workflow de WhatsApp a partir de una plantilla existente |
 | `create_whatsapp_workflow` | Automatizacion | mutation | Crea un nuevo workflow de automatizacion para respuestas de WhatsApp. Campos requeridos: name y actions. Si el usuari... |
 | `delete_agent` | Agentes | mutation | Elimina un agente de atencion |
+| `delete_ai_error` | Base de Conocimiento | mutation | Remove an AI correction that is no longer valid. |
 | `delete_calendar_event` | Calendario | mutation | Elimina un evento del calendario |
 | `delete_campaign` | Marketing Masivo | mutation | Elimina permanentemente una campaña de marketing masivo |
 | `delete_contact_list` | Marketing Masivo | mutation | Elimina una lista de contactos y todos sus contactos asociados. Esta accion no se puede deshacer. |
@@ -211,6 +212,7 @@
 | `search_products` | Productos | query | Busca productos en tu tienda online o en el CRM configurado |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
 | `send_whatsapp_message` | WhatsApp | mutation | Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345... |
+| `set_ai_error` | Base de Conocimiento | mutation | Record a new AI mistake detected during conversation. The assistant calls this automatically when the user corrects it. |
 | `smart_knowledge_update` | Prompt e IA | mutation | Busca y actualiza datos aprendidos que contradigan o estén desactualizados según la instrucción del usuario. Usa esto... |
 | `start_campaign` | Marketing Masivo | mutation | Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas. |
 | `sync_knowledge_now` | Almacenamiento | mutation | Fuerza la sincronizacion inmediata de los facts aprendidos al Vector Store (normalmente se hace automaticamente) |

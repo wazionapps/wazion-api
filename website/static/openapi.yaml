@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    246 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    248 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1194,6 +1194,17 @@ components:
           type: integer
           description: "ID del agente a eliminar"
       required: ["action", "id"]
+
+    DeleteAiErrorArgs:
+      description: |
+        **delete_ai_error** [knowledge] (mutation)
+        Remove an AI correction that is no longer valid.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID of the correction to delete"
+      required: ["id"]
 
     DeleteCalendarEventArgs:
       description: |
@@ -3594,6 +3605,9 @@ components:
           type: integer
           description: "Posicion de inicio para paginacion"
           default: 0
+        source_type:
+          type: string
+          description: "Filter by source: conversation, correction, copilot_correction, dashboard_correction, chatgpt_correction"
 
     ListNotificationsArgs:
       description: |
@@ -4482,6 +4496,23 @@ components:
           type: boolean
           description: "Archivar chat tras enviar"
       required: ["action", "phone", "message"]
+
+    SetAiErrorArgs:
+      description: |
+        **set_ai_error** [knowledge] (mutation)
+        Record a new AI mistake detected during conversation. The assistant calls this automatically when the user corrects it.
+      type: object
+      properties:
+        fact_content:
+          type: string
+          description: "The correct information or rule to remember"
+        category:
+          type: string
+          description: "Category: shipping, pricing, warranty, product, tone, policy, communication, general"
+        original_text:
+          type: string
+          description: "What the AI originally said wrong"
+      required: ["fact_content", "category"]
 
     SmartKnowledgeUpdateArgs:
       description: |
