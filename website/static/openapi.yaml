@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    255 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    257 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -581,6 +581,9 @@ components:
         id:
           type: integer
           description: "ID del mensaje programado a cancelar"
+        agent_id:
+          type: integer
+          description: "ID del agente que cancela el mensaje"
       required: ["action", "id"]
 
     CheckPluginConversationNoteArgs:
@@ -1084,6 +1087,9 @@ components:
         scheduled_at:
           type: string
           description: "Fecha y hora de envio en formato YYYY-MM-DD HH:MM:SS. Debe ser una fecha futura. Si el usuario dice una fecha relativa como 'manana a las 10', convertirla al formato correcto"
+        agent_id:
+          type: integer
+          description: "ID del agente que programa el mensaje"
       required: ["action", "session_id", "phone", "message_text", "scheduled_at"]
 
     CreateTaskArgs:
@@ -3504,6 +3510,17 @@ components:
         Muestra todos los agentes de atencion configurados con sus nombres y colores
       type: object
 
+    ListAgentsJsonArgs:
+      description: |
+        **list_agents_json** [agents] (query)
+        Devuelve todos los agentes configurados en formato JSON con sus datos completos: nombre, email, teléfono, color, permisos y si tienen PIN.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Acción fija"
+      required: ["action"]
+
     ListBlacklistArgs:
       description: |
         **list_blacklist** [mass_marketing] (query)
@@ -3725,6 +3742,9 @@ components:
         date_to:
           type: string
           description: "Fecha fin YYYY-MM-DD"
+        phone:
+          type: string
+          description: "Filtrar por número de teléfono del destinatario"
       required: ["action"]
 
     ListStorageFilesArgs:
@@ -3805,6 +3825,17 @@ components:
         search:
           type: string
           description: "Filtrar por numero de telefono"
+      required: ["action"]
+
+    ListWhatsappScheduledSessionsArgs:
+      description: |
+        **list_whatsapp_scheduled_sessions** [whatsapp_ops] (query)
+        Devuelve las sesiones de WhatsApp conectadas disponibles para enviar mensajes programados.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Acción fija"
       required: ["action"]
 
     ListWhatsappTemplatesArgs:
@@ -5293,6 +5324,9 @@ components:
         session_id:
           type: integer
           description: "New WhatsApp Auto session ID to send from"
+        agent_id:
+          type: integer
+          description: "ID del agente que modifica el mensaje"
       required: ["action", "id"]
 
     UpdateStoreUrlArgs:

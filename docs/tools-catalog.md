@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 255 (excluding hidden)
+> Total tools: 257 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -163,6 +163,7 @@
 | `import_marketing_contacts` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo. Soporta entrada manual de telefonos o importacion desde conversaci... |
 | `improve_prompt` | Prompt e IA | query | Analiza el prompt actual con IA y devuelve puntuaciones por categoria, sugerencias de mejora y una version mejorada d... |
 | `list_agents` | Agentes | query | Muestra todos los agentes de atencion configurados con sus nombres y colores |
+| `list_agents_json` | Agentes | query | Devuelve todos los agentes configurados en formato JSON con sus datos completos: nombre, email, teléfono, color, perm... |
 | `list_blacklist` | Marketing Masivo | query | Obtiene los numeros bloqueados manualmente que no recibiran campanas masivas, distinta de las bajas voluntarias |
 | `list_calendar_events` | Calendario | query | Muestra los eventos programados en un rango de fechas |
 | `list_campaigns` | Marketing Masivo | query | Obtiene todas las campanas de marketing masivo de la tienda |
@@ -178,6 +179,7 @@
 | `list_tasks` | Tareas | query | Lista las tareas de la tienda con filtros opcionales por estado, agente o telefono |
 | `list_whatsapp_agents` | Agentes | query | Muestra todos los agentes disponibles para asignar en workflows de WhatsApp |
 | `list_whatsapp_optout` | WhatsApp | query | Muestra los contactos que han solicitado no recibir mensajes automaticos de WhatsApp |
+| `list_whatsapp_scheduled_sessions` | WhatsApp | query | Devuelve las sesiones de WhatsApp conectadas disponibles para enviar mensajes programados. |
 | `list_whatsapp_templates` | WhatsApp | query | Muestra las plantillas de mensajes guardadas para WhatsApp |
 | `list_whatsapp_workflows` | Automatizacion | query | Obtiene la lista de todos los workflows de automatizacion de WhatsApp |
 | `manage_faq` | Plugins | mutation | Permite despublicar, republicar o eliminar FAQs del plugin Product Q&A. Util para gestionar contenido que ya no es re... |
