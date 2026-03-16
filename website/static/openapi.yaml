@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    251 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    255 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1347,6 +1347,17 @@ components:
           description: "Formato de respuesta"
       required: ["action", "phone", "message"]
 
+    DeleteCustomerAiErrorArgs:
+      description: |
+        **delete_customer_ai_error** [knowledge] (mutation)
+        Remove a correction from the customer-facing WhatsApp AI that is no longer valid.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID of the correction to delete"
+      required: ["id"]
+
     DeleteKnowledgeFileArgs:
       description: |
         **delete_knowledge_file** [storage] (mutation)
@@ -2219,6 +2230,19 @@ components:
         **get_crm_health_status** [advanced] (query)
         Muestra el estado actual de los endpoints CRM configurados: si estan activos o deshabilitados por errores consecutivos, contador de errores y lista de endpoints
       type: object
+
+    GetCustomerAiErrorsArgs:
+      description: |
+        **get_customer_ai_errors** [knowledge] (query)
+        List corrections for the CUSTOMER-FACING WhatsApp AI (the AI that generates responses to customers via WhatsApp Auto, workflows, auto-pilot). Use this to review what the customer AI has been corrected on.
+      type: object
+      properties:
+        category:
+          type: string
+          description: "Filter by category: shipping, pricing, warranty, product, tone, policy, communication, general"
+        query:
+          type: string
+          description: "Search corrections by keyword"
 
     GetCustomerCommentsArgs:
       description: |
@@ -4527,6 +4551,23 @@ components:
           description: "What the AI originally said wrong"
       required: ["fact_content", "category"]
 
+    SetCustomerAiErrorArgs:
+      description: |
+        **set_customer_ai_error** [knowledge] (mutation)
+        Record a correction for the CUSTOMER-FACING WhatsApp AI. Use when the user reports that the WhatsApp AI gave wrong information to a customer (wrong shipping times, incorrect prices, wrong policies, etc.).
+      type: object
+      properties:
+        fact_content:
+          type: string
+          description: "The correct information that the AI should use instead"
+        category:
+          type: string
+          description: "Category: shipping, pricing, warranty, product, tone, policy, communication, general"
+        original_text:
+          type: string
+          description: "The wrong text that the AI generated"
+      required: ["fact_content", "category"]
+
     SmartKnowledgeUpdateArgs:
       description: |
         **smart_knowledge_update** [prompt] (mutation)
@@ -5063,6 +5104,26 @@ components:
         remove_function:
           type: string
           description: "Nombre de la funcion a eliminar"
+
+    UpdateCustomerAiErrorArgs:
+      description: |
+        **update_customer_ai_error** [knowledge] (mutation)
+        Edit an existing correction for the customer-facing WhatsApp AI.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID of the correction to update"
+        fact_content:
+          type: string
+          description: "Updated correct information"
+        category:
+          type: string
+          description: "Updated category"
+        status:
+          type: string
+          description: "New status: active or rejected"
+      required: ["id"]
 
     UpdateCustomerTagsArgs:
       description: |

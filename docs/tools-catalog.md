@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 251 (excluding hidden)
+> Total tools: 255 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -51,6 +51,7 @@
 | `delete_contact_list` | Marketing Masivo | mutation | Elimina una lista de contactos y todos sus contactos asociados. Esta accion no se puede deshacer. |
 | `delete_conversation_file` | Almacenamiento | mutation | Elimina un archivo compartido en una conversacion |
 | `delete_conversation_message` | Conversaciones | mutation | Elimina un mensaje especifico de una conversacion. Requiere el texto exacto del mensaje. |
+| `delete_customer_ai_error` | Base de Conocimiento | mutation | Remove a correction from the customer-facing WhatsApp AI that is no longer valid. |
 | `delete_knowledge_file` | Almacenamiento | mutation | Elimina un archivo de la base de conocimiento (no permite eliminar archivos de sistema) |
 | `delete_notification` | Notificaciones | mutation | Elimina permanentemente una notificacion |
 | `delete_task` | Tareas | mutation | Elimina una tarea permanentemente |
@@ -94,6 +95,7 @@
 | `get_credit_history` | Actividad | query | Muestra el consumo de creditos OpenAI por dia y por endpoint |
 | `get_credits_info` | Estadisticas | query | Muestra informacion detallada sobre los creditos disponibles: gratuitos, comprados, porcentaje usado y fecha de renov... |
 | `get_crm_health_status` | Avanzado | query | Muestra el estado actual de los endpoints CRM configurados: si estan activos o deshabilitados por errores consecutivo... |
+| `get_customer_ai_errors` | Base de Conocimiento | query | List corrections for the CUSTOMER-FACING WhatsApp AI (the AI that generates responses to customers via WhatsApp Auto,... |
 | `get_customer_comments` | Clientes | query | Obtiene los comentarios y tags asociados a un cliente |
 | `get_customer_info` | Clientes | query | Obtiene perfil completo de un cliente: datos CRM, comentarios, tags, conversacion, archivos y tareas |
 | `get_customer_journey` | Clientes | query | Timeline completo de un cliente: mensajes, comentarios, archivos, tareas, pedidos, follow-ups |
@@ -214,6 +216,7 @@
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
 | `send_whatsapp_message` | WhatsApp | mutation | Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345... |
 | `set_ai_error` | Base de Conocimiento | mutation | Record a new AI mistake detected during conversation. The assistant calls this automatically when the user corrects it. |
+| `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI. Use when the user reports that the WhatsApp AI gave wrong in... |
 | `smart_knowledge_update` | Prompt e IA | mutation | Busca y actualiza datos aprendidos que contradigan o estén desactualizados según la instrucción del usuario. Usa esto... |
 | `start_campaign` | Marketing Masivo | mutation | Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas. |
 | `sync_knowledge_now` | Almacenamiento | mutation | Fuerza la sincronizacion inmediata de los facts aprendidos al Vector Store (normalmente se hace automaticamente) |
@@ -242,6 +245,7 @@
 | `update_contact_info` | Cuenta | mutation | Actualiza nombre, email y telefono de la cuenta |
 | `update_crm_endpoints` | Avanzado | mutation | Define endpoints para sincronizar datos con tu CRM |
 | `update_custom_functions` | Avanzado | mutation | Define APIs que la IA puede llamar durante conversaciones |
+| `update_customer_ai_error` | Base de Conocimiento | mutation | Edit an existing correction for the customer-facing WhatsApp AI. |
 | `update_customer_tags` | Configuracion General | mutation | Configura las etiquetas para clasificar clientes |
 | `update_date_format` | Configuracion General | mutation | Cambia el formato en que se muestran las fechas |
 | `update_docqa_assistant` | Plugins | mutation | Modifica la configuracion de un asistente de documentacion existente |
