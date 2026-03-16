@@ -1786,15 +1786,15 @@ components:
     GetAiErrorsArgs:
       description: |
         **get_ai_errors** [knowledge] (query)
-        List active AI corrections for this assistant. Shows what the assistant has learned from past mistakes. Can filter by category or search by keyword.
+        List active AI corrections for this assistant. To list ALL corrections, pass no parameters. Only use category or query when filtering specific results.
       type: object
       properties:
         category:
           type: string
-          description: "Filter by category: shipping, pricing, warranty, product, tone, policy, communication, general"
+          description: "OPTIONAL filter. Omit to get ALL categories. Values: shipping, pricing, warranty, product, tone, policy, communication, general"
         query:
           type: string
-          description: "Search term to find relevant corrections"
+          description: "OPTIONAL single keyword search. Omit to get ALL corrections. Use single words only, not sentences."
 
     GetAiSummaryArgs:
       description: |
@@ -2234,15 +2234,15 @@ components:
     GetCustomerAiErrorsArgs:
       description: |
         **get_customer_ai_errors** [knowledge] (query)
-        List corrections for the CUSTOMER-FACING WhatsApp AI (the AI that generates responses to customers via WhatsApp Auto, workflows, auto-pilot). Use this to review what the customer AI has been corrected on.
+        List corrections for the CUSTOMER-FACING WhatsApp AI. To list ALL corrections, pass no parameters. Only use category or query when filtering specific results.
       type: object
       properties:
         category:
           type: string
-          description: "Filter by category: shipping, pricing, warranty, product, tone, policy, communication, general"
+          description: "OPTIONAL filter. Omit to get ALL categories. Values: shipping, pricing, warranty, product, tone, policy, communication, general"
         query:
           type: string
-          description: "Search corrections by keyword"
+          description: "OPTIONAL single keyword search. Omit to get ALL corrections. Use single words only, not sentences."
 
     GetCustomerCommentsArgs:
       description: |

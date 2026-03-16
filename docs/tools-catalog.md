@@ -74,7 +74,7 @@
 | `get_agent_permissions` | Agentes | query | Obtiene los permisos configurados de un agente y el registro completo de permisos disponibles |
 | `get_agent_stats` | Agentes | query | Metricas de rendimiento del equipo: mensajes enviados, recibidos, tareas completadas |
 | `get_agent_tasks` | Tareas | query | Muestra las tareas asignadas a un agente especifico |
-| `get_ai_errors` | Base de Conocimiento | query | List active AI corrections for this assistant. Shows what the assistant has learned from past mistakes. Can filter by... |
+| `get_ai_errors` | Base de Conocimiento | query | List active AI corrections for this assistant. To list ALL corrections, pass no parameters. Only use category or quer... |
 | `get_ai_summary` | Analisis IA | query | Genera un resumen de una conversacion usando IA. Tipos: quick (breve), detailed (completo), actionable (acciones pend... |
 | `get_analytics` | Estadisticas | query | Muestra metricas de rendimiento: conversaciones, mensajes, actividad diaria |
 | `get_api_key` | Avanzado | query | Muestra la API key actual de la tienda (token_ext) y la URL del servidor MCP. Usa esta accion cuando el usuario pregu... |
@@ -95,7 +95,7 @@
 | `get_credit_history` | Actividad | query | Muestra el consumo de creditos OpenAI por dia y por endpoint |
 | `get_credits_info` | Estadisticas | query | Muestra informacion detallada sobre los creditos disponibles: gratuitos, comprados, porcentaje usado y fecha de renov... |
 | `get_crm_health_status` | Avanzado | query | Muestra el estado actual de los endpoints CRM configurados: si estan activos o deshabilitados por errores consecutivo... |
-| `get_customer_ai_errors` | Base de Conocimiento | query | List corrections for the CUSTOMER-FACING WhatsApp AI (the AI that generates responses to customers via WhatsApp Auto,... |
+| `get_customer_ai_errors` | Base de Conocimiento | query | List corrections for the CUSTOMER-FACING WhatsApp AI. To list ALL corrections, pass no parameters. Only use category ... |
 | `get_customer_comments` | Clientes | query | Obtiene los comentarios y tags asociados a un cliente |
 | `get_customer_info` | Clientes | query | Obtiene perfil completo de un cliente: datos CRM, comentarios, tags, conversacion, archivos y tareas |
 | `get_customer_journey` | Clientes | query | Timeline completo de un cliente: mensajes, comentarios, archivos, tareas, pedidos, follow-ups |
