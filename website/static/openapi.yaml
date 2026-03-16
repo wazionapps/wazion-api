@@ -1470,7 +1470,7 @@ components:
     DeleteWhatsappTemplateArgs:
       description: |
         **delete_whatsapp_template** [whatsapp_ops] (mutation)
-        Elimina una plantilla de mensaje de WhatsApp
+        Elimina una plantilla de mensaje de WhatsApp. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false - esto NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente al usuario que la plantilla se eliminara y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -1485,7 +1485,7 @@ components:
     DeleteWhatsappWorkflowArgs:
       description: |
         **delete_whatsapp_workflow** [automation] (mutation)
-        SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabras, simular ni probar. Si el usuario quiere cambiar algo del workflow, usar update_whatsapp_workflow en su lugar.
+        SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabras, simular ni probar. Si el usuario quiere cambiar algo del workflow, usar update_whatsapp_workflow en su lugar. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false - esto NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente al usuario que el workflow se eliminara y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
         ⚠️ Requires confirmation
       type: object
       properties:

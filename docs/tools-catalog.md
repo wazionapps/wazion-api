@@ -56,7 +56,7 @@
 | `delete_notification` | Notificaciones | mutation | Elimina permanentemente una notificacion |
 | `delete_task` | Tareas | mutation | Elimina una tarea permanentemente |
 | `delete_whatsapp_session` | WhatsApp | mutation | Elimina una sesion de WhatsApp desconectada. Solo funciona con sesiones en estado 'disconnected'. |
-| `delete_whatsapp_template` | WhatsApp | mutation | Elimina una plantilla de mensaje de WhatsApp |
+| `delete_whatsapp_template` | WhatsApp | mutation | Elimina una plantilla de mensaje de WhatsApp. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true... |
 | `delete_whatsapp_workflow` | Automatizacion | mutation | SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabra... |
 | `disconnect_ecommerce` | Integraciones | mutation | Desconecta la integracion con tu plataforma e-commerce (Shopify, WooCommerce, etc.) |
 | `disconnect_whatsapp` | Automatizacion | mutation | Desconecta una sesion de WhatsApp y elimina los datos de autenticacion. Si hay multiples numeros, requiere session_id. |
