@@ -215,8 +215,8 @@
 | `search_products` | Productos | query | Busca productos en tu tienda online o en el CRM configurado |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
 | `send_whatsapp_message` | WhatsApp | mutation | Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345... |
-| `set_ai_error` | Base de Conocimiento | mutation | Record a new AI mistake detected during conversation. The assistant calls this automatically when the user corrects it. |
-| `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI. Use when the user reports that the WhatsApp AI gave wrong in... |
+| `set_ai_error` | Base de Conocimiento | mutation | Record a mistake in YOUR OWN responses (this dashboard chat). Call this when the user corrects you, AND when you proa... |
+| `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use wh... |
 | `smart_knowledge_update` | Prompt e IA | mutation | Busca y actualiza datos aprendidos que contradigan o estén desactualizados según la instrucción del usuario. Usa esto... |
 | `start_campaign` | Marketing Masivo | mutation | Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas. |
 | `sync_knowledge_now` | Almacenamiento | mutation | Fuerza la sincronizacion inmediata de los facts aprendidos al Vector Store (normalmente se hace automaticamente) |

@@ -4537,7 +4537,7 @@ components:
     SetAiErrorArgs:
       description: |
         **set_ai_error** [knowledge] (mutation)
-        Record a new AI mistake detected during conversation. The assistant calls this automatically when the user corrects it.
+        Record a mistake in YOUR OWN responses (this dashboard chat). Call this when the user corrects you, AND when you proactively detect you gave wrong information. IMPORTANT: This is ONLY for YOUR errors. For errors in the customer-facing WhatsApp AI (auto-pilot, workflows, suggestions, chat web), use set_customer_ai_error instead.
       type: object
       properties:
         fact_content:
@@ -4554,7 +4554,7 @@ components:
     SetCustomerAiErrorArgs:
       description: |
         **set_customer_ai_error** [knowledge] (mutation)
-        Record a correction for the CUSTOMER-FACING WhatsApp AI. Use when the user reports that the WhatsApp AI gave wrong information to a customer (wrong shipping times, incorrect prices, wrong policies, etc.).
+        Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use when the user reports a bad AI response to a customer, AND also when you proactively detect errors while reviewing conversation history (e.g., AI ignored the question, derailed the conversation, gave wrong info). Do not wait for the user to ask. IMPORTANT: This is ONLY for customer-facing AI errors. For YOUR OWN errors in this chat, use set_ai_error instead.
       type: object
       properties:
         fact_content:
