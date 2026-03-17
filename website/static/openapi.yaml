@@ -4568,7 +4568,7 @@ components:
     SetAiErrorArgs:
       description: |
         **set_ai_error** [knowledge] (mutation)
-        Record a mistake in YOUR OWN responses (this dashboard chat). Call this when the user corrects you, AND when you proactively detect you gave wrong information. IMPORTANT: This is ONLY for YOUR errors. For errors in the customer-facing WhatsApp AI (auto-pilot, workflows, suggestions, chat web), use set_customer_ai_error instead.
+        Record a mistake in YOUR OWN responses or behavior (this dashboard chat). Call this when the user corrects you, AND when you proactively detect you did something wrong. This includes: wrong answers and behavioral rules about HOW you should act. IMPORTANT: This is for YOUR errors. For errors in the CONTENT of responses sent to customers by the WhatsApp AI, use set_customer_ai_error instead.
       type: object
       properties:
         fact_content:
@@ -4585,7 +4585,7 @@ components:
     SetCustomerAiErrorArgs:
       description: |
         **set_customer_ai_error** [knowledge] (mutation)
-        Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use when the user reports a bad AI response to a customer, AND also when you proactively detect errors while reviewing conversation history (e.g., AI ignored the question, derailed the conversation, gave wrong info). Do not wait for the user to ask. IMPORTANT: This is ONLY for customer-facing AI errors. For YOUR OWN errors in this chat, use set_ai_error instead.
+        Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use ONLY when the CONTENT of a response sent to a customer was wrong (wrong info, wrong tone, unnecessary questions to the customer). Do NOT use this for behavioral rules about when/whether to respond — those belong in set_ai_error. IMPORTANT: If the user says the AI should not have replied or should have handled the situation differently, that is a behavioral rule for set_ai_error, not a content correction.
       type: object
       properties:
         fact_content:
