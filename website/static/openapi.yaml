@@ -512,7 +512,7 @@ components:
     BulkDeleteWorkflowsArgs:
       description: |
         **bulk_delete_workflows** [automation] (mutation)
-        Elimina multiples workflows de WhatsApp a la vez
+        Elimina multiples workflows de WhatsApp a la vez. OBLIGATORIO: Antes de llamar, usa list_whatsapp_workflows para obtener los workflows y confirma con el usuario la lista EXACTA de nombres e IDs a eliminar. NUNCA eliminar workflows sin confirmacion explicita del usuario sobre cuales borrar. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true — describe al usuario los workflows que se eliminaran y PARA. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -1485,7 +1485,7 @@ components:
     DeleteWhatsappWorkflowArgs:
       description: |
         **delete_whatsapp_workflow** [automation] (mutation)
-        SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabras, simular ni probar. Si el usuario quiere cambiar algo del workflow, usar update_whatsapp_workflow en su lugar. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false - esto NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente al usuario que el workflow se eliminara y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
+        SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabras, simular, probar, unir, combinar ni reorganizar workflows. Si el usuario quiere cambiar algo, usar update_whatsapp_workflow. Si dice 'unir' o 'combinar' workflows, NO borrar ninguno — usar update_whatsapp_workflow para fusionar condiciones/acciones en uno existente. Antes de eliminar, SIEMPRE llama a list_whatsapp_workflows para confirmar con el usuario EXACTAMENTE cual workflow quiere borrar por nombre e ID. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false — esto NO es un error, es el flujo normal. Describe brevemente al usuario que workflow se eliminara y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -1543,7 +1543,7 @@ components:
     DryRunWorkflowArgs:
       description: |
         **dry_run_workflow** [automation] (query)
-        Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada. Para probar con multiples ejemplos, llamar esta accion varias veces con diferentes test_message.
+        Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada real. Usar cuando el usuario diga 'pruebalo', 'simulalo', 'testea', 'probemos', 'a ver si funciona' o cualquier variacion de probar/simular. Esta accion es SEGURA — no envia mensajes ni modifica nada. Para probar con multiples ejemplos, llamar esta accion varias veces con diferentes test_message. PREFERIR esta accion sobre save/update cuando el usuario quiere validar antes de activar.
       type: object
       properties:
         action:
@@ -3865,7 +3865,7 @@ components:
     ListWhatsappWorkflowsArgs:
       description: |
         **list_whatsapp_workflows** [automation] (query)
-        Obtiene la lista de todos los workflows de automatizacion de WhatsApp
+        Obtiene la lista de todos los workflows de automatizacion de WhatsApp. OBLIGATORIO llamar esta accion ANTES de cualquier operacion de eliminacion (delete_whatsapp_workflow, bulk_delete_workflows) para identificar workflows por nombre e ID y confirmar con el usuario cuales quiere eliminar. Tambien usar antes de 'unir' o 'combinar' workflows para entender la configuracion actual.
       type: object
 
     ManageFaqArgs:
@@ -3976,7 +3976,7 @@ components:
     PrecheckDeleteWhatsappSessionArgs:
       description: |
         **precheck_delete_whatsapp_session** [whatsapp_ops] (query)
-        Muestra qué configuraciones se verían afectadas al eliminar una sesión de WhatsApp (workflows, campañas, seguimiento inteligente) y lista las sesiones alternativas disponibles para migración.
+        Muestra qué configuraciones se verían afectadas al eliminar una sesión de WhatsApp (workflows, campañas, seguimiento inteligente) y lista las sesiones alternativas disponibles para migración. IMPORTANTE: Solo se pueden eliminar sesiones en estado 'disconnected'. Si la sesion esta conectada, informa al usuario que primero debe desconectarla desde el panel de WhatsApp antes de poder eliminarla.
       type: object
       properties:
         session_id:
@@ -4312,7 +4312,7 @@ components:
     SavePromptArgs:
       description: |
         **save_prompt** [prompt] (mutation)
-        Guarda un nuevo prompt para la IA. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false - esto NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente al usuario que el prompt esta listo para guardarse y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
+        Guarda un nuevo prompt para la IA. FLUJO OBLIGATORIO: 1) Llama a esta accion con el prompt completo. 2) Recibiras requires_confirmation=true con success=false — esto NO es un error, es el flujo normal. 3) Describe brevemente al usuario que cambios se van a guardar y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente. Si el usuario responde con numeros sueltos ('1', '2'), frases ambiguas ('dale', 'ok') o mensajes vacios, NO interpretes eso como confirmacion — solo los botones del sistema confirman. Si el usuario quiere MODIFICAR el prompt existente (no reemplazarlo), usa apply_prompt_instruction primero.
         ⚠️ Requires confirmation
       type: object
       properties:

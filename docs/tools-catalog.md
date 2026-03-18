@@ -18,7 +18,7 @@
 | `auto_categorize_conversations` | Analisis IA | query | Categoriza conversaciones recientes por tema, intento y prioridad usando IA |
 | `auto_tag_customer` | Analisis IA | query | Analiza la conversacion con IA y sugiere tags relevantes para el cliente |
 | `bulk_add_to_blacklist` | Marketing Masivo | mutation | Añade varios números de teléfono a la lista negra de marketing masivo de una vez |
-| `bulk_delete_workflows` | Automatizacion | mutation | Elimina multiples workflows de WhatsApp a la vez |
+| `bulk_delete_workflows` | Automatizacion | mutation | Elimina multiples workflows de WhatsApp a la vez. OBLIGATORIO: Antes de llamar, usa list_whatsapp_workflows para obte... |
 | `bulk_toggle_workflows` | Automatizacion | mutation | Activa o desactiva multiples workflows a la vez |
 | `cancel_campaign` | Marketing Masivo | mutation | Cancela definitivamente una campana de marketing masivo (en curso, pausada, borrador o programada). Los mensajes ya e... |
 | `cancel_campaign_schedule` | Marketing Masivo | mutation | Cancela la programacion de una campana programada, cambiandola a estado borrador. No elimina la campana. |
@@ -62,7 +62,7 @@
 | `disconnect_whatsapp` | Automatizacion | mutation | Desconecta una sesion de WhatsApp y elimina los datos de autenticacion. Si hay multiples numeros, requiere session_id. |
 | `download_conversation_file` | Almacenamiento | query | Obtiene la URL de descarga de un archivo compartido en una conversacion |
 | `download_knowledge_file` | Base de Conocimiento | query | Obtiene la URL de descarga de un archivo de la base de conocimiento |
-| `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada. Para probar con multiples ejemplos, llam... |
+| `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada real. Usar cuando el usuario diga 'prueba... |
 | `duplicate_campaign` | Marketing Masivo | mutation | Crea una copia de una campaña existente en estado borrador |
 | `export_campaign_csv` | Marketing Masivo | query | Descarga los logs de envio de una campana completada como archivo CSV. Solo funciona con campanas completadas, cancel... |
 | `export_conversations` | Conversaciones | query | Exporta conversaciones con todos los mensajes en formato estructurado |
@@ -182,7 +182,7 @@
 | `list_whatsapp_optout` | WhatsApp | query | Muestra los contactos que han solicitado no recibir mensajes automaticos de WhatsApp |
 | `list_whatsapp_scheduled_sessions` | WhatsApp | query | Devuelve las sesiones de WhatsApp conectadas disponibles para enviar mensajes programados. |
 | `list_whatsapp_templates` | WhatsApp | query | Muestra las plantillas de mensajes guardadas para WhatsApp |
-| `list_whatsapp_workflows` | Automatizacion | query | Obtiene la lista de todos los workflows de automatizacion de WhatsApp |
+| `list_whatsapp_workflows` | Automatizacion | query | Obtiene la lista de todos los workflows de automatizacion de WhatsApp. OBLIGATORIO llamar esta accion ANTES de cualqu... |
 | `manage_faq` | Plugins | mutation | Permite despublicar, republicar o eliminar FAQs del plugin Product Q&A. Util para gestionar contenido que ya no es re... |
 | `mark_all_notifications_read` | Notificaciones | mutation | Marca todas las notificaciones no leidas como leidas |
 | `mark_notification_read` | Notificaciones | mutation | Marca una notificacion especifica como leida |
@@ -210,7 +210,7 @@
 | `save_as_whatsapp_template` | WhatsApp | mutation | Guarda un mensaje como plantilla reutilizable de WhatsApp |
 | `save_mass_marketing_config` | Marketing Masivo | mutation | Guarda la configuracion de marketing masivo: auto-respuesta, traduccion y opciones de envio |
 | `save_plugin_conversation_note` | Plugins | mutation | Genera un resumen IA de una conversacion del plugin de chat web y lo guarda como nota en el perfil del cliente. Requi... |
-| `save_prompt` | Prompt e IA | mutation | Guarda un nuevo prompt para la IA. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con succes... |
+| `save_prompt` | Prompt e IA | mutation | Guarda un nuevo prompt para la IA. FLUJO OBLIGATORIO: 1) Llama a esta accion con el prompt completo. 2) Recibiras req... |
 | `save_smart_followup_config` | Seguimiento Inteligente | mutation | Actualiza la configuracion de seguimiento inteligente. Solo envia los campos que quieras cambiar. El sistema verifica... |
 | `search_conversations` | Conversaciones | query | Busca conversaciones por texto, telefono o rango de fechas. Ejemplo: 'busca conversaciones que mencionen devolucion' |
 | `search_customer_comments` | Clientes | query | Busca texto en los comentarios de todos los clientes |
