@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    258 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    260 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -380,6 +380,18 @@ components:
           type: string
           description: "La instruccion de que modificar en el prompt"
       required: ["instruction"]
+
+    ApplyTrainingSuggestionArgs:
+      description: |
+        **apply_training_suggestion** [ai_training] (mutation)
+        Apply a pending AI improvement suggestion. Level 1-2 creates a correction, Level 4 appends to prompt, Level 3 requires manual workflow changes.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        suggestion_id:
+          type: integer
+          description: "ID of the suggestion to apply"
+      required: ["suggestion_id"]
 
     ApproveCampaignArgs:
       description: |
@@ -1517,6 +1529,20 @@ components:
         session_id:
           type: integer
           description: "ID de la sesion a desconectar. Obligatorio si hay mas de un numero conectado. Usa get_whatsapp_status para obtener los IDs."
+
+    DismissTrainingSuggestionArgs:
+      description: |
+        **dismiss_training_suggestion** [ai_training] (mutation)
+        Dismiss a pending suggestion with optional reason.
+      type: object
+      properties:
+        suggestion_id:
+          type: integer
+          description: "ID of the suggestion to dismiss"
+        reason:
+          type: string
+          description: "Why the suggestion was dismissed. OPTIONAL - omit if no reason given."
+      required: ["suggestion_id"]
 
     DownloadConversationFileArgs:
       description: |
