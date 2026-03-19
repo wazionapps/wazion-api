@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    260 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    267 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -59,6 +59,8 @@ tags:
     description: Buscar, ver y analizar conversaciones con clientes
   - name: customers
     description: Informacion de clientes, comentarios, tags y busqueda
+  - name: email
+    description: Gestion de cuentas de correo electronico, auto-responder y estadisticas de email
   - name: general
     description: Ajustes basicos del dashboard
   - name: integrations
@@ -1024,6 +1026,57 @@ components:
           description: "Dominios donde funcionara el widget (vacio = todos)"
       required: ["display_name"]
 
+    CreateEmailAccountArgs:
+      description: |
+        **create_email_account** [email] (mutation)
+        Crea una nueva cuenta de correo electronico con configuracion IMAP/SMTP. Maximo 10 cuentas por tienda.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        label:
+          type: string
+          description: "Nombre descriptivo de la cuenta (ej: 'Soporte', 'Ventas')"
+        email_address:
+          type: string
+          description: "Direccion de email"
+        auth_type:
+          type: string
+          description: "Tipo de autenticacion: 'basic' (IMAP/SMTP) o 'oauth2'. Default: 'basic'"
+        imap_host:
+          type: string
+          description: "Servidor IMAP (ej: imap.gmail.com). Requerido para auth_type=basic"
+        imap_port:
+          type: integer
+          description: "Puerto IMAP. Default: 993"
+        imap_user:
+          type: string
+          description: "Usuario IMAP (normalmente el email)"
+        imap_password:
+          type: string
+          description: "Contrasena IMAP (se cifra automaticamente)"
+        smtp_host:
+          type: string
+          description: "Servidor SMTP (ej: smtp.gmail.com). Requerido para auth_type=basic"
+        smtp_port:
+          type: integer
+          description: "Puerto SMTP. Default: 587"
+        smtp_user:
+          type: string
+          description: "Usuario SMTP (normalmente el email)"
+        smtp_password:
+          type: string
+          description: "Contrasena SMTP (se cifra automaticamente)"
+        smtp_from_name:
+          type: string
+          description: "Nombre del remitente en los emails enviados"
+        agent_hashes:
+          type: array
+          description: "Lista de phone_hash de agentes asignados a esta cuenta"
+      required: ["action", "label", "email_address"]
+
     CreateKnowledgeFileArgs:
       description: |
         **create_knowledge_file** [storage] (mutation)
@@ -1375,6 +1428,21 @@ components:
           type: integer
           description: "ID of the correction to delete"
       required: ["id"]
+
+    DeleteEmailAccountArgs:
+      description: |
+        **delete_email_account** [email] (mutation)
+        Elimina una cuenta de correo y todos sus emails asociados. Esta accion no se puede deshacer.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID de la cuenta a eliminar"
+      required: ["action", "id"]
 
     DeleteKnowledgeFileArgs:
       description: |
@@ -2426,6 +2494,22 @@ components:
         action:
           type: string
       required: ["action"]
+
+    GetEmailStatsArgs:
+      description: |
+        **get_email_stats** [email] (query)
+        Devuelve estadisticas de emails: total recibidos, respondidos, tiempo medio de respuesta, desglose por agente y clasificacion IA.
+      type: object
+      properties:
+        period:
+          type: string
+          description: "Periodo: 'last_7_days', 'last_30_days', 'this_month', 'last_month', 'last_90_days', 'all_time', 'custom'. Default: 'last_30_days'"
+        date_from:
+          type: string
+          description: "Fecha inicio (YYYY-MM-DD). Solo para period=custom"
+        date_to:
+          type: string
+          description: "Fecha fin (YYYY-MM-DD). Solo para period=custom"
 
     GetKnowledgeProcessingStatusArgs:
       description: |
@@ -3664,6 +3748,17 @@ components:
         Muestra todos los asistentes de documentacion creados con el plugin Doc Q&A
       type: object
 
+    ListEmailAccountsArgs:
+      description: |
+        **list_email_accounts** [email] (query)
+        Devuelve todas las cuentas de correo electronico configuradas en la tienda, con sus agentes asignados.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
+
     ListKnowledgeFilesArgs:
       description: |
         **list_knowledge_files** [storage] (query)
@@ -4709,6 +4804,17 @@ components:
         Verifica que la conexion con la plataforma e-commerce (Shopify, WooCommerce, PrestaShop o VTEX) funciona correctamente. Usa las credenciales guardadas si no se proporcionan.
       type: object
 
+    TestEmailConnectionArgs:
+      description: |
+        **test_email_connection** [email] (query)
+        Verifica que la conexion IMAP y SMTP de una cuenta de email funciona correctamente.
+      type: object
+      properties:
+        account_id:
+          type: integer
+          description: "ID de la cuenta a probar"
+      required: ["account_id"]
+
     TestShopifyConnectionArgs:
       description: |
         **test_shopify_connection** [integrations] (query)
@@ -5249,6 +5355,58 @@ components:
           type: array
           description: "Dominios permitidos"
       required: ["assistant_id"]
+
+    UpdateEmailAccountArgs:
+      description: |
+        **update_email_account** [email] (mutation)
+        Modifica los campos de una cuenta de correo existente. Solo se actualizan los campos enviados.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID de la cuenta a actualizar"
+        label:
+          type: string
+          description: "Nuevo nombre descriptivo"
+        email_address:
+          type: string
+          description: "Nueva direccion de email"
+        smtp_from_name:
+          type: string
+          description: "Nuevo nombre del remitente"
+        is_active:
+          type: integer
+          description: "1 para activar, 0 para desactivar la cuenta"
+      required: ["action", "id"]
+
+    UpdateEmailAutoresponderArgs:
+      description: |
+        **update_email_autoresponder** [email] (mutation)
+        Configura el auto-responder IA para una cuenta de email. Puede generar borradores o enviar respuestas automaticas.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID de la cuenta de email"
+        auto_responder_enabled:
+          type: boolean
+          description: "Activar o desactivar el auto-responder"
+        auto_responder_mode:
+          type: string
+          description: "Modo: 'draft' (genera borrador para revision) o 'automatic' (envia automaticamente)"
+        auto_responder_schedule:
+          type: string
+          description: "Horario: 'always' (siempre) o 'outside_hours' (solo fuera de horario)"
+        auto_responder_thread_limit:
+          type: integer
+          description: "Maximo de respuestas automaticas por hilo (1-10). Default: 2"
+      required: ["action", "id"]
 
     UpdateKnowledgeFileArgs:
       description: |

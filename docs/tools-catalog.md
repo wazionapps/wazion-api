@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 260 (excluding hidden)
+> Total tools: 267 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -38,6 +38,7 @@
 | `create_campaign` | Marketing Masivo | mutation | Crea una nueva campana de marketing masivo. Puede crearse como borrador o programarse para una fecha futura. Soporta ... |
 | `create_contact_list` | Marketing Masivo | mutation | Crea una nueva lista de contactos para campanas de marketing masivo |
 | `create_docqa_assistant` | Plugins | mutation | Crea un nuevo asistente de documentacion. Despues de crearlo, podras subir archivos (PDF, Word, etc.) desde el dashbo... |
+| `create_email_account` | Email | mutation | Crea una nueva cuenta de correo electronico con configuracion IMAP/SMTP. Maximo 10 cuentas por tienda. |
 | `create_knowledge_file` | Almacenamiento | mutation | Crea un nuevo archivo en la base de conocimiento a partir de contenido de texto. Ideal para anadir informacion como p... |
 | `create_list_from_followup` | Marketing Masivo | mutation | Crea una lista de contactos desde conversaciones detectadas por Smart Follow-up |
 | `create_list_from_inactive` | Marketing Masivo | mutation | Crea una nueva lista de contactos a partir de clientes que no han tenido conversación en un periodo determinado |
@@ -53,6 +54,7 @@
 | `delete_conversation_file` | Almacenamiento | mutation | Elimina un archivo compartido en una conversacion |
 | `delete_conversation_message` | Conversaciones | mutation | Elimina un mensaje especifico de una conversacion. Requiere el texto exacto del mensaje. |
 | `delete_customer_ai_error` | Base de Conocimiento | mutation | Remove a correction from the customer-facing WhatsApp AI that is no longer valid. |
+| `delete_email_account` | Email | mutation | Elimina una cuenta de correo y todos sus emails asociados. Esta accion no se puede deshacer. |
 | `delete_knowledge_file` | Almacenamiento | mutation | Elimina un archivo de la base de conocimiento (no permite eliminar archivos de sistema) |
 | `delete_notification` | Notificaciones | mutation | Elimina permanentemente una notificacion |
 | `delete_task` | Tareas | mutation | Elimina una tarea permanentemente |
@@ -105,6 +107,7 @@
 | `get_daily_summary` | Actividad | query | Resumen completo de actividad de un dia: conversaciones, mensajes, plugins, workflows, follow-ups, tareas |
 | `get_docqa_stats` | Estadisticas | query | Muestra estadisticas detalladas de un asistente de documentacion. Requiere assistant_id: usa list_docqa_assistants pr... |
 | `get_ecommerce_sync_status` | Actividad | query | Estado de conexion con la plataforma e-commerce y estadisticas de clientes CRM sincronizados |
+| `get_email_stats` | Email | query | Devuelve estadisticas de emails: total recibidos, respondidos, tiempo medio de respuesta, desglose por agente y clasi... |
 | `get_knowledge_processing_status` | Base de Conocimiento | query | Obtiene el estado de procesamiento de todos los archivos de conocimiento (polling endpoint) |
 | `get_marketing_sessions` | Marketing Masivo | query | Obtiene las sesiones de WhatsApp disponibles para envío de campañas |
 | `get_mass_marketing_config` | Marketing Masivo | query | Obtiene la configuracion actual de marketing masivo: auto-respuesta, traduccion automatica, texto personalizado de baja |
@@ -173,6 +176,7 @@
 | `list_contact_lists` | Marketing Masivo | query | Obtiene todas las listas de contactos de marketing masivo de la tienda |
 | `list_conversation_files` | Almacenamiento | query | Lista los archivos compartidos en una conversacion con un cliente |
 | `list_docqa_assistants` | Plugins | query | Muestra todos los asistentes de documentacion creados con el plugin Doc Q&A |
+| `list_email_accounts` | Email | query | Devuelve todas las cuentas de correo electronico configuradas en la tienda, con sus agentes asignados. |
 | `list_knowledge_files` | Almacenamiento | query | Muestra todos los archivos subidos a la base de conocimiento (PDFs, documentos, etc.) |
 | `list_knowledge_snippets` | Prompt e IA | query | Muestra los datos (facts) que la IA ha aprendido automaticamente de las conversaciones. Estos son datos concretos del... |
 | `list_notifications` | Notificaciones | query | Obtiene las notificaciones del sistema con filtros opcionales |
@@ -227,6 +231,7 @@
 | `sync_knowledge_now` | Almacenamiento | mutation | Fuerza la sincronizacion inmediata de los facts aprendidos al Vector Store (normalmente se hace automaticamente) |
 | `test_crm_endpoint` | Avanzado | mutation | Envia una peticion de prueba a un endpoint CRM para verificar que funciona correctamente |
 | `test_ecommerce_connection` | Integraciones | query | Verifica que la conexion con la plataforma e-commerce (Shopify, WooCommerce, PrestaShop o VTEX) funciona correctament... |
+| `test_email_connection` | Email | query | Verifica que la conexion IMAP y SMTP de una cuenta de email funciona correctamente. |
 | `test_shopify_connection` | Integraciones | query | Valida la conexion con una tienda Shopify verificando las credenciales y los permisos OAuth. Si no se proporcionan cr... |
 | `test_webhook` | Avanzado | mutation | Envia un webhook de prueba. Usa automaticamente la URL y secret configurados en la tienda si no se proporcionan param... |
 | `toggle_analytics` | Estadisticas | mutation | Activa o desactiva el registro de analytics con structured outputs para esta tienda |
@@ -254,6 +259,8 @@
 | `update_customer_tags` | Configuracion General | mutation | Configura las etiquetas para clasificar clientes |
 | `update_date_format` | Configuracion General | mutation | Cambia el formato en que se muestran las fechas |
 | `update_docqa_assistant` | Plugins | mutation | Modifica la configuracion de un asistente de documentacion existente |
+| `update_email_account` | Email | mutation | Modifica los campos de una cuenta de correo existente. Solo se actualizan los campos enviados. |
+| `update_email_autoresponder` | Email | mutation | Configura el auto-responder IA para una cuenta de email. Puede generar borradores o enviar respuestas automaticas. |
 | `update_knowledge_file` | Almacenamiento | mutation | Cambia el titulo, descripcion y/o contenido de un archivo de conocimiento. Para archivos de texto (txt, md, csv, json... |
 | `update_knowledge_snippet` | Prompt e IA | mutation | Permite aprobar, rechazar, editar o eliminar un dato aprendido. Usa filter=pending en list_knowledge_snippets para ve... |
 | `update_language` | Configuracion General | mutation | Cambia el idioma del dashboard y las respuestas de la IA |
