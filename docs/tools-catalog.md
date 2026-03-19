@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 267 (excluding hidden)
+> Total tools: 271 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -107,6 +107,8 @@
 | `get_daily_summary` | Actividad | query | Resumen completo de actividad de un dia: conversaciones, mensajes, plugins, workflows, follow-ups, tareas |
 | `get_docqa_stats` | Estadisticas | query | Muestra estadisticas detalladas de un asistente de documentacion. Requiere assistant_id: usa list_docqa_assistants pr... |
 | `get_ecommerce_sync_status` | Actividad | query | Estado de conexion con la plataforma e-commerce y estadisticas de clientes CRM sincronizados |
+| `get_email_account` | Email | query | Devuelve los datos completos de una cuenta de correo especifica, incluyendo agentes asignados. |
+| `get_email_retention` | Email | query | Devuelve el periodo de retencion configurado para los emails de la tienda. |
 | `get_email_stats` | Email | query | Devuelve estadisticas de emails: total recibidos, respondidos, tiempo medio de respuesta, desglose por agente y clasi... |
 | `get_knowledge_processing_status` | Base de Conocimiento | query | Obtiene el estado de procesamiento de todos los archivos de conocimiento (polling endpoint) |
 | `get_marketing_sessions` | Marketing Masivo | query | Obtiene las sesiones de WhatsApp disponibles para envío de campañas |
@@ -260,7 +262,9 @@
 | `update_date_format` | Configuracion General | mutation | Cambia el formato en que se muestran las fechas |
 | `update_docqa_assistant` | Plugins | mutation | Modifica la configuracion de un asistente de documentacion existente |
 | `update_email_account` | Email | mutation | Modifica los campos de una cuenta de correo existente. Solo se actualizan los campos enviados. |
+| `update_email_agents` | Email | mutation | Actualiza los agentes asignados a una cuenta de correo electronico. |
 | `update_email_autoresponder` | Email | mutation | Configura el auto-responder IA para una cuenta de email. Puede generar borradores o enviar respuestas automaticas. |
+| `update_email_retention` | Email | mutation | Cambia el periodo de retencion de emails. Los emails mas antiguos se eliminan automaticamente. |
 | `update_knowledge_file` | Almacenamiento | mutation | Cambia el titulo, descripcion y/o contenido de un archivo de conocimiento. Para archivos de texto (txt, md, csv, json... |
 | `update_knowledge_snippet` | Prompt e IA | mutation | Permite aprobar, rechazar, editar o eliminar un dato aprendido. Usa filter=pending en list_knowledge_snippets para ve... |
 | `update_language` | Configuracion General | mutation | Cambia el idioma del dashboard y las respuestas de la IA |

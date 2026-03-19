@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    267 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    271 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1075,6 +1075,9 @@ components:
         agent_hashes:
           type: array
           description: "Lista de phone_hash de agentes asignados a esta cuenta"
+        signature_html:
+          type: string
+          description: "Firma HTML para los emails enviados desde esta cuenta"
       required: ["action", "label", "email_address"]
 
     CreateKnowledgeFileArgs:
@@ -2493,6 +2496,31 @@ components:
       properties:
         action:
           type: string
+      required: ["action"]
+
+    GetEmailAccountArgs:
+      description: |
+        **get_email_account** [email] (query)
+        Devuelve los datos completos de una cuenta de correo especifica, incluyendo agentes asignados.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID de la cuenta de email"
+      required: ["action", "id"]
+
+    GetEmailRetentionArgs:
+      description: |
+        **get_email_retention** [email] (query)
+        Devuelve el periodo de retencion configurado para los emails de la tienda.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
       required: ["action"]
 
     GetEmailStatsArgs:
@@ -5374,12 +5402,59 @@ components:
         email_address:
           type: string
           description: "Nueva direccion de email"
+        imap_host:
+          type: string
+          description: "Servidor IMAP"
+        imap_port:
+          type: integer
+          description: "Puerto IMAP"
+        imap_user:
+          type: string
+          description: "Usuario IMAP"
+        imap_password:
+          type: string
+          description: "Nueva contrasena IMAP (se cifra automaticamente)"
+        smtp_host:
+          type: string
+          description: "Servidor SMTP"
+        smtp_port:
+          type: integer
+          description: "Puerto SMTP"
+        smtp_user:
+          type: string
+          description: "Usuario SMTP"
+        smtp_password:
+          type: string
+          description: "Nueva contrasena SMTP (se cifra automaticamente)"
         smtp_from_name:
           type: string
           description: "Nuevo nombre del remitente"
+        signature_html:
+          type: string
+          description: "Firma HTML para los emails"
         is_active:
           type: integer
           description: "1 para activar, 0 para desactivar la cuenta"
+        agent_hashes:
+          type: array
+          description: "Lista de phone_hash de agentes asignados. Reemplaza la asignacion actual"
+      required: ["action", "id"]
+
+    UpdateEmailAgentsArgs:
+      description: |
+        **update_email_agents** [email] (mutation)
+        Actualiza los agentes asignados a una cuenta de correo electronico.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID de la cuenta de email"
+        agent_hashes:
+          type: array
+          description: "Lista de phone_hash de agentes a asignar. Array vacio para quitar todos"
       required: ["action", "id"]
 
     UpdateEmailAutoresponderArgs:
@@ -5407,6 +5482,21 @@ components:
           type: integer
           description: "Maximo de respuestas automaticas por hilo (1-10). Default: 2"
       required: ["action", "id"]
+
+    UpdateEmailRetentionArgs:
+      description: |
+        **update_email_retention** [email] (mutation)
+        Cambia el periodo de retencion de emails. Los emails mas antiguos se eliminan automaticamente.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        retention_days:
+          type: integer
+          description: "Dias de retencion: 30, 60, 90 o 180"
+          enum: [30, 60, 90, 180]
+      required: ["action", "retention_days"]
 
     UpdateKnowledgeFileArgs:
       description: |
@@ -5440,8 +5530,8 @@ components:
           description: "ID del snippet a gestionar"
         action:
           type: string
-          description: "Acción a realizar: approve (aprobar snippet), reject (rechazar), edit (editar contenido), delete (eliminar), resolve_conflict (resolver conflicto eligiendo uno), keep_both (mantener ambos snippets)"
-          enum: ["approve", "reject", "edit", "delete", "resolve_conflict", "keep_both"]
+          description: "Acción a realizar: approve (aprobar snippet), reject (rechazar), edit (editar contenido), delete (eliminar), resolve_conflict (resolver conflicto eligiendo uno), keep_both (mantener ambos snippets), toggle_permanent (marcar/desmarcar como permanente)"
+          enum: ["approve", "reject", "edit", "delete", "resolve_conflict", "keep_both", "toggle_permanent"]
         content:
           type: string
           description: "Nuevo contenido (solo para action=edit)"
