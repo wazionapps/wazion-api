@@ -524,7 +524,7 @@ components:
     BulkDeleteWorkflowsArgs:
       description: |
         **bulk_delete_workflows** [automation] (mutation)
-        Elimina multiples workflows de WhatsApp a la vez. OBLIGATORIO: Antes de llamar, usa list_whatsapp_workflows para obtener los workflows y confirma con el usuario la lista EXACTA de nombres e IDs a eliminar. NUNCA eliminar workflows sin confirmacion explicita del usuario sobre cuales borrar. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true — describe al usuario los workflows que se eliminaran y PARA. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
+        Elimina multiples workflows de WhatsApp a la vez. OBLIGATORIO: Antes de llamar, usa list_whatsapp_workflows para obtener los workflows y confirma con el usuario la lista EXACTA de nombres e IDs a eliminar. NUNCA eliminar workflows sin confirmacion explicita del usuario sobre cuales borrar. Si el usuario dice 'limpieza maxima' o similar, listar primero los workflows y preguntar cuales quiere eliminar (todos, solo los desactivados, etc.). FLUJO DE CONFIRMACION OBLIGATORIO: Esta accion devolvera success=false con requires_confirmation=true — esto NO es un error, es el paso 1 del flujo normal. Cuando recibas esta respuesta: 1) Describe brevemente los workflows que se eliminaran, 2) PARA completamente, 3) NUNCA vuelvas a llamar a esta misma accion — hacerlo INVALIDA el token de confirmacion y rompe el flujo. Los botones aparecen automaticamente.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -1172,7 +1172,7 @@ components:
     CreateWhatsappWorkflowArgs:
       description: |
         **create_whatsapp_workflow** [automation] (mutation)
-        Crea un nuevo workflow de automatizacion para respuestas de WhatsApp. Campos requeridos: name y actions. Si el usuario no especifica nombre, genera uno descriptivo automaticamente (ej: 'Respuesta IA fuera horario'). Si el usuario pide crearlo desactivado o para revision, usa status='disabled'. Por defecto se crea activo.
+        Crea un nuevo workflow de automatizacion para respuestas de WhatsApp. Campos requeridos: name y actions. Si el usuario no especifica nombre, genera uno descriptivo automaticamente (ej: 'Respuesta IA fuera horario'). Si el usuario pide crearlo desactivado o para revision, usa status='disabled'. Por defecto se crea activo. LIMITE: maximo 10 workflows por tienda. Si recibes error de limite alcanzado, NO reintentes crear — en su lugar: 1) Llama a list_whatsapp_workflows para mostrar los existentes, 2) Sugiere al usuario eliminar workflows que ya no necesite o reutilizar uno existente con update_whatsapp_workflow.
       type: object
       properties:
         name:
@@ -1497,7 +1497,7 @@ components:
     DeleteWhatsappWorkflowArgs:
       description: |
         **delete_whatsapp_workflow** [automation] (mutation)
-        SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabras, simular, probar, unir, combinar ni reorganizar workflows. Si el usuario quiere cambiar algo, usar update_whatsapp_workflow. Si dice 'unir' o 'combinar' workflows, NO borrar ninguno — usar update_whatsapp_workflow para fusionar condiciones/acciones en uno existente. Antes de eliminar, SIEMPRE llama a list_whatsapp_workflows para confirmar con el usuario EXACTAMENTE cual workflow quiere borrar por nombre e ID. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false — esto NO es un error, es el flujo normal. Describe brevemente al usuario que workflow se eliminara y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente.
+        SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabras, simular, probar, unir, combinar ni reorganizar workflows. Si el usuario quiere cambiar algo, usar update_whatsapp_workflow. Si dice 'unir' o 'combinar' workflows, NO borrar ninguno — usar update_whatsapp_workflow para fusionar condiciones/acciones en uno existente. Antes de eliminar, SIEMPRE llama a list_whatsapp_workflows para confirmar con el usuario EXACTAMENTE cual workflow quiere borrar por nombre e ID. FLUJO DE CONFIRMACION OBLIGATORIO: Esta accion devolvera success=false con requires_confirmation=true — esto NO es un error, es el paso 1 del flujo normal de confirmacion. Cuando recibas esta respuesta: 1) Describe brevemente al usuario que workflow se eliminara, 2) PARA completamente, 3) NUNCA vuelvas a llamar a esta misma accion — hacerlo INVALIDA el token de confirmacion y rompe el flujo. Los botones de Confirmar/Cancelar aparecen automaticamente en la interfaz del usuario.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -5489,7 +5489,7 @@ components:
           description: "ID del workflow a editar"
         name:
           type: string
-          description: "Nombre del workflow (max 100 caracteres)"
+          description: "Nombre del workflow (max 100 caracteres). Si no se envia, se mantiene el nombre actual"
         trigger_type:
           type: string
           description: "Tipo de trigger: 'message.received' o 'message.sent'. Si no se envia, se mantiene el valor actual"
@@ -5508,7 +5508,7 @@ components:
           type: string
           description: "Estado del workflow: 'enabled' para activar, 'disabled' para desactivar"
           enum: ["enabled", "disabled"]
-      required: ["id", "name"]
+      required: ["id"]
 
     VerifyEcommerceWritePermissionArgs:
       description: |
