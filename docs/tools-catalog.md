@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 271 (excluding hidden)
+> Total tools: 276 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -72,6 +72,7 @@
 | `export_conversations` | Conversaciones | query | Exporta conversaciones con todos los mensajes en formato estructurado |
 | `gdpr_delete_customer_data` | Clientes | mutation | Elimina todos los datos personales de un cliente para cumplimiento GDPR (Art. 17 - Derecho al olvido). Los registros ... |
 | `gdpr_export_customer_data` | Clientes | query | Exporta todos los datos almacenados de un cliente para cumplimiento GDPR (Art. 15 - Derecho de acceso) |
+| `generate_email_draft` | Email | mutation | Genera un borrador de respuesta usando IA para un hilo de email |
 | `generate_referral_code` | Referidos | mutation | Genera el enlace único de referido del usuario para compartir. Si ya tiene uno, lo devuelve. |
 | `get_agent_activity` | Agentes | query | Muestra la actividad y carga de trabajo de un agente especifico |
 | `get_agent_performance` | Agentes | query | Metricas detalladas de rendimiento de un agente: clientes asignados, tareas, tasa de completado |
@@ -110,6 +111,7 @@
 | `get_email_account` | Email | query | Devuelve los datos completos de una cuenta de correo especifica, incluyendo agentes asignados. |
 | `get_email_retention` | Email | query | Devuelve el periodo de retencion configurado para los emails de la tienda. |
 | `get_email_stats` | Email | query | Devuelve estadisticas de emails: total recibidos, respondidos, tiempo medio de respuesta, desglose por agente y clasi... |
+| `get_email_thread_detail` | Email | query | Obtiene todos los mensajes de un hilo de email especifico |
 | `get_knowledge_processing_status` | Base de Conocimiento | query | Obtiene el estado de procesamiento de todos los archivos de conocimiento (polling endpoint) |
 | `get_marketing_sessions` | Marketing Masivo | query | Obtiene las sesiones de WhatsApp disponibles para envío de campañas |
 | `get_mass_marketing_config` | Marketing Masivo | query | Obtiene la configuracion actual de marketing masivo: auto-respuesta, traduccion automatica, texto personalizado de baja |
@@ -179,6 +181,7 @@
 | `list_conversation_files` | Almacenamiento | query | Lista los archivos compartidos en una conversacion con un cliente |
 | `list_docqa_assistants` | Plugins | query | Muestra todos los asistentes de documentacion creados con el plugin Doc Q&A |
 | `list_email_accounts` | Email | query | Devuelve todas las cuentas de correo electronico configuradas en la tienda, con sus agentes asignados. |
+| `list_email_threads` | Email | query | Lista los hilos de email de la tienda, con filtros por estado y cuenta |
 | `list_knowledge_files` | Almacenamiento | query | Muestra todos los archivos subidos a la base de conocimiento (PDFs, documentos, etc.) |
 | `list_knowledge_snippets` | Prompt e IA | query | Muestra los datos (facts) que la IA ha aprendido automaticamente de las conversaciones. Estos son datos concretos del... |
 | `list_notifications` | Notificaciones | query | Obtiene las notificaciones del sistema con filtros opcionales |
@@ -193,6 +196,7 @@
 | `list_whatsapp_workflows` | Automatizacion | query | Obtiene la lista de todos los workflows de automatizacion de WhatsApp. OBLIGATORIO llamar esta accion ANTES de cualqu... |
 | `manage_faq` | Plugins | mutation | Permite despublicar, republicar o eliminar FAQs del plugin Product Q&A. Util para gestionar contenido que ya no es re... |
 | `mark_all_notifications_read` | Notificaciones | mutation | Marca todas las notificaciones no leidas como leidas |
+| `mark_email_read` | Email | mutation | Marca un hilo de email como leido |
 | `mark_notification_read` | Notificaciones | mutation | Marca una notificacion especifica como leida |
 | `merge_customers` | Clientes | mutation | Fusiona dos registros de cliente en uno, combinando comentarios, tags y datos CRM |
 | `pause_campaign` | Marketing Masivo | mutation | Pausa temporalmente una campana de marketing masivo en curso |
@@ -224,6 +228,7 @@
 | `search_customer_comments` | Clientes | query | Busca texto en los comentarios de todos los clientes |
 | `search_customers` | Clientes | query | Busca clientes por nombre, telefono o email en el CRM y en los contactos |
 | `search_products` | Productos | query | Busca productos en tu tienda online o en el CRM configurado |
+| `send_email_reply` | Email | mutation | Envia una respuesta a un hilo de email existente o compone un nuevo email |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
 | `send_whatsapp_message` | WhatsApp | mutation | Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345... |
 | `set_ai_error` | Base de Conocimiento | mutation | Record a mistake in YOUR OWN responses or behavior (this dashboard chat). Call this when the user corrects you, AND w... |

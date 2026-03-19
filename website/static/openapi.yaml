@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    271 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    276 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1758,6 +1758,23 @@ components:
           description: "Telefono del cliente"
       required: ["action", "phone"]
 
+    GenerateEmailDraftArgs:
+      description: |
+        **generate_email_draft** [email] (mutation)
+        Genera un borrador de respuesta usando IA para un hilo de email
+      type: object
+      properties:
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+        action:
+          type: string
+          description: "Debe ser 'generate'"
+        instructions:
+          type: string
+          description: "Instrucciones opcionales para la IA"
+      required: ["thread_id", "action"]
+
     GenerateReferralCodeArgs:
       description: |
         **generate_referral_code** [referrals] (mutation)
@@ -2538,6 +2555,17 @@ components:
         date_to:
           type: string
           description: "Fecha fin (YYYY-MM-DD). Solo para period=custom"
+
+    GetEmailThreadDetailArgs:
+      description: |
+        **get_email_thread_detail** [email] (query)
+        Obtiene todos los mensajes de un hilo de email especifico
+      type: object
+      properties:
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+      required: ["thread_id"]
 
     GetKnowledgeProcessingStatusArgs:
       description: |
@@ -3787,6 +3815,28 @@ components:
           description: "Accion fija"
       required: ["action"]
 
+    ListEmailThreadsArgs:
+      description: |
+        **list_email_threads** [email] (query)
+        Lista los hilos de email de la tienda, con filtros por estado y cuenta
+      type: object
+      properties:
+        filter:
+          type: string
+          description: "Filtro: unread, read, all (default: all)"
+        account_id:
+          type: integer
+          description: "ID de cuenta para filtrar"
+        search:
+          type: string
+          description: "Buscar por asunto o remitente"
+        page:
+          type: integer
+          description: "Pagina (default: 1)"
+        per_page:
+          type: integer
+          description: "Resultados por pagina (default: 20)"
+
     ListKnowledgeFilesArgs:
       description: |
         **list_knowledge_files** [storage] (query)
@@ -4061,6 +4111,17 @@ components:
           type: integer
           description: "ID de la notificacion"
       required: ["action"]
+
+    MarkEmailReadArgs:
+      description: |
+        **mark_email_read** [email] (mutation)
+        Marca un hilo de email como leido
+      type: object
+      properties:
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+      required: ["thread_id"]
 
     MarkNotificationReadArgs:
       description: |
@@ -4682,6 +4743,27 @@ components:
           type: integer
           default: 10
       required: ["action", "query"]
+
+    SendEmailReplyArgs:
+      description: |
+        **send_email_reply** [email] (mutation)
+        Envia una respuesta a un hilo de email existente o compone un nuevo email
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        thread_id:
+          type: integer
+          description: "ID del hilo para responder (0 para email nuevo)"
+        to:
+          type: string
+          description: "Destinatario (obligatorio para email nuevo)"
+        subject:
+          type: string
+          description: "Asunto (obligatorio para email nuevo)"
+        body_html:
+          type: string
+          description: "Contenido HTML del email"
+      required: ["body_html"]
 
     SendSupportTicketArgs:
       description: |
