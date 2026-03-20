@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 276 (excluding hidden)
+> Total tools: 280 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -63,11 +63,13 @@
 | `delete_whatsapp_workflow` | Automatizacion | mutation | SOLO para BORRAR/ELIMINAR un workflow de WhatsApp de forma permanente. NO usar para editar, modificar, añadir palabra... |
 | `disconnect_ecommerce` | Integraciones | mutation | Desconecta la integracion con tu plataforma e-commerce (Shopify, WooCommerce, etc.) |
 | `disconnect_whatsapp` | Automatizacion | mutation | Desconecta una sesion de WhatsApp y elimina los datos de autenticacion. Si hay multiples numeros, requiere session_id. |
+| `discover_email_folders` | Email | query | Conecta al servidor IMAP de una cuenta de email y descubre las carpetas disponibles (Enviados, Papelera, Archivo, Spa... |
 | `dismiss_training_suggestion` | ai_training | mutation | Dismiss a pending suggestion with optional reason. |
 | `download_conversation_file` | Almacenamiento | query | Obtiene la URL de descarga de un archivo compartido en una conversacion |
 | `download_knowledge_file` | Base de Conocimiento | query | Obtiene la URL de descarga de un archivo de la base de conocimiento |
 | `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada real. Usar cuando el usuario diga 'prueba... |
 | `duplicate_campaign` | Marketing Masivo | mutation | Crea una copia de una campaña existente en estado borrador |
+| `email_thread_action` | Email | mutation | Ejecuta una accion sobre un hilo de email: archivar, eliminar, marcar como spam, restaurar o marcar como no leido |
 | `export_campaign_csv` | Marketing Masivo | query | Descarga los logs de envio de una campana completada como archivo CSV. Solo funciona con campanas completadas, cancel... |
 | `export_conversations` | Conversaciones | query | Exporta conversaciones con todos los mensajes en formato estructurado |
 | `gdpr_delete_customer_data` | Clientes | mutation | Elimina todos los datos personales de un cliente para cumplimiento GDPR (Art. 17 - Derecho al olvido). Los registros ... |
@@ -269,7 +271,9 @@
 | `update_email_account` | Email | mutation | Modifica los campos de una cuenta de correo existente. Solo se actualizan los campos enviados. |
 | `update_email_agents` | Email | mutation | Actualiza los agentes asignados a una cuenta de correo electronico. |
 | `update_email_autoresponder` | Email | mutation | Configura el auto-responder IA para una cuenta de email. Puede generar borradores o enviar respuestas automaticas. |
+| `update_email_folders` | Email | mutation | Configura el mapeo de carpetas IMAP para una cuenta de email (Enviados, Papelera, Archivo, Spam). Necesario para la s... |
 | `update_email_retention` | Email | mutation | Cambia el periodo de retencion de emails. Los emails mas antiguos se eliminan automaticamente. |
+| `update_email_sync` | Email | mutation | Configura el modo de sincronizacion IMAP para una cuenta: solo bandeja de entrada o bidireccional (sincroniza accione... |
 | `update_knowledge_file` | Almacenamiento | mutation | Cambia el titulo, descripcion y/o contenido de un archivo de conocimiento. Para archivos de texto (txt, md, csv, json... |
 | `update_knowledge_snippet` | Prompt e IA | mutation | Permite aprobar, rechazar, editar o eliminar un dato aprendido. Usa filter=pending en list_knowledge_snippets para ve... |
 | `update_language` | Configuracion General | mutation | Cambia el idioma del dashboard y las respuestas de la IA |

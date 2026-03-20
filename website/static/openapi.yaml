@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    276 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    280 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1601,6 +1601,20 @@ components:
           type: integer
           description: "ID de la sesion a desconectar. Obligatorio si hay mas de un numero conectado. Usa get_whatsapp_status para obtener los IDs."
 
+    DiscoverEmailFoldersArgs:
+      description: |
+        **discover_email_folders** [email] (query)
+        Conecta al servidor IMAP de una cuenta de email y descubre las carpetas disponibles (Enviados, Papelera, Archivo, Spam). Detecta automaticamente las carpetas estandar.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'discover_folders'"
+        id:
+          type: integer
+          description: "ID de la cuenta de email"
+      required: ["action", "id"]
+
     DismissTrainingSuggestionArgs:
       description: |
         **dismiss_training_suggestion** [ai_training] (mutation)
@@ -1668,6 +1682,20 @@ components:
           type: integer
           description: "ID de la campaña a duplicar"
       required: ["action", "campaign_id"]
+
+    EmailThreadActionArgs:
+      description: |
+        **email_thread_action** [email] (mutation)
+        Ejecuta una accion sobre un hilo de email: archivar, eliminar, marcar como spam, restaurar o marcar como no leido
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion a ejecutar: archive, delete, spam, restore, mark_unread"
+        thread_id:
+          type: integer
+          description: "ID del hilo de email"
+      required: ["action", "thread_id"]
 
     ExportCampaignCsvArgs:
       description: |
@@ -5565,6 +5593,32 @@ components:
           description: "Maximo de respuestas automaticas por hilo (1-10). Default: 2"
       required: ["action", "id"]
 
+    UpdateEmailFoldersArgs:
+      description: |
+        **update_email_folders** [email] (mutation)
+        Configura el mapeo de carpetas IMAP para una cuenta de email (Enviados, Papelera, Archivo, Spam). Necesario para la sincronizacion bidireccional.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'update_folders'"
+        id:
+          type: integer
+          description: "ID de la cuenta de email"
+        sent_folder:
+          type: string
+          description: "Nombre de la carpeta de Enviados en IMAP (ej: Sent, INBOX.Sent)"
+        trash_folder:
+          type: string
+          description: "Nombre de la carpeta de Papelera en IMAP (ej: Trash, INBOX.Trash)"
+        archive_folder:
+          type: string
+          description: "Nombre de la carpeta de Archivo en IMAP (ej: Archive, All Mail)"
+        spam_folder:
+          type: string
+          description: "Nombre de la carpeta de Spam en IMAP (ej: Junk, Spam)"
+      required: ["action", "id"]
+
     UpdateEmailRetentionArgs:
       description: |
         **update_email_retention** [email] (mutation)
@@ -5579,6 +5633,23 @@ components:
           description: "Dias de retencion: 30, 60, 90 o 180"
           enum: [30, 60, 90, 180]
       required: ["action", "retention_days"]
+
+    UpdateEmailSyncArgs:
+      description: |
+        **update_email_sync** [email] (mutation)
+        Configura el modo de sincronizacion IMAP para una cuenta: solo bandeja de entrada o bidireccional (sincroniza acciones como archivar, eliminar, spam con el servidor).
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'update_sync'"
+        id:
+          type: integer
+          description: "ID de la cuenta de email"
+        sync_mode:
+          type: string
+          description: "Modo de sincronizacion: 'inbox_only' (solo recibir) o 'bidirectional' (sincronizar acciones con IMAP)"
+      required: ["action", "id", "sync_mode"]
 
     UpdateKnowledgeFileArgs:
       description: |
