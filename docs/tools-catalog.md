@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 280 (excluding hidden)
+> Total tools: 284 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -39,6 +39,7 @@
 | `create_contact_list` | Marketing Masivo | mutation | Crea una nueva lista de contactos para campanas de marketing masivo |
 | `create_docqa_assistant` | Plugins | mutation | Crea un nuevo asistente de documentacion. Despues de crearlo, podras subir archivos (PDF, Word, etc.) desde el dashbo... |
 | `create_email_account` | Email | mutation | Crea una nueva cuenta de correo electronico con configuracion IMAP/SMTP. Maximo 10 cuentas por tienda. |
+| `create_email_rule` | Email | mutation | Crea una nueva regla automatica para procesar emails entrantes. Puede filtrar por remitente, asunto, etc. y ejecutar ... |
 | `create_knowledge_file` | Almacenamiento | mutation | Crea un nuevo archivo en la base de conocimiento a partir de contenido de texto. Ideal para anadir informacion como p... |
 | `create_list_from_followup` | Marketing Masivo | mutation | Crea una lista de contactos desde conversaciones detectadas por Smart Follow-up |
 | `create_list_from_inactive` | Marketing Masivo | mutation | Crea una nueva lista de contactos a partir de clientes que no han tenido conversación en un periodo determinado |
@@ -55,6 +56,7 @@
 | `delete_conversation_message` | Conversaciones | mutation | Elimina un mensaje especifico de una conversacion. Requiere el texto exacto del mensaje. |
 | `delete_customer_ai_error` | Base de Conocimiento | mutation | Remove a correction from the customer-facing WhatsApp AI that is no longer valid. |
 | `delete_email_account` | Email | mutation | Elimina una cuenta de correo y todos sus emails asociados. Esta accion no se puede deshacer. |
+| `delete_email_rule` | Email | mutation | Elimina una regla de email. Esta accion no se puede deshacer. |
 | `delete_knowledge_file` | Almacenamiento | mutation | Elimina un archivo de la base de conocimiento (no permite eliminar archivos de sistema) |
 | `delete_notification` | Notificaciones | mutation | Elimina permanentemente una notificacion |
 | `delete_task` | Tareas | mutation | Elimina una tarea permanentemente |
@@ -69,7 +71,7 @@
 | `download_knowledge_file` | Base de Conocimiento | query | Obtiene la URL de descarga de un archivo de la base de conocimiento |
 | `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada real. Usar cuando el usuario diga 'prueba... |
 | `duplicate_campaign` | Marketing Masivo | mutation | Crea una copia de una campaña existente en estado borrador |
-| `email_thread_action` | Email | mutation | Ejecuta una accion sobre un hilo de email: archivar, eliminar, marcar como spam, restaurar o marcar como no leido |
+| `email_thread_action` | Email | mutation | Ejecuta una accion sobre un hilo de email: archivar, eliminar, spam, restaurar, marcar como no leido, posponer (snooz... |
 | `export_campaign_csv` | Marketing Masivo | query | Descarga los logs de envio de una campana completada como archivo CSV. Solo funciona con campanas completadas, cancel... |
 | `export_conversations` | Conversaciones | query | Exporta conversaciones con todos los mensajes en formato estructurado |
 | `gdpr_delete_customer_data` | Clientes | mutation | Elimina todos los datos personales de un cliente para cumplimiento GDPR (Art. 17 - Derecho al olvido). Los registros ... |
@@ -183,6 +185,7 @@
 | `list_conversation_files` | Almacenamiento | query | Lista los archivos compartidos en una conversacion con un cliente |
 | `list_docqa_assistants` | Plugins | query | Muestra todos los asistentes de documentacion creados con el plugin Doc Q&A |
 | `list_email_accounts` | Email | query | Devuelve todas las cuentas de correo electronico configuradas en la tienda, con sus agentes asignados. |
+| `list_email_rules` | Email | query | Lista todas las reglas automaticas de email configuradas para la tienda. Las reglas se aplican a los emails entrantes... |
 | `list_email_threads` | Email | query | Lista los hilos de email de la tienda, con filtros por estado y cuenta |
 | `list_knowledge_files` | Almacenamiento | query | Muestra todos los archivos subidos a la base de conocimiento (PDFs, documentos, etc.) |
 | `list_knowledge_snippets` | Prompt e IA | query | Muestra los datos (facts) que la IA ha aprendido automaticamente de las conversaciones. Estos son datos concretos del... |
@@ -273,6 +276,7 @@
 | `update_email_autoresponder` | Email | mutation | Configura el auto-responder IA para una cuenta de email. Puede generar borradores o enviar respuestas automaticas. |
 | `update_email_folders` | Email | mutation | Configura el mapeo de carpetas IMAP para una cuenta de email (Enviados, Papelera, Archivo, Spam). Necesario para la s... |
 | `update_email_retention` | Email | mutation | Cambia el periodo de retencion de emails. Los emails mas antiguos se eliminan automaticamente. |
+| `update_email_rule` | Email | mutation | Actualiza una regla de email existente. Puede modificar nombre, prioridad, estado, condiciones o acciones. |
 | `update_email_sync` | Email | mutation | Configura el modo de sincronizacion IMAP para una cuenta: solo bandeja de entrada o bidireccional (sincroniza accione... |
 | `update_knowledge_file` | Almacenamiento | mutation | Cambia el titulo, descripcion y/o contenido de un archivo de conocimiento. Para archivos de texto (txt, md, csv, json... |
 | `update_knowledge_snippet` | Prompt e IA | mutation | Permite aprobar, rechazar, editar o eliminar un dato aprendido. Usa filter=pending en list_knowledge_snippets para ve... |

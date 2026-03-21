@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    280 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    284 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1080,6 +1080,29 @@ components:
           description: "Firma HTML para los emails enviados desde esta cuenta"
       required: ["action", "label", "email_address"]
 
+    CreateEmailRuleArgs:
+      description: |
+        **create_email_rule** [email] (mutation)
+        Crea una nueva regla automatica para procesar emails entrantes. Puede filtrar por remitente, asunto, etc. y ejecutar acciones como archivar, etiquetar o asignar agente.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'create'"
+        name:
+          type: string
+          description: "Nombre descriptivo de la regla"
+        priority:
+          type: integer
+          description: "Prioridad (0-99, mayor = se evalua primero). Default 0"
+        conditions:
+          type: array
+          description: "Array de condiciones. Cada condicion: {field: 'from'|'subject'|'body', operator: 'contains'|'equals'|'starts_with'|'ends_with', value: 'texto'}"
+        actions:
+          type: array
+          description: "Array de acciones. Cada accion: {type: 'archive'|'delete'|'spam'|'set_tags'|'assign', value?: 'etiqueta o agent_hash'}"
+      required: ["action", "name", "conditions", "actions"]
+
     CreateKnowledgeFileArgs:
       description: |
         **create_knowledge_file** [storage] (mutation)
@@ -1447,6 +1470,21 @@ components:
           description: "ID de la cuenta a eliminar"
       required: ["action", "id"]
 
+    DeleteEmailRuleArgs:
+      description: |
+        **delete_email_rule** [email] (mutation)
+        Elimina una regla de email. Esta accion no se puede deshacer.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'delete'"
+        id:
+          type: integer
+          description: "ID de la regla a eliminar"
+      required: ["action", "id"]
+
     DeleteKnowledgeFileArgs:
       description: |
         **delete_knowledge_file** [storage] (mutation)
@@ -1686,15 +1724,27 @@ components:
     EmailThreadActionArgs:
       description: |
         **email_thread_action** [email] (mutation)
-        Ejecuta una accion sobre un hilo de email: archivar, eliminar, marcar como spam, restaurar o marcar como no leido
+        Ejecuta una accion sobre un hilo de email: archivar, eliminar, spam, restaurar, marcar como no leido, posponer (snooze), quitar snooze, fusionar hilos, asignar etiquetas o asignar agente
       type: object
       properties:
         action:
           type: string
-          description: "Accion a ejecutar: archive, delete, spam, restore, mark_unread"
+          description: "Accion a ejecutar: archive, delete, spam, restore, mark_unread, snooze, unsnooze, merge, set_tags, assign"
         thread_id:
           type: integer
           description: "ID del hilo de email"
+        until:
+          type: string
+          description: "Fecha/hora hasta la que posponer (solo para action=snooze). Formato ISO 8601 o natural (ej: '2026-03-22 09:00:00', 'tomorrow 9am')"
+        target_thread_id:
+          type: integer
+          description: "ID del hilo destino para fusionar (solo para action=merge)"
+        tags:
+          type: array
+          description: "Array de etiquetas (solo para action=set_tags)"
+        agent_hash:
+          type: string
+          description: "Hash del agente a asignar (solo para action=assign, null para desasignar)"
       required: ["action", "thread_id"]
 
     ExportCampaignCsvArgs:
@@ -3843,6 +3893,12 @@ components:
           description: "Accion fija"
       required: ["action"]
 
+    ListEmailRulesArgs:
+      description: |
+        **list_email_rules** [email] (query)
+        Lista todas las reglas automaticas de email configuradas para la tienda. Las reglas se aplican a los emails entrantes en orden de prioridad.
+      type: object
+
     ListEmailThreadsArgs:
       description: |
         **list_email_threads** [email] (query)
@@ -5633,6 +5689,35 @@ components:
           description: "Dias de retencion: 30, 60, 90 o 180"
           enum: [30, 60, 90, 180]
       required: ["action", "retention_days"]
+
+    UpdateEmailRuleArgs:
+      description: |
+        **update_email_rule** [email] (mutation)
+        Actualiza una regla de email existente. Puede modificar nombre, prioridad, estado, condiciones o acciones.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'update'"
+        id:
+          type: integer
+          description: "ID de la regla a actualizar"
+        name:
+          type: string
+          description: "Nuevo nombre"
+        priority:
+          type: integer
+          description: "Nueva prioridad"
+        is_active:
+          type: integer
+          description: "1=activa, 0=desactivada"
+        conditions:
+          type: array
+          description: "Nuevas condiciones (reemplaza las actuales)"
+        actions:
+          type: array
+          description: "Nuevas acciones (reemplaza las actuales)"
+      required: ["action", "id"]
 
     UpdateEmailSyncArgs:
       description: |
