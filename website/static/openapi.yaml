@@ -3955,6 +3955,10 @@ components:
         source_type:
           type: string
           description: "Filter by source: conversation, correction, copilot_correction, dashboard_correction, chatgpt_correction"
+        risk_level:
+          type: string
+          description: "Filtrar por nivel de riesgo: low, medium o high"
+          enum: ["low", "medium", "high"]
 
     ListNotificationsArgs:
       description: |
