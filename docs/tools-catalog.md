@@ -2,19 +2,21 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 287 (excluding hidden)
+> Total tools: 299 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
 | `add_contacts_to_list` | Marketing Masivo | mutation | Añade uno o más contactos a una lista de marketing |
 | `add_customer_comment` | Clientes | mutation | Anade un nuevo comentario interno a la ficha de un cliente |
 | `add_customer_tag` | Clientes | mutation | Anade una etiqueta (tag) a un cliente para clasificarlo |
+| `add_email_note` | Email | mutation | Agrega una nota interna a un hilo de email. Solo visible para agentes. |
 | `add_to_blacklist` | Marketing Masivo | mutation | Bloquea un numero de telefono para que no reciba campanas de marketing masivo |
 | `add_whatsapp_optout` | WhatsApp | mutation | Anade un numero a la lista de opt-out para que no reciba mensajes automaticos |
 | `apply_prompt_instruction` | Prompt e IA | query | Genera una version modificada del prompt segun una instruccion. NO guarda los cambios - solo devuelve el prompt modif... |
 | `apply_training_suggestion` | ai_training | mutation | Apply a pending AI improvement suggestion. Level 1-2 creates a correction, Level 4 appends to prompt, Level 3 require... |
 | `approve_campaign` | Marketing Masivo | mutation | Aprueba una campaña pendiente de aprobación para que pueda ser enviada |
 | `archive_campaign` | Marketing Masivo | mutation | Archiva una campaña completada para mantener la lista limpia |
+| `assign_email_thread` | Email | mutation | Asigna un hilo de email a un agente especifico. Usar assign_to=null para desasignar. |
 | `assign_marketing_session` | Marketing Masivo | mutation | Habilita o deshabilita una sesión de WhatsApp para envío de campañas de marketing |
 | `auto_categorize_conversations` | Analisis IA | query | Categoriza conversaciones recientes por tema, intento y prioridad usando IA |
 | `auto_tag_customer` | Analisis IA | query | Analiza la conversacion con IA y sugiere tags relevantes para el cliente |
@@ -23,6 +25,7 @@
 | `bulk_toggle_workflows` | Automatizacion | mutation | Activa o desactiva multiples workflows a la vez |
 | `cancel_campaign` | Marketing Masivo | mutation | Cancela definitivamente una campana de marketing masivo (en curso, pausada, borrador o programada). Los mensajes ya e... |
 | `cancel_campaign_schedule` | Marketing Masivo | mutation | Cancela la programacion de una campana programada, cambiandola a estado borrador. No elimina la campana. |
+| `cancel_scheduled_email` | Email | mutation | Cancela un email que estaba programado para enviarse. El email se elimina. |
 | `cancel_scheduled_message` | WhatsApp | mutation | Cancela un mensaje de WhatsApp que esta programado para envio futuro |
 | `check_plugin_conversation_note` | Plugins | query | Comprueba si ya existe una nota guardada para una sesion de chat del plugin y muestra los datos del cliente asociado. |
 | `check_whatsapp_optout` | WhatsApp | query | Comprueba si un numero de telefono esta en la lista de opt-out de automatizacion WhatsApp |
@@ -56,6 +59,7 @@
 | `delete_conversation_message` | Conversaciones | mutation | Elimina un mensaje especifico de una conversacion. Requiere el texto exacto del mensaje. |
 | `delete_customer_ai_error` | Base de Conocimiento | mutation | Remove a correction from the customer-facing WhatsApp AI that is no longer valid. |
 | `delete_email_account` | Email | mutation | Elimina una cuenta de correo y todos sus emails asociados. Esta accion no se puede deshacer. |
+| `delete_email_note` | Email | mutation | Elimina una nota interna de un hilo de email. |
 | `delete_email_rule` | Email | mutation | Elimina una regla de email. Esta accion no se puede deshacer. |
 | `delete_knowledge_file` | Almacenamiento | mutation | Elimina un archivo de la base de conocimiento (no permite eliminar archivos de sistema) |
 | `delete_notification` | Notificaciones | mutation | Elimina permanentemente una notificacion |
@@ -188,12 +192,15 @@
 | `list_conversation_files` | Almacenamiento | query | Lista los archivos compartidos en una conversacion con un cliente |
 | `list_docqa_assistants` | Plugins | query | Muestra todos los asistentes de documentacion creados con el plugin Doc Q&A |
 | `list_email_accounts` | Email | query | Devuelve todas las cuentas de correo electronico configuradas en la tienda, con sus agentes asignados. |
+| `list_email_drafts` | Email | query | Muestra los borradores de email pendientes de envio. |
+| `list_email_notes` | Email | query | Obtiene las notas internas de un hilo de email. Las notas son visibles solo para agentes, no para el cliente. |
 | `list_email_rules` | Email | query | Lista todas las reglas automaticas de email configuradas para la tienda. Las reglas se aplican a los emails entrantes... |
 | `list_email_threads` | Email | query | Lista los hilos de email de la tienda, con filtros por estado y cuenta |
 | `list_knowledge_files` | Almacenamiento | query | Muestra todos los archivos subidos a la base de conocimiento (PDFs, documentos, etc.) |
 | `list_knowledge_snippets` | Prompt e IA | query | Muestra los datos (facts) que la IA ha aprendido automaticamente de las conversaciones. Estos son datos concretos del... |
 | `list_notifications` | Notificaciones | query | Obtiene las notificaciones del sistema con filtros opcionales |
 | `list_plugin_configs` | Plugins | query | Lista todos los plugins instalados con su configuracion y estado |
+| `list_scheduled_emails` | Email | query | Muestra los emails que estan programados para enviarse en el futuro. |
 | `list_scheduled_messages` | WhatsApp | query | Lists scheduled WhatsApp messages with optional status filter. Returns id, session info, phone, message text, schedul... |
 | `list_storage_files` | Almacenamiento | query | Muestra la lista de archivos subidos a la base de conocimiento con su tamano y fecha |
 | `list_tasks` | Tareas | query | Lista las tareas de la tienda con filtros opcionales por estado, agente o telefono |
@@ -207,6 +214,7 @@
 | `mark_email_read` | Email | mutation | Marca un hilo de email como leido |
 | `mark_notification_read` | Notificaciones | mutation | Marca una notificacion especifica como leida |
 | `merge_customers` | Clientes | mutation | Fusiona dos registros de cliente en uno, combinando comentarios, tags y datos CRM |
+| `merge_email_threads` | Email | mutation | Fusiona un hilo de email en otro. Los mensajes y notas del hilo origen se mueven al destino. Solo se pueden fusionar ... |
 | `pause_campaign` | Marketing Masivo | mutation | Pausa temporalmente una campana de marketing masivo en curso |
 | `precheck_delete_whatsapp_session` | WhatsApp | query | Muestra qué configuraciones se verían afectadas al eliminar una sesión de WhatsApp (workflows, campañas, seguimiento ... |
 | `preview_smart_followup` | Seguimiento Inteligente | query | Genera una vista previa del mensaje de seguimiento que se enviaria a un cliente sin enviarlo realmente |
@@ -241,7 +249,10 @@
 | `send_whatsapp_message` | WhatsApp | mutation | Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345... |
 | `set_ai_error` | Base de Conocimiento | mutation | Record a mistake in YOUR OWN responses or behavior (this dashboard chat). Call this when the user corrects you, AND w... |
 | `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use ON... |
+| `set_email_priority` | Email | mutation | Cambia la prioridad de un hilo de email. |
+| `set_email_tags` | Email | mutation | Establece las etiquetas de un hilo de email. Las etiquetas son strings libres. |
 | `smart_knowledge_update` | Prompt e IA | mutation | Busca y actualiza datos aprendidos que contradigan o estén desactualizados según la instrucción del usuario. Usa esto... |
+| `snooze_email_thread` | Email | mutation | Pospone un hilo de email hasta una fecha y hora especifica. El hilo se reabrira automaticamente cuando llegue el mome... |
 | `start_campaign` | Marketing Masivo | mutation | Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas. |
 | `sync_knowledge_now` | Almacenamiento | mutation | Fuerza la sincronizacion inmediata de los facts aprendidos al Vector Store (normalmente se hace automaticamente) |
 | `test_crm_endpoint` | Avanzado | mutation | Envia una peticion de prueba a un endpoint CRM para verificar que funciona correctamente |
@@ -260,6 +271,7 @@
 | `translate_conversation` | Analisis IA | query | Traduce los ultimos mensajes de una conversacion a otro idioma usando IA |
 | `trigger_smart_followup` | Seguimiento Inteligente | mutation | Lanza manualmente el analisis de seguimiento inteligente para esta tienda. Si ya hay una ejecucion en curso (cron o m... |
 | `unarchive_campaign` | Marketing Masivo | mutation | Restaura una campaña archivada a la lista principal |
+| `unsnooze_email_thread` | Email | mutation | Reactiva un hilo de email que estaba pospuesto, devolviendolo a estado abierto. |
 | `update_agent` | Agentes | mutation | Modifica los datos de un agente existente |
 | `update_ai_error` | Base de Conocimiento | mutation | Update an existing AI correction. Can change the content, category, or status (active/rejected). |
 | `update_billing_info` | Cuenta | mutation | Actualiza los datos de facturacion para las facturas |

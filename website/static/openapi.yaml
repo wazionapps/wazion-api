@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    287 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    299 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -335,6 +335,23 @@ components:
           description: "Telefono secundario para merge"
       required: ["action", "phone", "tag_name"]
 
+    AddEmailNoteArgs:
+      description: |
+        **add_email_note** [email] (mutation)
+        Agrega una nota interna a un hilo de email. Solo visible para agentes.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'add'"
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+        note_text:
+          type: string
+          description: "Texto de la nota"
+      required: ["action", "thread_id", "note_text"]
+
     AddToBlacklistArgs:
       description: |
         **add_to_blacklist** [mass_marketing] (mutation)
@@ -420,6 +437,23 @@ components:
           type: integer
           description: "ID de la campaña a archivar"
       required: ["action", "campaign_id"]
+
+    AssignEmailThreadArgs:
+      description: |
+        **assign_email_thread** [email] (mutation)
+        Asigna un hilo de email a un agente especifico. Usar assign_to=null para desasignar.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'assign'"
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+        assign_to:
+          type: integer
+          description: "ID del agente (shop_agents.id). Omitir o null para desasignar."
+      required: ["action", "thread_id"]
 
     AssignMarketingSessionArgs:
       description: |
@@ -581,6 +615,21 @@ components:
           type: integer
           description: "ID de la campana programada"
       required: ["action", "campaign_id"]
+
+    CancelScheduledEmailArgs:
+      description: |
+        **cancel_scheduled_email** [email] (mutation)
+        Cancela un email que estaba programado para enviarse. El email se elimina.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'cancel_scheduled'"
+        message_id:
+          type: integer
+          description: "ID del mensaje programado a cancelar"
+      required: ["action", "message_id"]
 
     CancelScheduledMessageArgs:
       description: |
@@ -1469,6 +1518,23 @@ components:
           type: integer
           description: "ID de la cuenta a eliminar"
       required: ["action", "id"]
+
+    DeleteEmailNoteArgs:
+      description: |
+        **delete_email_note** [email] (mutation)
+        Elimina una nota interna de un hilo de email.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'delete'"
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+        note_id:
+          type: integer
+          description: "ID de la nota a eliminar"
+      required: ["action", "thread_id", "note_id"]
 
     DeleteEmailRuleArgs:
       description: |
@@ -3932,6 +3998,28 @@ components:
           description: "Accion fija"
       required: ["action"]
 
+    ListEmailDraftsArgs:
+      description: |
+        **list_email_drafts** [email] (query)
+        Muestra los borradores de email pendientes de envio.
+      type: object
+      properties:
+        filter:
+          type: string
+          description: "Debe ser 'drafts'"
+      required: ["filter"]
+
+    ListEmailNotesArgs:
+      description: |
+        **list_email_notes** [email] (query)
+        Obtiene las notas internas de un hilo de email. Las notas son visibles solo para agentes, no para el cliente.
+      type: object
+      properties:
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+      required: ["thread_id"]
+
     ListEmailRulesArgs:
       description: |
         **list_email_rules** [email] (query)
@@ -4050,6 +4138,17 @@ components:
           description: "Periodo de tiempo para las estadisticas"
           enum: ["today", "yesterday", "last_7_days", "last_30_days"]
       required: ["action"]
+
+    ListScheduledEmailsArgs:
+      description: |
+        **list_scheduled_emails** [email] (query)
+        Muestra los emails que estan programados para enviarse en el futuro.
+      type: object
+      properties:
+        filter:
+          type: string
+          description: "Debe ser 'scheduled'"
+      required: ["filter"]
 
     ListScheduledMessagesArgs:
       description: |
@@ -4295,6 +4394,24 @@ components:
           type: string
           description: "Telefono del cliente secundario (se fusiona y elimina)"
       required: ["action", "primary_phone", "secondary_phone"]
+
+    MergeEmailThreadsArgs:
+      description: |
+        **merge_email_threads** [email] (mutation)
+        Fusiona un hilo de email en otro. Los mensajes y notas del hilo origen se mueven al destino. Solo se pueden fusionar hilos de la misma cuenta de email.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'merge'"
+        thread_id:
+          type: integer
+          description: "ID del hilo origen (se eliminara)"
+        target_thread_id:
+          type: integer
+          description: "ID del hilo destino (recibira los mensajes)"
+      required: ["action", "thread_id", "target_thread_id"]
 
     PauseCampaignArgs:
       description: |
@@ -4967,6 +5084,41 @@ components:
           description: "The wrong text that the AI generated"
       required: ["fact_content", "category"]
 
+    SetEmailPriorityArgs:
+      description: |
+        **set_email_priority** [email] (mutation)
+        Cambia la prioridad de un hilo de email.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'set_priority'"
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+        priority:
+          type: string
+          description: "Prioridad del hilo"
+          enum: ["high", "medium", "low"]
+      required: ["action", "thread_id", "priority"]
+
+    SetEmailTagsArgs:
+      description: |
+        **set_email_tags** [email] (mutation)
+        Establece las etiquetas de un hilo de email. Las etiquetas son strings libres.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'set_tags'"
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+        tags:
+          type: array
+          description: "Array de etiquetas (strings). Enviar array vacio para quitar todas."
+      required: ["action", "thread_id", "tags"]
+
     SmartKnowledgeUpdateArgs:
       description: |
         **smart_knowledge_update** [prompt] (mutation)
@@ -4987,6 +5139,23 @@ components:
           type: array
           description: "Lista de cambios propuestos del preview (para Phase 2 con confirm=true). Cada elemento: {id, action, proposed}"
       required: ["instruction"]
+
+    SnoozeEmailThreadArgs:
+      description: |
+        **snooze_email_thread** [email] (mutation)
+        Pospone un hilo de email hasta una fecha y hora especifica. El hilo se reabrira automaticamente cuando llegue el momento.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'snooze'"
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+        until:
+          type: string
+          description: "Fecha y hora hasta cuando posponer (formato ISO 8601, ej: 2026-03-25T09:00:00)"
+      required: ["action", "thread_id", "until"]
 
     StartCampaignArgs:
       description: |
@@ -5230,6 +5399,20 @@ components:
           type: integer
           description: "ID de la campaña a desarchivar"
       required: ["action", "campaign_id"]
+
+    UnsnoozeEmailThreadArgs:
+      description: |
+        **unsnooze_email_thread** [email] (mutation)
+        Reactiva un hilo de email que estaba pospuesto, devolviendolo a estado abierto.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'unsnooze'"
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+      required: ["action", "thread_id"]
 
     UpdateAgentArgs:
       description: |
