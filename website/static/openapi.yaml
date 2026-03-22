@@ -3956,7 +3956,7 @@ components:
         page:
           type: integer
           description: "Pagina (default: 1)"
-        per_page:
+        limit:
           type: integer
           description: "Resultados por pagina (default: 20)"
 
