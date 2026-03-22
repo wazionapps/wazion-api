@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 284 (excluding hidden)
+> Total tools: 287 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -172,7 +172,10 @@
 | `get_workflow_logs` | WhatsApp | query | Muestra las ejecuciones recientes de workflows automaticos de WhatsApp |
 | `get_workflow_session_stats` | Automatizacion | query | Obtiene estadísticas de workflows para una sesión específica de WhatsApp: mensajes de hoy, ejecuciones, volumen de 7 ... |
 | `global_search` | Clientes | query | Busca en todas las fuentes de datos de clientes: CRM, contactos, conversaciones. Devuelve resultados unificados sin d... |
+| `import_contacts_from_all_conversations` | Marketing Masivo | mutation | Importa a una lista de marketing masivo todos los telefonos del historial completo de conversaciones WhatsApp (conver... |
 | `import_contacts_from_conversations` | Marketing Masivo | mutation | Importa a una lista de marketing masivo todos los telefonos de las conversaciones WhatsApp de la tienda. |
+| `import_contacts_from_crm` | Marketing Masivo | mutation | Importa a una lista de marketing masivo los contactos del CRM interno de WAzion. |
+| `import_contacts_from_platform` | Marketing Masivo | mutation | Importa a una lista de marketing masivo los clientes con telefono de la plataforma conectada (Shopify, WooCommerce, P... |
 | `import_contacts_manual` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo escribiendo los telefonos. Un telefono por linea o separados por co... |
 | `import_marketing_contacts` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo. Soporta entrada manual de telefonos o importacion desde conversaci... |
 | `improve_prompt` | Prompt e IA | query | Analiza el prompt actual con IA y devuelve puntuaciones por categoria, sugerencias de mejora y una version mejorada d... |

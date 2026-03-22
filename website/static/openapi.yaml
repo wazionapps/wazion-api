@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    284 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    287 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -3688,10 +3688,49 @@ components:
           description: "Telefono secundario para merge"
       required: ["action", "query"]
 
+    ImportContactsFromAllConversationsArgs:
+      description: |
+        **import_contacts_from_all_conversations** [mass_marketing] (mutation)
+        Importa a una lista de marketing masivo todos los telefonos del historial completo de conversaciones WhatsApp (conversation_history). Mas amplio que la importacion desde mensajes recientes.
+      type: object
+      properties:
+        source:
+          type: string
+        list_id:
+          type: integer
+          description: "ID de la lista donde importar los contactos"
+      required: ["source", "list_id"]
+
     ImportContactsFromConversationsArgs:
       description: |
         **import_contacts_from_conversations** [mass_marketing] (mutation)
         Importa a una lista de marketing masivo todos los telefonos de las conversaciones WhatsApp de la tienda.
+      type: object
+      properties:
+        source:
+          type: string
+        list_id:
+          type: integer
+          description: "ID de la lista donde importar los contactos"
+      required: ["source", "list_id"]
+
+    ImportContactsFromCrmArgs:
+      description: |
+        **import_contacts_from_crm** [mass_marketing] (mutation)
+        Importa a una lista de marketing masivo los contactos del CRM interno de WAzion.
+      type: object
+      properties:
+        source:
+          type: string
+        list_id:
+          type: integer
+          description: "ID de la lista donde importar los contactos"
+      required: ["source", "list_id"]
+
+    ImportContactsFromPlatformArgs:
+      description: |
+        **import_contacts_from_platform** [mass_marketing] (mutation)
+        Importa a una lista de marketing masivo los clientes con telefono de la plataforma conectada (Shopify, WooCommerce, PrestaShop, VTEX).
       type: object
       properties:
         source:
