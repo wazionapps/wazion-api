@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    299 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    309 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -407,10 +407,13 @@ components:
         ⚠️ Requires confirmation
       type: object
       properties:
+        action:
+          type: string
+          description: "Accion fija"
         suggestion_id:
           type: integer
-          description: "ID of the suggestion to apply"
-      required: ["suggestion_id"]
+          description: "ID de la sugerencia de entrenamiento a aplicar"
+      required: ["action", "suggestion_id"]
 
     ApproveCampaignArgs:
       description: |
@@ -629,6 +632,30 @@ components:
         message_id:
           type: integer
           description: "ID del mensaje programado a cancelar"
+        to:
+          type: string
+          description: "Destinatario del email"
+        subject:
+          type: string
+          description: "Asunto del email"
+        body_text:
+          type: string
+          description: "Cuerpo en texto plano"
+        cc:
+          type: array
+          description: "Copia a (array de emails)"
+        bcc:
+          type: array
+          description: "Copia oculta (array de emails)"
+        account_id:
+          type: integer
+          description: "ID de la cuenta de email"
+        attachment_ids:
+          type: array
+          description: "IDs de adjuntos"
+        scheduled_at:
+          type: string
+          description: "Fecha programada"
       required: ["action", "message_id"]
 
     CancelScheduledMessageArgs:
@@ -918,6 +945,9 @@ components:
         permissions_json:
           type: string
           description: "Permisos iniciales del agente en formato JSON. Si no se proporciona, el agente tendra todos los permisos por defecto"
+        permissions:
+          type: object
+          description: "Permisos del agente (objeto JSON con permisos por seccion)"
       required: ["action", "nickname", "full_name", "email"]
 
     CreateCalendarEventArgs:
@@ -1073,6 +1103,21 @@ components:
         allowed_domains:
           type: array
           description: "Dominios donde funcionara el widget (vacio = todos)"
+        language_available:
+          type: array
+          description: "Idiomas disponibles (array)"
+        language_show_selector:
+          type: boolean
+          description: "Mostrar selector de idioma"
+        rate_limit_window_minutes:
+          type: integer
+          description: "Ventana de rate limit en minutos"
+        config_design:
+          type: object
+          description: "Configuracion de diseno (JSON)"
+        config_texts:
+          type: object
+          description: "Textos personalizados (JSON)"
       required: ["display_name"]
 
     CreateEmailAccountArgs:
@@ -1325,6 +1370,9 @@ components:
         session_id:
           type: integer
           description: "ID de la sesion de WhatsApp a la que asignar este workflow. Si no se especifica (null), el workflow se ejecuta para todos los numeros conectados."
+        id:
+          type: integer
+          description: "ID del workflow (si se especifica, actualiza en lugar de crear)"
       required: ["name", "actions"]
 
     DeleteAgentArgs:
@@ -1503,6 +1551,30 @@ components:
           type: integer
           description: "ID of the correction to delete"
       required: ["id"]
+
+    DeleteDocqaAssistantArgs:
+      description: |
+        **delete_docqa_assistant** [plugins] (mutation)
+        Elimina un asistente Doc-QA y todos sus recursos asociados en OpenAI
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente Doc-QA a eliminar"
+      required: ["assistant_id"]
+
+    DeleteDocqaFileArgs:
+      description: |
+        **delete_docqa_file** [plugins] (mutation)
+        Elimina un archivo de un asistente Doc-QA
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        file_id:
+          type: integer
+          description: "ID del archivo a eliminar"
+      required: ["file_id"]
 
     DeleteEmailAccountArgs:
       description: |
@@ -1725,13 +1797,16 @@ components:
         Dismiss a pending suggestion with optional reason.
       type: object
       properties:
+        action:
+          type: string
+          description: "Accion fija"
         suggestion_id:
           type: integer
-          description: "ID of the suggestion to dismiss"
+          description: "ID de la sugerencia de entrenamiento a descartar"
         reason:
           type: string
-          description: "Why the suggestion was dismissed. OPTIONAL - omit if no reason given."
-      required: ["suggestion_id"]
+          description: "Razon por la que se descarta la sugerencia"
+      required: ["action", "suggestion_id"]
 
     DownloadConversationFileArgs:
       description: |
@@ -2125,6 +2200,9 @@ components:
         days:
           type: integer
           description: "Dias a analizar (default 30)"
+        period:
+          type: string
+          description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
       required: ["action"]
 
     GetAutolearningMetricsArgs:
@@ -2151,6 +2229,9 @@ components:
           type: integer
           description: "Dias a analizar (default 7)"
           default: 7
+        period:
+          type: string
+          description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
       required: ["action"]
 
     GetCampaignArgs:
@@ -2632,7 +2713,50 @@ components:
         date:
           type: string
           description: "Fecha (YYYY-MM-DD, default hoy)"
+        period:
+          type: string
+          description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
       required: ["action"]
+
+    GetDocqaDetailArgs:
+      description: |
+        **get_docqa_detail** [plugins] (query)
+        Obtiene los detalles completos de un asistente Doc-QA incluyendo estadisticas
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente Doc-QA"
+      required: ["assistant_id"]
+
+    GetDocqaLogsArgs:
+      description: |
+        **get_docqa_logs** [plugins] (query)
+        Obtiene el historial de preguntas realizadas a un asistente Doc-QA
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente Doc-QA"
+        page:
+          type: integer
+          description: "Numero de pagina (default: 1)"
+        per_page:
+          type: integer
+          description: "Resultados por pagina (10-100, default: 20)"
+        date_from:
+          type: string
+          description: "Fecha inicio del filtro (YYYY-MM-DD)"
+        date_to:
+          type: string
+          description: "Fecha fin del filtro (YYYY-MM-DD)"
+        days:
+          type: integer
+          description: "Ultimos N dias"
+        search:
+          type: string
+          description: "Texto de busqueda en preguntas y respuestas"
+      required: ["assistant_id"]
 
     GetDocqaStatsArgs:
       description: |
@@ -2657,6 +2781,12 @@ components:
       properties:
         action:
           type: string
+        period:
+          type: string
+          description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+        days:
+          type: integer
+          description: "Numero de dias de lookback"
       required: ["action"]
 
     GetEmailAccountArgs:
@@ -2672,6 +2802,31 @@ components:
           type: integer
           description: "ID de la cuenta de email"
       required: ["action", "id"]
+
+    GetEmailAccountsArgs:
+      description: |
+        **get_email_accounts** [email] (query)
+        Lista las cuentas de email accesibles con su estado y configuracion basica
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
+
+    GetEmailFilterCountsArgs:
+      description: |
+        **get_email_filter_counts** [email] (query)
+        Devuelve la cantidad de hilos por cada filtro (no leidos, leidos, enviados, archivados, etc.)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        account_id:
+          type: integer
+          description: "ID de cuenta de email para filtrar (omitir para todas)"
+      required: ["action"]
 
     GetEmailRetentionArgs:
       description: |
@@ -2709,7 +2864,21 @@ components:
         thread_id:
           type: integer
           description: "ID del hilo"
+        page:
+          type: integer
+          description: "Numero de pagina para paginacion de mensajes"
       required: ["thread_id"]
+
+    GetEmailUnreadCountArgs:
+      description: |
+        **get_email_unread_count** [email] (query)
+        Devuelve el total de emails no leidos en todas las cuentas
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
 
     GetKnowledgeProcessingStatusArgs:
       description: |
@@ -3323,6 +3492,9 @@ components:
           type: integer
           description: "Dias a analizar (default 30)"
           default: 30
+        period:
+          type: string
+          description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
       required: ["action"]
 
     GetTrainingSuggestionsArgs:
@@ -3544,6 +3716,9 @@ components:
       properties:
         action:
           type: string
+        session_id:
+          type: integer
+          description: "ID de sesion de WhatsApp"
       required: ["action"]
 
     GetWhatsappMessageLogsArgs:
@@ -3571,6 +3746,9 @@ components:
         session_id:
           type: integer
           description: "ID de la sesión WhatsApp"
+        days:
+          type: integer
+          description: "Numero de dias de lookback"
       required: ["action"]
 
     GetWhatsappProfileArgs:
@@ -3681,6 +3859,18 @@ components:
         period:
           type: integer
           description: "Number of days: 7, 30, or 90. Default: 7"
+        limit:
+          type: integer
+          description: "Numero maximo de resultados"
+        offset:
+          type: integer
+          description: "Desplazamiento para paginacion"
+        from:
+          type: string
+          description: "Fecha inicio (YYYY-MM-DD)"
+        to:
+          type: string
+          description: "Fecha fin (YYYY-MM-DD)"
       required: ["action"]
 
     GetWorkflowLogsArgs:
@@ -3701,6 +3891,9 @@ components:
         session_id:
           type: integer
           description: "ID de la sesión WhatsApp"
+        days:
+          type: integer
+          description: "Numero de dias de lookback"
       required: ["action"]
 
     GetWorkflowSessionStatsArgs:
@@ -3962,6 +4155,12 @@ components:
         action:
           type: string
           description: "Accion fija: list"
+        page:
+          type: integer
+          description: "Numero de pagina"
+        search:
+          type: string
+          description: "Texto de busqueda"
       required: ["action"]
 
     ListConversationFilesArgs:
@@ -3987,6 +4186,17 @@ components:
         Muestra todos los asistentes de documentacion creados con el plugin Doc Q&A
       type: object
 
+    ListDocqaFilesArgs:
+      description: |
+        **list_docqa_files** [plugins] (query)
+        Lista los archivos subidos a un asistente Doc-QA
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente Doc-QA"
+      required: ["assistant_id"]
+
     ListEmailAccountsArgs:
       description: |
         **list_email_accounts** [email] (query)
@@ -4007,6 +4217,24 @@ components:
         filter:
           type: string
           description: "Debe ser 'drafts'"
+        from_filter:
+          type: string
+          description: "Filtrar por remitente"
+        has_attachments:
+          type: string
+          description: "Filtrar por borradores con adjuntos"
+        tag:
+          type: string
+          description: "Filtrar por etiqueta"
+        assigned:
+          type: string
+          description: "Filtrar por agente asignado"
+        date_from:
+          type: string
+          description: "Fecha inicio del filtro"
+        date_to:
+          type: string
+          description: "Fecha fin del filtro"
       required: ["filter"]
 
     ListEmailNotesArgs:
@@ -4047,6 +4275,24 @@ components:
         limit:
           type: integer
           description: "Resultados por pagina (default: 20)"
+        from_filter:
+          type: string
+          description: "Filtrar por remitente"
+        has_attachments:
+          type: string
+          description: "Filtrar por hilos con adjuntos"
+        tag:
+          type: string
+          description: "Filtrar por etiqueta"
+        assigned:
+          type: string
+          description: "Filtrar por agente asignado"
+        date_from:
+          type: string
+          description: "Fecha inicio del filtro"
+        date_to:
+          type: string
+          description: "Fecha fin del filtro"
 
     ListKnowledgeFilesArgs:
       description: |
@@ -4148,6 +4394,24 @@ components:
         filter:
           type: string
           description: "Debe ser 'scheduled'"
+        from_filter:
+          type: string
+          description: "Filtrar por remitente"
+        has_attachments:
+          type: string
+          description: "Filtrar por emails con adjuntos"
+        tag:
+          type: string
+          description: "Filtrar por etiqueta"
+        assigned:
+          type: string
+          description: "Filtrar por agente asignado"
+        date_from:
+          type: string
+          description: "Fecha inicio del filtro"
+        date_to:
+          type: string
+          description: "Fecha fin del filtro"
       required: ["filter"]
 
     ListScheduledMessagesArgs:
@@ -4305,7 +4569,7 @@ components:
           description: "Array de IDs de FAQs a gestionar (obtener de get_product_qa_faqs)"
         action:
           type: string
-          description: "Acción a realizar: unpublish (despublicar FAQs), republish (republicar), delete (eliminar)"
+          description: "Accion a realizar: unpublish, republish, delete"
           enum: ["unpublish", "republish", "delete"]
       required: ["faq_ids", "action"]
 
@@ -4480,7 +4744,22 @@ components:
         confirmation:
           type: boolean
           description: "Debe ser true para confirmar la regeneracion"
+        confirm:
+          type: boolean
+          description: "Confirmar la regeneracion del token"
       required: ["confirmation"]
+
+    RegenerateDocqaTokenArgs:
+      description: |
+        **regenerate_docqa_token** [plugins] (mutation)
+        Genera un nuevo token de acceso para un asistente Doc-QA
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente Doc-QA"
+      required: ["assistant_id"]
 
     RegeneratePluginTokenArgs:
       description: |
@@ -4626,6 +4905,21 @@ components:
           type: string
           description: "Numero de telefono a quitar de opt-out"
       required: ["action", "phone"]
+
+    RemoveWhatsappProfilePictureArgs:
+      description: |
+        **remove_whatsapp_profile_picture** [automation] (mutation)
+        Elimina la foto de perfil de una sesion de WhatsApp
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        session_id:
+          type: integer
+          description: "ID de la sesion de WhatsApp"
+      required: ["action", "session_id"]
 
     ReorderWhatsappWorkflowsArgs:
       description: |
@@ -5007,6 +5301,12 @@ components:
         body_html:
           type: string
           description: "Contenido HTML del email"
+        scheduled_at:
+          type: string
+          description: "Fecha y hora para programar el envio (ISO 8601)"
+        attachment_ids:
+          type: array
+          description: "IDs de adjuntos previamente subidos"
       required: ["body_html"]
 
     SendSupportTicketArgs:
@@ -5219,7 +5519,34 @@ components:
         account_id:
           type: integer
           description: "ID de la cuenta a probar"
-      required: ["account_id"]
+        imap_host:
+          type: string
+          description: "Servidor IMAP"
+        imap_port:
+          type: string
+          description: "Puerto IMAP"
+        imap_user:
+          type: string
+          description: "Usuario IMAP"
+        imap_password:
+          type: string
+          description: "Contrasena IMAP"
+        smtp_host:
+          type: string
+          description: "Servidor SMTP"
+        smtp_port:
+          type: string
+          description: "Puerto SMTP"
+        smtp_user:
+          type: string
+          description: "Usuario SMTP"
+        smtp_password:
+          type: string
+          description: "Contrasena SMTP"
+        email_address:
+          type: string
+          description: "Direccion de email"
+      required: ["account_id", "imap_host", "imap_port", "imap_user", "imap_password", "smtp_host", "smtp_port", "smtp_user", "smtp_password", "email_address"]
 
     TestShopifyConnectionArgs:
       description: |
@@ -5446,6 +5773,9 @@ components:
         permissions_json:
           type: string
           description: "JSON string con los permisos del agente (ej: {"ai_generate": true, "notes_view": true}). Alternativa a save_agent_permissions."
+        permissions:
+          type: object
+          description: "Permisos del agente (objeto JSON con permisos por seccion)"
       required: ["action", "id"]
 
     UpdateAiErrorArgs:
@@ -5774,6 +6104,21 @@ components:
         allowed_domains:
           type: array
           description: "Dominios permitidos"
+        language_available:
+          type: array
+          description: "Idiomas disponibles (array)"
+        language_show_selector:
+          type: boolean
+          description: "Mostrar selector de idioma"
+        rate_limit_window_minutes:
+          type: integer
+          description: "Ventana de rate limit en minutos"
+        config_design:
+          type: object
+          description: "Configuracion de diseno (JSON)"
+        config_texts:
+          type: object
+          description: "Textos personalizados (JSON)"
       required: ["assistant_id"]
 
     UpdateEmailAccountArgs:
@@ -5994,7 +6339,7 @@ components:
           description: "ID del snippet a gestionar"
         action:
           type: string
-          description: "Acción a realizar: approve (aprobar snippet), reject (rechazar), edit (editar contenido), delete (eliminar), resolve_conflict (resolver conflicto eligiendo uno), keep_both (mantener ambos snippets), toggle_permanent (marcar/desmarcar como permanente)"
+          description: "Accion a realizar: approve, reject, edit, delete, resolve_conflict, keep_both, toggle_permanent"
           enum: ["approve", "reject", "edit", "delete", "resolve_conflict", "keep_both", "toggle_permanent"]
         content:
           type: string

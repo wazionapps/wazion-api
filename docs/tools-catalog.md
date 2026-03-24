@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 299 (excluding hidden)
+> Total tools: 309 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -58,6 +58,8 @@
 | `delete_conversation_file` | Almacenamiento | mutation | Elimina un archivo compartido en una conversacion |
 | `delete_conversation_message` | Conversaciones | mutation | Elimina un mensaje especifico de una conversacion. Requiere el texto exacto del mensaje. |
 | `delete_customer_ai_error` | Base de Conocimiento | mutation | Remove a correction from the customer-facing WhatsApp AI that is no longer valid. |
+| `delete_docqa_assistant` | Plugins | mutation | Elimina un asistente Doc-QA y todos sus recursos asociados en OpenAI |
+| `delete_docqa_file` | Plugins | mutation | Elimina un archivo de un asistente Doc-QA |
 | `delete_email_account` | Email | mutation | Elimina una cuenta de correo y todos sus emails asociados. Esta accion no se puede deshacer. |
 | `delete_email_note` | Email | mutation | Elimina una nota interna de un hilo de email. |
 | `delete_email_rule` | Email | mutation | Elimina una regla de email. Esta accion no se puede deshacer. |
@@ -114,12 +116,17 @@
 | `get_customer_journey` | Clientes | query | Timeline completo de un cliente: mensajes, comentarios, archivos, tareas, pedidos, follow-ups |
 | `get_customer_lifetime_value` | Clientes | query | Calcula metricas de valor del cliente: pedidos, gasto, antiguedad, interacciones |
 | `get_daily_summary` | Actividad | query | Resumen completo de actividad de un dia: conversaciones, mensajes, plugins, workflows, follow-ups, tareas |
+| `get_docqa_detail` | Plugins | query | Obtiene los detalles completos de un asistente Doc-QA incluyendo estadisticas |
+| `get_docqa_logs` | Plugins | query | Obtiene el historial de preguntas realizadas a un asistente Doc-QA |
 | `get_docqa_stats` | Estadisticas | query | Muestra estadisticas detalladas de un asistente de documentacion. Requiere assistant_id: usa list_docqa_assistants pr... |
 | `get_ecommerce_sync_status` | Actividad | query | Estado de conexion con la plataforma e-commerce y estadisticas de clientes CRM sincronizados |
 | `get_email_account` | Email | query | Devuelve los datos completos de una cuenta de correo especifica, incluyendo agentes asignados. |
+| `get_email_accounts` | Email | query | Lista las cuentas de email accesibles con su estado y configuracion basica |
+| `get_email_filter_counts` | Email | query | Devuelve la cantidad de hilos por cada filtro (no leidos, leidos, enviados, archivados, etc.) |
 | `get_email_retention` | Email | query | Devuelve el periodo de retencion configurado para los emails de la tienda. |
 | `get_email_stats` | Email | query | Devuelve estadisticas de emails: total recibidos, respondidos, tiempo medio de respuesta, desglose por agente y clasi... |
 | `get_email_thread_detail` | Email | query | Obtiene todos los mensajes de un hilo de email especifico |
+| `get_email_unread_count` | Email | query | Devuelve el total de emails no leidos en todas las cuentas |
 | `get_knowledge_processing_status` | Base de Conocimiento | query | Obtiene el estado de procesamiento de todos los archivos de conocimiento (polling endpoint) |
 | `get_marketing_sessions` | Marketing Masivo | query | Obtiene las sesiones de WhatsApp disponibles para envío de campañas |
 | `get_mass_marketing_config` | Marketing Masivo | query | Obtiene la configuracion actual de marketing masivo: auto-respuesta, traduccion automatica, texto personalizado de baja |
@@ -191,6 +198,7 @@
 | `list_contact_lists` | Marketing Masivo | query | Obtiene todas las listas de contactos de marketing masivo de la tienda |
 | `list_conversation_files` | Almacenamiento | query | Lista los archivos compartidos en una conversacion con un cliente |
 | `list_docqa_assistants` | Plugins | query | Muestra todos los asistentes de documentacion creados con el plugin Doc Q&A |
+| `list_docqa_files` | Plugins | query | Lista los archivos subidos a un asistente Doc-QA |
 | `list_email_accounts` | Email | query | Devuelve todas las cuentas de correo electronico configuradas en la tienda, con sus agentes asignados. |
 | `list_email_drafts` | Email | query | Muestra los borradores de email pendientes de envio. |
 | `list_email_notes` | Email | query | Obtiene las notas internas de un hilo de email. Las notas son visibles solo para agentes, no para el cliente. |
@@ -221,6 +229,7 @@
 | `publish_question_as_faq` | Plugins | mutation | Publica manualmente una pregunta del historial como FAQ en tu tienda online. Util para promover preguntas importantes... |
 | `reconnect_whatsapp` | Automatizacion | mutation | Intenta reconectar una sesion de WhatsApp existente (puede requerir escanear QR manualmente). Si hay multiples numero... |
 | `regenerate_api_key` | Avanzado | mutation | Genera una nueva API key (token_ext) para la tienda. Esto invalida la key actual e impide el acceso de cualquier cone... |
+| `regenerate_docqa_token` | Plugins | mutation | Genera un nuevo token de acceso para un asistente Doc-QA |
 | `regenerate_plugin_token` | Plugins | mutation | Genera un nuevo token para los plugins (invalida el anterior) |
 | `remove_contact_from_list` | Marketing Masivo | mutation | Elimina un contacto individual de una lista de marketing |
 | `remove_contacts_bulk` | Marketing Masivo | mutation | Elimina múltiples contactos de una lista de marketing |
@@ -228,6 +237,7 @@
 | `remove_from_blacklist` | Marketing Masivo | mutation | Desbloquea un numero de telefono de la lista negra de marketing masivo |
 | `remove_unsubscribed_bulk` | Marketing Masivo | mutation | Elimina registros de bajas de marketing masivo |
 | `remove_whatsapp_optout` | WhatsApp | mutation | Elimina un numero de la lista de opt-out para que pueda recibir mensajes automaticos de nuevo |
+| `remove_whatsapp_profile_picture` | Automatizacion | mutation | Elimina la foto de perfil de una sesion de WhatsApp |
 | `reorder_whatsapp_workflows` | Automatizacion | mutation | Cambia el orden de ejecucion de los workflows de WhatsApp |
 | `request_referral_payout` | Referidos | mutation | Solicita el pago de las comisiones pendientes (mínimo 50€). Solo disponible si no hay otra solicitud abierta. |
 | `reset_crm_errors` | Avanzado | mutation | Resetea el contador de errores CRM y reactiva los endpoints si estaban deshabilitados por errores consecutivos |
