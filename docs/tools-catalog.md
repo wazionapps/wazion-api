@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 309 (excluding hidden)
+> Total tools: 310 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -94,7 +94,7 @@
 | `get_analytics` | Estadisticas | query | Muestra metricas de rendimiento: conversaciones, mensajes, actividad diaria |
 | `get_api_key` | Avanzado | query | Muestra la API key actual de la tienda (token_ext) y la URL del servidor MCP. Usa esta accion cuando el usuario pregu... |
 | `get_api_usage_stats` | Actividad | query | Consumo de tokens y costes por modelo de IA |
-| `get_autolearning_metrics` | Estadisticas | query | Muestra las metricas del sistema de aprendizaje automatico |
+| `get_autolearning_metrics` | Estadisticas | query | Muestra las metricas del sistema de aprendizaje automatico. Se puede filtrar por estado de los snippets. |
 | `get_autolearning_stats` | Estadisticas | query | Obtiene estadisticas detalladas del sistema de auto-learning: snippets activos, pendientes, rechazados, etc. |
 | `get_busiest_hours` | Actividad | query | Analiza a que horas del dia se reciben mas mensajes de clientes |
 | `get_campaign` | Marketing Masivo | query | Obtiene los detalles completos de una campaña de marketing masivo |
@@ -243,6 +243,7 @@
 | `reset_crm_errors` | Avanzado | mutation | Resetea el contador de errores CRM y reactiva los endpoints si estaban deshabilitados por errores consecutivos |
 | `restore_default_prompt` | Prompt e IA | query | Obtiene el prompt por defecto segun el idioma |
 | `resume_campaign` | Marketing Masivo | mutation | Reanuda una campana de marketing masivo que fue pausada |
+| `retry_email_account` | Email | mutation | Resetea el estado de error de una cuenta de email y reintenta la conexion. Util cuando una cuenta esta en estado de e... |
 | `rollback_prompt` | Prompt e IA | mutation | Revierte la parte autogenerada del prompt a una version anterior del historial. La parte personalizada del usuario se... |
 | `save_agent_permissions` | Agentes | mutation | Actualiza los permisos de un agente. Enviar null para dar todos los permisos, o un objeto con los permisos especifico... |
 | `save_as_whatsapp_template` | WhatsApp | mutation | Guarda un mensaje como plantilla reutilizable de WhatsApp |

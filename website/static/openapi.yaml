@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    309 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    310 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -2208,8 +2208,13 @@ components:
     GetAutolearningMetricsArgs:
       description: |
         **get_autolearning_metrics** [stats] (query)
-        Muestra las metricas del sistema de aprendizaje automatico
+        Muestra las metricas del sistema de aprendizaje automatico. Se puede filtrar por estado de los snippets.
       type: object
+      properties:
+        filter:
+          type: string
+          description: "Filtrar metricas por estado: active (aprobados), pending (pendientes), disputed (en conflicto), stale (obsoletos)"
+          enum: ["active", "pending", "disputed", "stale"]
 
     GetAutolearningStatsArgs:
       description: |
@@ -4971,6 +4976,19 @@ components:
           type: integer
           description: "ID de la campana a reanudar"
       required: ["action", "campaign_id"]
+
+    RetryEmailAccountArgs:
+      description: |
+        **retry_email_account** [email] (mutation)
+        Resetea el estado de error de una cuenta de email y reintenta la conexion. Util cuando una cuenta esta en estado de error tras fallos de IMAP/SMTP.
+      type: object
+      properties:
+        action:
+          type: string
+        id:
+          type: integer
+          description: "ID de la cuenta de email a reintentar"
+      required: ["action", "id"]
 
     RollbackPromptArgs:
       description: |
