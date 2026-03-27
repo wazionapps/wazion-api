@@ -6556,12 +6556,12 @@ components:
     UpdateWhatsappWorkflowArgs:
       description: |
         **update_whatsapp_workflow** [automation] (mutation)
-        Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar). Soporta update parcial: solo se sobreescriben los campos que se envian, los demas se mantienen sin cambios. Para añadir palabras a condiciones: leer primero con list_whatsapp_workflows, modificar el array de rules, y enviar el conditions actualizado.
+        Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar, activar/desactivar). Soporta update parcial: solo se sobreescriben los campos que se envian, los demas se mantienen sin cambios. IMPORTANTE: el parametro 'id' es OBLIGATORIO y debe ser el ID numerico del workflow (obtenido de list_whatsapp_workflows). Si el usuario dice 'ajustalo', 'yes apply', 'hazlo' u otra respuesta de seguimiento, DEBES recordar el workflow_id del contexto previo de la conversacion y enviarlo. NUNCA enviar esta accion sin 'id'. Para añadir palabras a condiciones: leer primero con list_whatsapp_workflows, modificar el array de rules, y enviar el conditions actualizado.
       type: object
       properties:
         id:
           type: integer
-          description: "ID del workflow a editar"
+          description: "ID numerico del workflow a editar. OBLIGATORIO siempre. Obtenerlo de list_whatsapp_workflows. Sin este parametro la peticion se trata como creacion y fallara si falta el nombre."
         name:
           type: string
           description: "Nombre del workflow (max 100 caracteres). Si no se envia, se mantiene el nombre actual"

@@ -314,7 +314,7 @@
 | `update_timezone` | Configuracion General | mutation | Cambia la zona horaria para mostrar fechas y horas correctamente |
 | `update_whatsapp_profile` | WhatsApp | mutation | Actualiza campos del perfil de WhatsApp: info/about, y datos de empresa (descripcion, direccion, email, web, horario)... |
 | `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada. Util para identificar numeros (ej: 'Soporte', 'Ve... |
-| `update_whatsapp_workflow` | Automatizacion | mutation | Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar). Sopor... |
+| `update_whatsapp_workflow` | Automatizacion | mutation | Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar, activa... |
 | `verify_ecommerce_write_permission` | Integraciones | query | Verifica si la conexion con la plataforma e-commerce tiene permisos de escritura para sincronizar FAQs. Requiere plat... |
 
 ---
