@@ -402,17 +402,16 @@ components:
 
     ApplyTrainingSuggestionArgs:
       description: |
-        **apply_training_suggestion** [ai_training] (mutation)
-        Apply a pending AI improvement suggestion. Level 1-2 creates a correction, Level 4 appends to prompt, Level 3 requires manual workflow changes.
+        **apply_training_suggestion** [knowledge] (mutation)
+        Aplica una sugerencia de entrenamiento de IA. Segun el nivel, crea un snippet de conocimiento o actualiza el prompt del asistente.
         ⚠️ Requires confirmation
       type: object
       properties:
         action:
           type: string
-          description: "Accion fija"
         suggestion_id:
           type: integer
-          description: "ID de la sugerencia de entrenamiento a aplicar"
+          description: "ID de la sugerencia a aplicar"
       required: ["action", "suggestion_id"]
 
     ApproveCampaignArgs:
@@ -1793,19 +1792,18 @@ components:
 
     DismissTrainingSuggestionArgs:
       description: |
-        **dismiss_training_suggestion** [ai_training] (mutation)
-        Dismiss a pending suggestion with optional reason.
+        **dismiss_training_suggestion** [knowledge] (mutation)
+        Descarta una sugerencia de entrenamiento de IA con motivo opcional.
       type: object
       properties:
         action:
           type: string
-          description: "Accion fija"
         suggestion_id:
           type: integer
-          description: "ID de la sugerencia de entrenamiento a descartar"
+          description: "ID de la sugerencia a descartar"
         reason:
           type: string
-          description: "Razon por la que se descarta la sugerencia"
+          description: "Motivo del descarte (opcional)"
       required: ["action", "suggestion_id"]
 
     DownloadConversationFileArgs:

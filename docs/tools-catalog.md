@@ -13,7 +13,7 @@
 | `add_to_blacklist` | Marketing Masivo | mutation | Bloquea un numero de telefono para que no reciba campanas de marketing masivo |
 | `add_whatsapp_optout` | WhatsApp | mutation | Anade un numero a la lista de opt-out para que no reciba mensajes automaticos |
 | `apply_prompt_instruction` | Prompt e IA | query | Genera una version modificada del prompt segun una instruccion. NO guarda los cambios - solo devuelve el prompt modif... |
-| `apply_training_suggestion` | ai_training | mutation | Apply a pending AI improvement suggestion. Level 1-2 creates a correction, Level 4 appends to prompt, Level 3 require... |
+| `apply_training_suggestion` | Base de Conocimiento | mutation | Aplica una sugerencia de entrenamiento de IA. Segun el nivel, crea un snippet de conocimiento o actualiza el prompt d... |
 | `approve_campaign` | Marketing Masivo | mutation | Aprueba una campaña pendiente de aprobación para que pueda ser enviada |
 | `archive_campaign` | Marketing Masivo | mutation | Archiva una campaña completada para mantener la lista limpia |
 | `assign_email_thread` | Email | mutation | Asigna un hilo de email a un agente especifico. Usar assign_to=null para desasignar. |
@@ -72,7 +72,7 @@
 | `disconnect_ecommerce` | Integraciones | mutation | Desconecta la integracion con tu plataforma e-commerce (Shopify, WooCommerce, etc.) |
 | `disconnect_whatsapp` | Automatizacion | mutation | Desconecta una sesion de WhatsApp y elimina los datos de autenticacion. Si hay multiples numeros, requiere session_id. |
 | `discover_email_folders` | Email | query | Conecta al servidor IMAP de una cuenta de email y descubre las carpetas disponibles (Enviados, Papelera, Archivo, Spa... |
-| `dismiss_training_suggestion` | ai_training | mutation | Dismiss a pending suggestion with optional reason. |
+| `dismiss_training_suggestion` | Base de Conocimiento | mutation | Descarta una sugerencia de entrenamiento de IA con motivo opcional. |
 | `download_conversation_file` | Almacenamiento | query | Obtiene la URL de descarga de un archivo compartido en una conversacion |
 | `download_knowledge_file` | Base de Conocimiento | query | Obtiene la URL de descarga de un archivo de la base de conocimiento |
 | `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada real. Usar cuando el usuario diga 'prueba... |
