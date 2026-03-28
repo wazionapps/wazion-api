@@ -6554,7 +6554,7 @@ components:
     UpdateWhatsappWorkflowArgs:
       description: |
         **update_whatsapp_workflow** [automation] (mutation)
-        Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar, activar/desactivar). Soporta update parcial: solo se sobreescriben los campos que se envian, los demas se mantienen sin cambios. IMPORTANTE: el parametro 'id' es OBLIGATORIO y debe ser el ID numerico del workflow (obtenido de list_whatsapp_workflows). Si el usuario dice 'ajustalo', 'yes apply', 'hazlo' u otra respuesta de seguimiento, DEBES recordar el workflow_id del contexto previo de la conversacion y enviarlo. NUNCA enviar esta accion sin 'id'. Para añadir palabras a condiciones: leer primero con list_whatsapp_workflows, modificar el array de rules, y enviar el conditions actualizado.
+        Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar, activar/desactivar). Soporta update parcial: solo se sobreescriben los campos que se envian, los demas se mantienen sin cambios. IMPORTANTE: el parametro 'id' es OBLIGATORIO y debe ser el ID numerico del workflow (obtenido de list_whatsapp_workflows). Si el usuario dice 'ajustalo', 'yes apply', 'hazlo' u otra respuesta de seguimiento, DEBES recordar el workflow_id del contexto previo de la conversacion y enviarlo. NUNCA enviar esta accion sin 'id'. Para cambiar solo el mensaje de una accion: SIEMPRE leer primero con list_whatsapp_workflows, copiar el array de actions completo preservando TODOS los valores originales (especialmente delay seconds), y enviar el array modificado. Si solo cambias name, conditions o status, NO envies 'actions' — se preservan automaticamente.
       type: object
       properties:
         id:
@@ -6573,7 +6573,7 @@ components:
           description: "Objeto con 'logic' (AND/OR) y 'rules' (array de condiciones). Si no se envia, se mantienen las condiciones actuales"
         actions:
           type: array
-          description: "Array de acciones a ejecutar. Si no se envia, se mantienen las acciones actuales. Tipos soportados: reply_with_ai (con pre_send_check opcional), reply (con no_repeat opcional), delay, ai_filter (filtro IA que decide si responder, previene bucles, ideal como primera accion). Para ai_filter se puede añadir prompt:'instrucciones' para personalizar criterios."
+          description: "Array de acciones a ejecutar. Si no se envia, se mantienen las acciones actuales. IMPORTANTE: si envias este campo, debes enviar el array COMPLETO de acciones (no solo la que cambias). Para editar solo el mensaje de una accion reply/reply_with_ai: 1) llama list_whatsapp_workflows para obtener las acciones actuales, 2) modifica solo el campo que necesitas, 3) envia el array completo con todos los valores existentes preservados. Tipos soportados: reply_with_ai (con pre_send_check opcional), reply (con no_repeat opcional), delay (seconds: 1-300, OBLIGATORIO), ai_filter (filtro IA que decide si responder, previene bucles, ideal como primera accion). Para ai_filter se puede añadir prompt:'instrucciones' para personalizar criterios. VALIDACION: cada accion delay DEBE tener 'seconds' entre 1 y 300. Si copias un delay existente, manten su valor original de seconds."
         session_id:
           type: integer
           description: "ID de la sesion de WhatsApp a la que asignar este workflow. null = todos los numeros. Usa get_whatsapp_status para ver las sesiones."
