@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 310 (excluding hidden)
+> Total tools: 313 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -97,6 +97,7 @@
 | `get_autolearning_metrics` | Estadisticas | query | Muestra las metricas del sistema de aprendizaje automatico. Se puede filtrar por estado de los snippets. |
 | `get_autolearning_stats` | Estadisticas | query | Obtiene estadisticas detalladas del sistema de auto-learning: snippets activos, pendientes, rechazados, etc. |
 | `get_busiest_hours` | Actividad | query | Analiza a que horas del dia se reciben mas mensajes de clientes |
+| `get_calendar_settings` | Calendario | query | Get calendar integration settings (enabled, timezone, booking rules) |
 | `get_campaign` | Marketing Masivo | query | Obtiene los detalles completos de una campaña de marketing masivo |
 | `get_campaign_logs` | Marketing Masivo | query | Obtiene el progreso y logs de envio de una campana especifica |
 | `get_chat_plugin_stats` | Estadisticas | query | Muestra estadisticas de uso del plugin de chat web: conversaciones, mensajes, sesiones activas, referrers y paises |
@@ -193,7 +194,9 @@
 | `list_agents` | Agentes | query | Muestra todos los agentes de atencion configurados con sus nombres y colores |
 | `list_agents_json` | Agentes | query | Devuelve todos los agentes configurados en formato JSON con sus datos completos: nombre, email, teléfono, color, perm... |
 | `list_blacklist` | Marketing Masivo | query | Obtiene los numeros bloqueados manualmente que no recibiran campanas masivas, distinta de las bajas voluntarias |
-| `list_calendar_events` | Calendario | query | Muestra los eventos programados en un rango de fechas |
+| `list_calendar_connections` | Calendario | query | List all connected calendar providers (Google, Microsoft) for this shop |
+| `list_calendar_events` | Calendario | query | List upcoming appointments/events in a date range |
+| `list_calendar_services` | Calendario | query | List all appointment types/services configured for a calendar |
 | `list_campaigns` | Marketing Masivo | query | Obtiene todas las campanas de marketing masivo de la tienda |
 | `list_contact_lists` | Marketing Masivo | query | Obtiene todas las listas de contactos de marketing masivo de la tienda |
 | `list_conversation_files` | Almacenamiento | query | Lista los archivos compartidos en una conversacion con un cliente |

@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    310 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    313 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -2237,6 +2237,16 @@ components:
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
       required: ["action"]
 
+    GetCalendarSettingsArgs:
+      description: |
+        **get_calendar_settings** [calendar] (query)
+        Get calendar integration settings (enabled, timezone, booking rules)
+      type: object
+      properties:
+        action:
+          type: string
+      required: ["action"]
+
     GetCampaignArgs:
       description: |
         **get_campaign** [mass_marketing] (query)
@@ -4094,49 +4104,44 @@ components:
           default: 1
       required: ["action"]
 
-    ListCalendarEventsArgs:
+    ListCalendarConnectionsArgs:
       description: |
-        **list_calendar_events** [calendar] (query)
-        Muestra los eventos programados en un rango de fechas
+        **list_calendar_connections** [calendar] (query)
+        List all connected calendar providers (Google, Microsoft) for this shop
       type: object
       properties:
         action:
           type: string
-          description: "Accion fija"
-        date_from:
-          type: string
-          description: "Fecha inicio (YYYY-MM-DD, default lunes de esta semana)"
-        date_to:
-          type: string
-          description: "Fecha fin (YYYY-MM-DD, default domingo de esta semana)"
-        agent_id:
-          type: integer
-          description: "Filtrar por agente"
-        phone:
-          type: string
-          description: "Filtrar por cliente"
-        title:
-          type: string
-          description: "Titulo del evento"
-        description:
-          type: string
-          description: "Descripcion del evento"
-        start_datetime:
-          type: string
-          description: "Fecha/hora inicio YYYY-MM-DD HH:MM:SS"
-        end_datetime:
-          type: string
-          description: "Fecha/hora fin YYYY-MM-DD HH:MM:SS"
-        all_day:
-          type: boolean
-          description: "Evento de dia completo"
-        assigned_agent_id:
-          type: integer
-          description: "ID del agente asignado"
-        event_id:
-          type: integer
-          description: "ID del evento"
       required: ["action"]
+
+    ListCalendarEventsArgs:
+      description: |
+        **list_calendar_events** [calendar] (query)
+        List upcoming appointments/events in a date range
+      type: object
+      properties:
+        action:
+          type: string
+        from:
+          type: string
+          description: "Start date YYYY-MM-DD"
+        to:
+          type: string
+          description: "End date YYYY-MM-DD"
+      required: ["action"]
+
+    ListCalendarServicesArgs:
+      description: |
+        **list_calendar_services** [calendar] (query)
+        List all appointment types/services configured for a calendar
+      type: object
+      properties:
+        action:
+          type: string
+        calendar_id:
+          type: integer
+          description: "Calendar ID"
+      required: ["action", "calendar_id"]
 
     ListCampaignsArgs:
       description: |
