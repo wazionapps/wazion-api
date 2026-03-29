@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    313 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    346 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -412,6 +412,9 @@ components:
         suggestion_id:
           type: integer
           description: "ID de la sugerencia a aplicar"
+        instruction:
+          type: string
+          description: "Instruccion personalizada de aplicacion"
       required: ["action", "suggestion_id"]
 
     ApproveCampaignArgs:
@@ -427,6 +430,20 @@ components:
           description: "ID de la campaña a aprobar"
       required: ["action", "campaign_id"]
 
+    ApproveKnowledgeSnippetArgs:
+      description: |
+        **approve_knowledge_snippet** [knowledge] (mutation)
+        Aprueba un snippet de conocimiento pendiente y lo activa
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del snippet a aprobar"
+      required: ["action", "id"]
+
     ArchiveCampaignArgs:
       description: |
         **archive_campaign** [mass_marketing] (mutation)
@@ -439,6 +456,26 @@ components:
           type: integer
           description: "ID de la campaña a archivar"
       required: ["action", "campaign_id"]
+
+    AssignCalendarAgentArgs:
+      description: |
+        **assign_calendar_agent** [calendar] (mutation)
+        Asigna un agente a un calendario con un rol especifico
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+        role:
+          type: string
+          description: "Rol: owner, can_book, view_only"
+      required: ["action", "calendar_id", "agent_id"]
 
     AssignEmailThreadArgs:
       description: |
@@ -455,6 +492,9 @@ components:
         assign_to:
           type: integer
           description: "ID del agente (shop_agents.id). Omitir o null para desasignar."
+        agent_hash:
+          type: string
+          description: "Hash del agente a asignar (null para desasignar)"
       required: ["action", "thread_id"]
 
     AssignMarketingSessionArgs:
@@ -949,6 +989,41 @@ components:
           description: "Permisos del agente (objeto JSON con permisos por seccion)"
       required: ["action", "nickname", "full_name", "email"]
 
+    CreateCalendarAvailabilityArgs:
+      description: |
+        **create_calendar_availability** [calendar] (mutation)
+        Crea una regla de disponibilidad en un calendario (semanal, excepcion por fecha, bloqueo)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+        rule_type:
+          type: string
+          description: "Tipo: weekly, date_exception, blocked"
+        day_of_week:
+          type: integer
+          description: "Dia de la semana (0-6, para weekly)"
+        specific_date:
+          type: string
+          description: "Fecha especifica YYYY-MM-DD (para date_exception)"
+        start_time:
+          type: string
+          description: "Hora inicio HH:MM"
+        end_time:
+          type: string
+          description: "Hora fin HH:MM"
+        label:
+          type: string
+          description: "Etiqueta descriptiva"
+        is_available:
+          type: boolean
+          description: "Si esta disponible (true) o bloqueado (false)"
+      required: ["action", "calendar_id", "rule_type", "start_time", "end_time"]
+
     CreateCalendarEventArgs:
       description: |
         **create_calendar_event** [calendar] (mutation)
@@ -992,6 +1067,76 @@ components:
           type: integer
           description: "ID del evento"
       required: ["action", "title", "start_datetime"]
+
+    CreateCalendarNotificationArgs:
+      description: |
+        **create_calendar_notification** [calendar] (mutation)
+        Crea una notificacion automatica para un calendario (confirmacion, recordatorio, cancelacion, seguimiento, no-show)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+        notification_type:
+          type: string
+          description: "Tipo: confirmation, reminder, cancellation, follow_up, no_show"
+        channel:
+          type: string
+          description: "Canal: whatsapp, email"
+        timing_minutes:
+          type: integer
+          description: "Minutos antes/despues del evento"
+        template_text:
+          type: string
+          description: "Texto de la notificacion"
+        is_enabled:
+          type: boolean
+          description: "Si esta habilitada"
+      required: ["action", "calendar_id", "notification_type", "channel", "timing_minutes", "template_text"]
+
+    CreateCalendarServiceArgs:
+      description: |
+        **create_calendar_service** [calendar] (mutation)
+        Crea un tipo de cita/servicio para un calendario (ej: consulta 30min, reunion 60min)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+        name:
+          type: string
+          description: "Nombre del servicio"
+        duration_minutes:
+          type: integer
+          description: "Duracion en minutos"
+        description:
+          type: string
+          description: "Descripcion del servicio"
+        buffer_before_minutes:
+          type: integer
+          description: "Minutos de buffer antes"
+        buffer_after_minutes:
+          type: integer
+          description: "Minutos de buffer despues"
+        max_concurrent:
+          type: integer
+          description: "Maximo de citas concurrentes"
+        price:
+          type: string
+          description: "Precio del servicio"
+        currency:
+          type: string
+          description: "Moneda (EUR, USD, etc.)"
+        requires_confirmation:
+          type: boolean
+          description: "Si requiere confirmacion del negocio"
+      required: ["action", "calendar_id", "name", "duration_minutes"]
 
     CreateCampaignArgs:
       description: |
@@ -1399,6 +1544,51 @@ components:
           description: "ID of the correction to delete"
       required: ["id"]
 
+    DeleteCalendarArgs:
+      description: |
+        **delete_calendar** [calendar] (mutation)
+        Elimina un calendario y todos sus eventos, servicios y disponibilidad
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario a eliminar"
+      required: ["action", "calendar_id"]
+
+    DeleteCalendarAvailabilityArgs:
+      description: |
+        **delete_calendar_availability** [calendar] (mutation)
+        Elimina una regla de disponibilidad del calendario
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        rule_id:
+          type: integer
+          description: "ID de la regla a eliminar"
+      required: ["action", "rule_id"]
+
+    DeleteCalendarConnectionArgs:
+      description: |
+        **delete_calendar_connection** [calendar] (mutation)
+        Elimina una conexion de proveedor de calendario (Google/Microsoft)
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        connection_id:
+          type: integer
+          description: "ID de la conexion a eliminar"
+      required: ["action", "connection_id"]
+
     DeleteCalendarEventArgs:
       description: |
         **delete_calendar_event** [calendar] (mutation)
@@ -1443,6 +1633,36 @@ components:
           type: integer
           description: "ID del agente asignado"
       required: ["action", "event_id"]
+
+    DeleteCalendarNotificationArgs:
+      description: |
+        **delete_calendar_notification** [calendar] (mutation)
+        Elimina una notificacion automatica de calendario
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        notification_id:
+          type: integer
+          description: "ID de la notificacion a eliminar"
+      required: ["action", "notification_id"]
+
+    DeleteCalendarServiceArgs:
+      description: |
+        **delete_calendar_service** [calendar] (mutation)
+        Elimina un servicio/tipo de cita del calendario
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        service_id:
+          type: integer
+          description: "ID del servicio a eliminar"
+      required: ["action", "service_id"]
 
     DeleteCampaignArgs:
       description: |
@@ -1622,6 +1842,21 @@ components:
           description: "ID de la regla a eliminar"
       required: ["action", "id"]
 
+    DeleteFaqArgs:
+      description: |
+        **delete_faq** [plugins] (mutation)
+        Elimina permanentemente una o varias FAQs del plugin Product Q&A
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        faq_ids:
+          type: array
+          description: "IDs de las FAQs a eliminar"
+      required: ["action", "faq_ids"]
+
     DeleteKnowledgeFileArgs:
       description: |
         **delete_knowledge_file** [storage] (mutation)
@@ -1633,6 +1868,21 @@ components:
           type: integer
           description: "ID del archivo a eliminar"
       required: ["file_id"]
+
+    DeleteKnowledgeSnippetArgs:
+      description: |
+        **delete_knowledge_snippet** [knowledge] (mutation)
+        Elimina permanentemente un snippet de conocimiento
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del snippet a eliminar"
+      required: ["action", "id"]
 
     DeleteNotificationArgs:
       description: |
@@ -1787,7 +2037,7 @@ components:
           description: "Debe ser 'discover_folders'"
         id:
           type: integer
-          description: "ID de la cuenta de email"
+          description: "ID de la cuenta de correo"
       required: ["action", "id"]
 
     DismissTrainingSuggestionArgs:
@@ -1860,6 +2110,26 @@ components:
           description: "ID de la campaña a duplicar"
       required: ["action", "campaign_id"]
 
+    EditKnowledgeSnippetArgs:
+      description: |
+        **edit_knowledge_snippet** [knowledge] (mutation)
+        Edita el contenido o categoria de un snippet de conocimiento
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del snippet"
+        content:
+          type: string
+          description: "Nuevo contenido del snippet"
+        category:
+          type: string
+          description: "Nueva categoria"
+      required: ["action", "id"]
+
     EmailThreadActionArgs:
       description: |
         **email_thread_action** [email] (mutation)
@@ -1884,6 +2154,9 @@ components:
         agent_hash:
           type: string
           description: "Hash del agente a asignar (solo para action=assign, null para desasignar)"
+        status:
+          type: string
+          description: "Nuevo estado: archive, trash, unarchive, star, unstar, mark_read, mark_unread, restore"
       required: ["action", "thread_id"]
 
     ExportCampaignCsvArgs:
@@ -2201,6 +2474,9 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+        date:
+          type: string
+          description: "Fecha de referencia YYYY-MM-DD"
       required: ["action"]
 
     GetAutolearningMetricsArgs:
@@ -2235,6 +2511,9 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+        date:
+          type: string
+          description: "Fecha de referencia YYYY-MM-DD"
       required: ["action"]
 
     GetCalendarSettingsArgs:
@@ -2729,6 +3008,9 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+        days:
+          type: integer
+          description: "Numero de dias a incluir"
       required: ["action"]
 
     GetDocqaDetailArgs:
@@ -2800,6 +3082,9 @@ components:
         days:
           type: integer
           description: "Numero de dias de lookback"
+        date:
+          type: string
+          description: "Fecha de referencia"
       required: ["action"]
 
     GetEmailAccountArgs:
@@ -2850,23 +3135,26 @@ components:
         action:
           type: string
           description: "Accion fija"
-      required: ["action"]
+        id:
+          type: integer
+          description: "ID de la cuenta de correo"
+      required: ["action", "id"]
 
     GetEmailStatsArgs:
       description: |
         **get_email_stats** [email] (query)
-        Devuelve estadisticas de emails: total recibidos, respondidos, tiempo medio de respuesta, desglose por agente y clasificacion IA.
+        Obtiene estadisticas de correo electronico: volumenes, tiempos de respuesta, desglose por agente y clasificacion IA
       type: object
       properties:
         period:
           type: string
-          description: "Periodo: 'last_7_days', 'last_30_days', 'this_month', 'last_month', 'last_90_days', 'all_time', 'custom'. Default: 'last_30_days'"
+          description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
         date_from:
           type: string
-          description: "Fecha inicio (YYYY-MM-DD). Solo para period=custom"
+          description: "Fecha inicio YYYY-MM-DD (solo para period=custom)"
         date_to:
           type: string
-          description: "Fecha fin (YYYY-MM-DD). Solo para period=custom"
+          description: "Fecha fin YYYY-MM-DD (solo para period=custom)"
 
     GetEmailThreadDetailArgs:
       description: |
@@ -2912,8 +3200,13 @@ components:
     GetMassMarketingConfigArgs:
       description: |
         **get_mass_marketing_config** [mass_marketing] (query)
-        Obtiene la configuracion actual de marketing masivo: auto-respuesta, traduccion automatica, texto personalizado de baja
+        Obtiene la configuracion actual de marketing masivo (auto-respuesta, texto de baja, aprobacion)
       type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
 
     GetMassMarketingStatsArgs:
       description: |
@@ -2991,6 +3284,12 @@ components:
           type: string
           enum: ["last_7_days", "last_30_days", "this_month"]
           default: "last_7_days"
+        date:
+          type: string
+          description: "Fecha de referencia YYYY-MM-DD"
+        days:
+          type: integer
+          description: "Numero de dias del periodo"
       required: ["action"]
 
     GetPluginChatSessionsArgs:
@@ -3321,8 +3620,13 @@ components:
     GetSmartFollowupConfigArgs:
       description: |
         **get_smart_followup_config** [smart_followup] (query)
-        Obtiene la configuracion actual de seguimiento inteligente. Incluye: hora de ejecucion, nivel de intencion minimo, intentos, envio automatico, tono, dias activos, etc.
+        Obtiene la configuracion actual del sistema de seguimiento inteligente (Smart Follow-up)
       type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
 
     GetSmartFollowupLogsArgs:
       description: |
@@ -3508,6 +3812,9 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+        date:
+          type: string
+          description: "Fecha de referencia YYYY-MM-DD"
       required: ["action"]
 
     GetTrainingSuggestionsArgs:
@@ -3805,6 +4112,9 @@ components:
       properties:
         action:
           type: string
+        session_id:
+          type: integer
+          description: "ID de sesion WhatsApp especifica"
       required: ["action"]
 
     GetWhatsappTemplateArgs:
@@ -3963,69 +4273,77 @@ components:
     ImportContactsFromAllConversationsArgs:
       description: |
         **import_contacts_from_all_conversations** [mass_marketing] (mutation)
-        Importa a una lista de marketing masivo todos los telefonos del historial completo de conversaciones WhatsApp (conversation_history). Mas amplio que la importacion desde mensajes recientes.
+        Importa todos los contactos de conversaciones de WhatsApp a una lista de marketing
       type: object
       properties:
         source:
           type: string
+          description: "Fuente fija"
         list_id:
           type: integer
-          description: "ID de la lista donde importar los contactos"
+          description: "ID de la lista destino"
       required: ["source", "list_id"]
 
     ImportContactsFromConversationsArgs:
       description: |
         **import_contacts_from_conversations** [mass_marketing] (mutation)
-        Importa a una lista de marketing masivo todos los telefonos de las conversaciones WhatsApp de la tienda.
+        Importa contactos seleccionados desde conversaciones de WhatsApp a una lista de marketing
       type: object
       properties:
         source:
           type: string
+          description: "Fuente fija"
         list_id:
           type: integer
-          description: "ID de la lista donde importar los contactos"
-      required: ["source", "list_id"]
+          description: "ID de la lista destino"
+        phones:
+          type: array
+          description: "Array de telefonos seleccionados"
+      required: ["source", "list_id", "phones"]
 
     ImportContactsFromCrmArgs:
       description: |
         **import_contacts_from_crm** [mass_marketing] (mutation)
-        Importa a una lista de marketing masivo los contactos del CRM interno de WAzion.
+        Importa contactos del CRM interno de WAzion a una lista de marketing masivo
       type: object
       properties:
         source:
           type: string
+          description: "Fuente fija"
         list_id:
           type: integer
-          description: "ID de la lista donde importar los contactos"
+          description: "ID de la lista destino"
       required: ["source", "list_id"]
 
     ImportContactsFromPlatformArgs:
       description: |
         **import_contacts_from_platform** [mass_marketing] (mutation)
-        Importa a una lista de marketing masivo los clientes con telefono de la plataforma conectada (Shopify, WooCommerce, PrestaShop, VTEX).
+        Importa contactos de clientes desde la plataforma ecommerce conectada (Shopify, WooCommerce, etc.)
       type: object
       properties:
         source:
           type: string
+          description: "Fuente fija"
         list_id:
           type: integer
-          description: "ID de la lista donde importar los contactos"
+          description: "ID de la lista destino"
       required: ["source", "list_id"]
 
     ImportContactsManualArgs:
       description: |
         **import_contacts_manual** [mass_marketing] (mutation)
-        Importa contactos a una lista de marketing masivo escribiendo los telefonos. Un telefono por linea o separados por comas.
+        Importa contactos a una lista de marketing masivo escribiendo los telefonos manualmente
       type: object
       properties:
         source:
           type: string
+          description: "Fuente fija"
         list_id:
           type: integer
-          description: "ID de la lista donde importar los contactos"
+          description: "ID de la lista destino"
         phones:
-          type: string
-          description: "Telefonos a importar, uno por linea o separados por comas. Incluir prefijo internacional (ej: +34600000000)"
+          type: array
+          description: "Array de objetos {phone, name} a importar"
       required: ["source", "list_id", "phones"]
 
     ImportMarketingContactsArgs:
@@ -4069,11 +4387,50 @@ components:
           description: "El prompt a analizar. Si no lo proporciona el usuario, usar el prompt actual (obtener con get_prompt primero)"
       required: ["prompt"]
 
+    KeepBothKnowledgeSnippetsArgs:
+      description: |
+        **keep_both_knowledge_snippets** [knowledge] (mutation)
+        Mantiene ambos snippets en conflicto activando los dos
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del snippet en conflicto"
+      required: ["action", "id"]
+
+    LinkOauthCalendarArgs:
+      description: |
+        **link_oauth_calendar** [calendar] (mutation)
+        Vincula un calendario externo (Google/Microsoft) a la tienda
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        connection_id:
+          type: integer
+          description: "ID de la conexion OAuth"
+        external_calendar_id:
+          type: string
+          description: "ID del calendario externo a vincular"
+        name:
+          type: string
+          description: "Nombre personalizado para el calendario"
+      required: ["action", "connection_id", "external_calendar_id"]
+
     ListAgentsArgs:
       description: |
         **list_agents** [agents] (query)
-        Muestra todos los agentes de atencion configurados con sus nombres y colores
+        Lista todos los agentes del comercio con detalles de perfil y permisos
       type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
 
     ListAgentsJsonArgs:
       description: |
@@ -4104,6 +4461,34 @@ components:
           default: 1
       required: ["action"]
 
+    ListCalendarAgentsArgs:
+      description: |
+        **list_calendar_agents** [calendar] (query)
+        Lista agentes asignados a un calendario especifico con sus roles
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+      required: ["action", "calendar_id"]
+
+    ListCalendarAvailabilityArgs:
+      description: |
+        **list_calendar_availability** [calendar] (query)
+        Lista todas las reglas de disponibilidad de un calendario (horarios, excepciones, bloqueos)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+      required: ["action", "calendar_id"]
+
     ListCalendarConnectionsArgs:
       description: |
         **list_calendar_connections** [calendar] (query)
@@ -4128,7 +4513,47 @@ components:
         to:
           type: string
           description: "End date YYYY-MM-DD"
+        status:
+          type: string
+          description: "Filtrar por estado: pending, confirmed, cancelled, completed, no_show"
       required: ["action"]
+
+    ListCalendarEventsOpsArgs:
+      description: |
+        **list_calendar_events_ops** [calendar] (query)
+        Lista eventos del calendario para un rango de fechas, con filtrado por agente o telefono
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        date_from:
+          type: string
+          description: "Fecha inicio YYYY-MM-DD"
+        date_to:
+          type: string
+          description: "Fecha fin YYYY-MM-DD"
+        agent_id:
+          type: integer
+          description: "Filtrar por ID de agente"
+        phone:
+          type: string
+          description: "Filtrar por telefono del cliente"
+      required: ["action"]
+
+    ListCalendarNotificationsArgs:
+      description: |
+        **list_calendar_notifications** [calendar] (query)
+        Lista las notificaciones configuradas para un calendario (confirmaciones, recordatorios, etc.)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+      required: ["action", "calendar_id"]
 
     ListCalendarServicesArgs:
       description: |
@@ -4143,6 +4568,17 @@ components:
           description: "Calendar ID"
       required: ["action", "calendar_id"]
 
+    ListCalendarsArgs:
+      description: |
+        **list_calendars** [calendar] (query)
+        Lista todos los calendarios disponibles con conteo de servicios y eventos proximos
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
+
     ListCampaignsArgs:
       description: |
         **list_campaigns** [mass_marketing] (query)
@@ -4152,6 +4588,9 @@ components:
         action:
           type: string
           description: "Accion fija: list"
+        status:
+          type: string
+          description: "Filtrar por estado de campana"
       required: ["action"]
 
     ListContactListsArgs:
@@ -4310,36 +4749,31 @@ components:
 
     ListKnowledgeSnippetsArgs:
       description: |
-        **list_knowledge_snippets** [prompt] (query)
-        Muestra los datos (facts) que la IA ha aprendido automaticamente de las conversaciones. Estos son datos concretos del negocio como horarios, precios, politicas, etc.
+        **list_knowledge_snippets** [knowledge] (query)
+        Lista snippets de conocimiento filtrados por estado (pendiente, activo, en conflicto, obsoleto, rechazado)
       type: object
       properties:
         filter:
           type: string
-          description: "Filtrar por estado: pending (pendientes de revision), active (aprobados), conflicts (en conflicto), stale (obsoletos), rejected (rechazados), all (todos)"
-          enum: ["pending", "active", "conflicts", "stale", "rejected", "all"]
-          default: "all"
+          description: "Filtro por estado: pending, active, conflicts, stale, rejected"
         category:
           type: string
-          description: "Filtrar por categoria (ej: horarios, precios, envios)"
+          description: "Filtrar por categoria"
         search:
           type: string
-          description: "Buscar en el contenido de los snippets"
-        limit:
-          type: integer
-          description: "Cantidad por pagina (max 100)"
-          default: 50
-        offset:
-          type: integer
-          description: "Posicion de inicio para paginacion"
-          default: 0
+          description: "Buscar en contenido de snippets"
         source_type:
           type: string
-          description: "Filter by source: conversation, correction, copilot_correction, dashboard_correction, chatgpt_correction"
+          description: "Filtrar por tipo de fuente"
+        offset:
+          type: integer
+          description: "Offset para paginacion"
+        limit:
+          type: integer
+          description: "Limite de resultados"
         risk_level:
           type: string
-          description: "Filtrar por nivel de riesgo: low, medium o high"
-          enum: ["low", "medium", "high"]
+          description: "Filtrar por nivel de riesgo"
 
     ListNotificationsArgs:
       description: |
@@ -4369,6 +4803,20 @@ components:
           type: integer
           description: "ID del agente"
       required: ["action"]
+
+    ListOauthCalendarsArgs:
+      description: |
+        **list_oauth_calendars** [calendar] (query)
+        Lista los calendarios disponibles de una conexion OAuth (Google/Microsoft) para vincular
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        connection_id:
+          type: integer
+          description: "ID de la conexion OAuth"
+      required: ["action", "connection_id"]
 
     ListPluginConfigsArgs:
       description: |
@@ -4782,6 +5230,20 @@ components:
           enum: ["chat", "product-qa"]
           default: "chat"
 
+    RejectKnowledgeSnippetArgs:
+      description: |
+        **reject_knowledge_snippet** [knowledge] (mutation)
+        Rechaza un snippet de conocimiento pendiente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del snippet a rechazar"
+      required: ["action", "id"]
+
     RemoveContactFromListArgs:
       description: |
         **remove_contact_from_list** [mass_marketing] (mutation)
@@ -4942,6 +5404,20 @@ components:
           description: "Array de objetos {id, priority} con el nuevo orden de los workflows"
       required: ["action", "order"]
 
+    RepublishFaqArgs:
+      description: |
+        **republish_faq** [plugins] (mutation)
+        Republica una o varias FAQs previamente despublicadas
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        faq_ids:
+          type: array
+          description: "IDs de las FAQs a republicar"
+      required: ["action", "faq_ids"]
+
     RequestReferralPayoutArgs:
       description: |
         **request_referral_payout** [referrals] (mutation)
@@ -4959,6 +5435,23 @@ components:
         action:
           type: string
       required: ["action"]
+
+    ResolveKnowledgeConflictArgs:
+      description: |
+        **resolve_knowledge_conflict** [knowledge] (mutation)
+        Resuelve un conflicto entre snippets de conocimiento eligiendo cual mantener
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del snippet en conflicto"
+        keep_id:
+          type: integer
+          description: "ID del snippet a mantener"
+      required: ["action", "id", "keep_id"]
 
     RestoreDefaultPromptArgs:
       description: |
@@ -5041,6 +5534,23 @@ components:
           type: integer
           description: "ID del workflow del que extraer el mensaje para guardar como plantilla"
       required: ["action", "name"]
+
+    SaveCalendarSettingsArgs:
+      description: |
+        **save_calendar_settings** [calendar] (mutation)
+        Guarda la configuracion global del modulo de calendario
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        settings:
+          type: object
+          description: "Objeto con la configuracion del calendario"
+        enabled:
+          type: boolean
+          description: "Si el modulo de calendario esta habilitado"
+      required: ["action"]
 
     SaveMassMarketingConfigArgs:
       description: |
@@ -5328,6 +5838,15 @@ components:
         attachment_ids:
           type: array
           description: "IDs de adjuntos previamente subidos"
+        cc:
+          type: array
+          description: "Direcciones CC"
+        bcc:
+          type: array
+          description: "Direcciones BCC"
+        account_id:
+          type: integer
+          description: "ID de la cuenta de correo"
       required: ["body_html"]
 
     SendSupportTicketArgs:
@@ -5501,28 +6020,25 @@ components:
 
     TestCrmEndpointArgs:
       description: |
-        **test_crm_endpoint** [advanced] (mutation)
-        Envia una peticion de prueba a un endpoint CRM para verificar que funciona correctamente
+        **test_crm_endpoint** [advanced] (query)
+        Prueba la conectividad y respuesta de un endpoint CRM personalizado configurado en la tienda
       type: object
       properties:
         type:
           type: string
-          description: "Tipo de endpoint CRM a probar"
-          enum: ["sidePanel_CustomerInfo", "ai_CustomerInitialInfo", "sidePanel_CustomerFindToJoin", "search_Products", "globalSearch"]
+          description: "Tipo de endpoint: sidePanel_CustomerInfo, ai_CustomerInitialInfo, sidePanel_CustomerFindToJoin, search_Products, globalSearch"
         url:
           type: string
-          description: "URL del endpoint CRM a probar"
+          description: "URL del endpoint a probar"
         method:
           type: string
-          description: "Metodo HTTP del endpoint (GET o POST)"
-          enum: ["GET", "POST"]
-          default: "GET"
+          description: "Metodo HTTP (GET o POST, default GET)"
         auth:
           type: object
-          description: "Configuración de autenticación. Objeto con 'type' (header, basic, body, query) y 'fields' (objeto con credenciales). Para 'header': headers HTTP. Para 'basic': username+password. Para 'body'/'query': se añaden a los datos"
+          description: "Configuracion de autenticacion con type (header, basic, body, query) y campos"
         test_phone:
           type: string
-          description: "Número de teléfono de prueba"
+          description: "Telefono de prueba (default +34600000000)"
       required: ["type", "url"]
 
     TestEcommerceConnectionArgs:
@@ -5581,6 +6097,12 @@ components:
         shopify_token:
           type: string
           description: "Token de acceso Shopify. Si no se proporciona, usa el token guardado"
+        url:
+          type: string
+          description: "URL de la tienda Shopify a probar"
+        token:
+          type: string
+          description: "Token de acceso a probar"
 
     TestWebhookArgs:
       description: |
@@ -5663,6 +6185,20 @@ components:
           type: boolean
           description: "true para activar, false para pausar"
       required: ["file_id", "is_active"]
+
+    ToggleSnippetPermanentArgs:
+      description: |
+        **toggle_snippet_permanent** [knowledge] (mutation)
+        Alterna el estado permanente de un snippet (protege de expiracion por antiguedad)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del snippet"
+      required: ["action", "id"]
 
     ToggleWebSearchArgs:
       description: |
@@ -5747,6 +6283,37 @@ components:
           type: integer
           description: "ID de la campaña a desarchivar"
       required: ["action", "campaign_id"]
+
+    UnassignCalendarAgentArgs:
+      description: |
+        **unassign_calendar_agent** [calendar] (mutation)
+        Desasigna un agente de un calendario
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+        agent_id:
+          type: integer
+          description: "ID del agente"
+      required: ["action", "calendar_id", "agent_id"]
+
+    UnpublishFaqArgs:
+      description: |
+        **unpublish_faq** [plugins] (mutation)
+        Despublica una o varias FAQs del plugin Product Q&A
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        faq_ids:
+          type: array
+          description: "IDs de las FAQs a despublicar"
+      required: ["action", "faq_ids"]
 
     UnsnoozeEmailThreadArgs:
       description: |
@@ -5885,6 +6452,58 @@ components:
           description: "Nombre del negocio (max 255 caracteres)"
       required: ["business_name"]
 
+    UpdateCalendarArgs:
+      description: |
+        **update_calendar** [calendar] (mutation)
+        Actualiza propiedades de un calendario (nombre, descripcion, color, estado por defecto)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        calendar_id:
+          type: integer
+          description: "ID del calendario"
+        name:
+          type: string
+          description: "Nombre del calendario"
+        description:
+          type: string
+          description: "Descripcion del calendario"
+        color:
+          type: string
+          description: "Color del calendario"
+        is_default:
+          type: boolean
+          description: "Si es el calendario por defecto"
+      required: ["action", "calendar_id"]
+
+    UpdateCalendarAvailabilityArgs:
+      description: |
+        **update_calendar_availability** [calendar] (mutation)
+        Actualiza una regla de disponibilidad existente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        rule_id:
+          type: integer
+          description: "ID de la regla de disponibilidad"
+        start_time:
+          type: string
+          description: "Hora inicio HH:MM"
+        end_time:
+          type: string
+          description: "Hora fin HH:MM"
+        label:
+          type: string
+          description: "Etiqueta descriptiva"
+        is_available:
+          type: boolean
+          description: "Si esta disponible"
+      required: ["action", "rule_id"]
+
     UpdateCalendarEventArgs:
       description: |
         **update_calendar_event** [calendar] (mutation)
@@ -5922,6 +6541,93 @@ components:
           type: string
           description: "Telefono del cliente"
       required: ["action", "event_id"]
+
+    UpdateCalendarEventStatusArgs:
+      description: |
+        **update_calendar_event_status** [calendar] (mutation)
+        Cambia el estado de un evento de calendario (pendiente, confirmado, cancelado, completado, no-show)
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        event_id:
+          type: integer
+          description: "ID del evento"
+        status:
+          type: string
+          description: "Nuevo estado: pending, confirmed, cancelled, completed, no_show"
+      required: ["action", "event_id", "status"]
+
+    UpdateCalendarNotificationArgs:
+      description: |
+        **update_calendar_notification** [calendar] (mutation)
+        Actualiza una notificacion automatica de calendario
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        notification_id:
+          type: integer
+          description: "ID de la notificacion"
+        notification_type:
+          type: string
+          description: "Tipo de notificacion"
+        channel:
+          type: string
+          description: "Canal de envio"
+        timing_minutes:
+          type: integer
+          description: "Minutos antes/despues"
+        template_text:
+          type: string
+          description: "Texto de la notificacion"
+        is_enabled:
+          type: boolean
+          description: "Si esta habilitada"
+      required: ["action", "notification_id"]
+
+    UpdateCalendarServiceArgs:
+      description: |
+        **update_calendar_service** [calendar] (mutation)
+        Actualiza propiedades de un servicio/tipo de cita existente
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        service_id:
+          type: integer
+          description: "ID del servicio"
+        name:
+          type: string
+          description: "Nombre del servicio"
+        duration_minutes:
+          type: integer
+          description: "Duracion en minutos"
+        description:
+          type: string
+          description: "Descripcion"
+        buffer_before_minutes:
+          type: integer
+          description: "Minutos de buffer antes"
+        buffer_after_minutes:
+          type: integer
+          description: "Minutos de buffer despues"
+        max_concurrent:
+          type: integer
+          description: "Maximo de citas concurrentes"
+        price:
+          type: string
+          description: "Precio"
+        currency:
+          type: string
+          description: "Moneda"
+        requires_confirmation:
+          type: boolean
+          description: "Si requiere confirmacion"
+      required: ["action", "service_id"]
 
     UpdateCampaignArgs:
       description: |
@@ -6239,6 +6945,9 @@ components:
         auto_responder_thread_limit:
           type: integer
           description: "Maximo de respuestas automaticas por hilo (1-10). Default: 2"
+        auto_responder_daily_limit:
+          type: integer
+          description: "Limite diario de auto-respuestas"
       required: ["action", "id"]
 
     UpdateEmailFoldersArgs:
@@ -6255,16 +6964,16 @@ components:
           description: "ID de la cuenta de email"
         sent_folder:
           type: string
-          description: "Nombre de la carpeta de Enviados en IMAP (ej: Sent, INBOX.Sent)"
+          description: "Nombre de la carpeta de enviados"
         trash_folder:
           type: string
-          description: "Nombre de la carpeta de Papelera en IMAP (ej: Trash, INBOX.Trash)"
+          description: "Nombre de la carpeta de papelera"
         archive_folder:
           type: string
-          description: "Nombre de la carpeta de Archivo en IMAP (ej: Archive, All Mail)"
+          description: "Nombre de la carpeta de archivo"
         spam_folder:
           type: string
-          description: "Nombre de la carpeta de Spam en IMAP (ej: Junk, Spam)"
+          description: "Nombre de la carpeta de spam"
       required: ["action", "id"]
 
     UpdateEmailRetentionArgs:
@@ -6280,7 +6989,10 @@ components:
           type: integer
           description: "Dias de retencion: 30, 60, 90 o 180"
           enum: [30, 60, 90, 180]
-      required: ["action", "retention_days"]
+        id:
+          type: integer
+          description: "ID de la cuenta de correo"
+      required: ["action", "retention_days", "id"]
 
     UpdateEmailRuleArgs:
       description: |
@@ -6325,8 +7037,8 @@ components:
           description: "ID de la cuenta de email"
         sync_mode:
           type: string
-          description: "Modo de sincronizacion: 'inbox_only' (solo recibir) o 'bidirectional' (sincronizar acciones con IMAP)"
-      required: ["action", "id", "sync_mode"]
+          description: "Modo de sincronizacion: inbox_only o bidirectional"
+      required: ["action", "id"]
 
     UpdateKnowledgeFileArgs:
       description: |

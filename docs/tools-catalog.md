@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 313 (excluding hidden)
+> Total tools: 346 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -15,7 +15,9 @@
 | `apply_prompt_instruction` | Prompt e IA | query | Genera una version modificada del prompt segun una instruccion. NO guarda los cambios - solo devuelve el prompt modif... |
 | `apply_training_suggestion` | Base de Conocimiento | mutation | Aplica una sugerencia de entrenamiento de IA. Segun el nivel, crea un snippet de conocimiento o actualiza el prompt d... |
 | `approve_campaign` | Marketing Masivo | mutation | Aprueba una campaña pendiente de aprobación para que pueda ser enviada |
+| `approve_knowledge_snippet` | Base de Conocimiento | mutation | Aprueba un snippet de conocimiento pendiente y lo activa |
 | `archive_campaign` | Marketing Masivo | mutation | Archiva una campaña completada para mantener la lista limpia |
+| `assign_calendar_agent` | Calendario | mutation | Asigna un agente a un calendario con un rol especifico |
 | `assign_email_thread` | Email | mutation | Asigna un hilo de email a un agente especifico. Usar assign_to=null para desasignar. |
 | `assign_marketing_session` | Marketing Masivo | mutation | Habilita o deshabilita una sesión de WhatsApp para envío de campañas de marketing |
 | `auto_categorize_conversations` | Analisis IA | query | Categoriza conversaciones recientes por tema, intento y prioridad usando IA |
@@ -37,7 +39,10 @@
 | `connect_whatsapp` | WhatsApp | mutation | Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve un código QR para escanear con el teléfono. |
 | `count_filtered_contacts` | Marketing Masivo | query | Cuenta cuantos contactos de una lista cumplen con filtros de segmentacion (tags, actividad reciente, historial WhatsApp) |
 | `create_agent` | Agentes | mutation | Crea un nuevo agente de atencion. Puede fallar si se ha alcanzado el limite de agentes del plan actual. |
+| `create_calendar_availability` | Calendario | mutation | Crea una regla de disponibilidad en un calendario (semanal, excepcion por fecha, bloqueo) |
 | `create_calendar_event` | Calendario | mutation | Agenda un nuevo evento o cita en el calendario |
+| `create_calendar_notification` | Calendario | mutation | Crea una notificacion automatica para un calendario (confirmacion, recordatorio, cancelacion, seguimiento, no-show) |
+| `create_calendar_service` | Calendario | mutation | Crea un tipo de cita/servicio para un calendario (ej: consulta 30min, reunion 60min) |
 | `create_campaign` | Marketing Masivo | mutation | Crea una nueva campana de marketing masivo. Puede crearse como borrador o programarse para una fecha futura. Soporta ... |
 | `create_contact_list` | Marketing Masivo | mutation | Crea una nueva lista de contactos para campanas de marketing masivo |
 | `create_docqa_assistant` | Plugins | mutation | Crea un nuevo asistente de documentacion. Despues de crearlo, podras subir archivos (PDF, Word, etc.) desde el dashbo... |
@@ -52,7 +57,12 @@
 | `create_whatsapp_workflow` | Automatizacion | mutation | Crea un nuevo workflow de automatizacion para respuestas de WhatsApp. Campos requeridos: name y actions. Si el usuari... |
 | `delete_agent` | Agentes | mutation | Elimina un agente de atencion |
 | `delete_ai_error` | Base de Conocimiento | mutation | Remove an AI correction that is no longer valid. |
+| `delete_calendar` | Calendario | mutation | Elimina un calendario y todos sus eventos, servicios y disponibilidad |
+| `delete_calendar_availability` | Calendario | mutation | Elimina una regla de disponibilidad del calendario |
+| `delete_calendar_connection` | Calendario | mutation | Elimina una conexion de proveedor de calendario (Google/Microsoft) |
 | `delete_calendar_event` | Calendario | mutation | Elimina un evento del calendario |
+| `delete_calendar_notification` | Calendario | mutation | Elimina una notificacion automatica de calendario |
+| `delete_calendar_service` | Calendario | mutation | Elimina un servicio/tipo de cita del calendario |
 | `delete_campaign` | Marketing Masivo | mutation | Elimina permanentemente una campaña de marketing masivo |
 | `delete_contact_list` | Marketing Masivo | mutation | Elimina una lista de contactos y todos sus contactos asociados. Esta accion no se puede deshacer. |
 | `delete_conversation_file` | Almacenamiento | mutation | Elimina un archivo compartido en una conversacion |
@@ -63,7 +73,9 @@
 | `delete_email_account` | Email | mutation | Elimina una cuenta de correo y todos sus emails asociados. Esta accion no se puede deshacer. |
 | `delete_email_note` | Email | mutation | Elimina una nota interna de un hilo de email. |
 | `delete_email_rule` | Email | mutation | Elimina una regla de email. Esta accion no se puede deshacer. |
+| `delete_faq` | Plugins | mutation | Elimina permanentemente una o varias FAQs del plugin Product Q&A |
 | `delete_knowledge_file` | Almacenamiento | mutation | Elimina un archivo de la base de conocimiento (no permite eliminar archivos de sistema) |
+| `delete_knowledge_snippet` | Base de Conocimiento | mutation | Elimina permanentemente un snippet de conocimiento |
 | `delete_notification` | Notificaciones | mutation | Elimina permanentemente una notificacion |
 | `delete_task` | Tareas | mutation | Elimina una tarea permanentemente |
 | `delete_whatsapp_session` | WhatsApp | mutation | Elimina una sesion de WhatsApp desconectada. Solo funciona con sesiones en estado 'disconnected'. |
@@ -77,6 +89,7 @@
 | `download_knowledge_file` | Base de Conocimiento | query | Obtiene la URL de descarga de un archivo de la base de conocimiento |
 | `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada real. Usar cuando el usuario diga 'prueba... |
 | `duplicate_campaign` | Marketing Masivo | mutation | Crea una copia de una campaña existente en estado borrador |
+| `edit_knowledge_snippet` | Base de Conocimiento | mutation | Edita el contenido o categoria de un snippet de conocimiento |
 | `email_thread_action` | Email | mutation | Ejecuta una accion sobre un hilo de email: archivar, eliminar, spam, restaurar, marcar como no leido, posponer (snooz... |
 | `export_campaign_csv` | Marketing Masivo | query | Descarga los logs de envio de una campana completada como archivo CSV. Solo funciona con campanas completadas, cancel... |
 | `export_conversations` | Conversaciones | query | Exporta conversaciones con todos los mensajes en formato estructurado |
@@ -125,12 +138,12 @@
 | `get_email_accounts` | Email | query | Lista las cuentas de email accesibles con su estado y configuracion basica |
 | `get_email_filter_counts` | Email | query | Devuelve la cantidad de hilos por cada filtro (no leidos, leidos, enviados, archivados, etc.) |
 | `get_email_retention` | Email | query | Devuelve el periodo de retencion configurado para los emails de la tienda. |
-| `get_email_stats` | Email | query | Devuelve estadisticas de emails: total recibidos, respondidos, tiempo medio de respuesta, desglose por agente y clasi... |
+| `get_email_stats` | Email | query | Obtiene estadisticas de correo electronico: volumenes, tiempos de respuesta, desglose por agente y clasificacion IA |
 | `get_email_thread_detail` | Email | query | Obtiene todos los mensajes de un hilo de email especifico |
 | `get_email_unread_count` | Email | query | Devuelve el total de emails no leidos en todas las cuentas |
 | `get_knowledge_processing_status` | Base de Conocimiento | query | Obtiene el estado de procesamiento de todos los archivos de conocimiento (polling endpoint) |
 | `get_marketing_sessions` | Marketing Masivo | query | Obtiene las sesiones de WhatsApp disponibles para envío de campañas |
-| `get_mass_marketing_config` | Marketing Masivo | query | Obtiene la configuracion actual de marketing masivo: auto-respuesta, traduccion automatica, texto personalizado de baja |
+| `get_mass_marketing_config` | Marketing Masivo | query | Obtiene la configuracion actual de marketing masivo (auto-respuesta, texto de baja, aprobacion) |
 | `get_mass_marketing_stats` | Estadisticas | query | Estadisticas de campanas masivas: rendimiento por campana, desglose de fallos, distribucion horaria de envios, calida... |
 | `get_onboarding_status` | Configuracion General | query | Muestra el progreso de configuracion inicial del usuario (setup guide) |
 | `get_overdue_tasks` | Tareas | query | Muestra todas las tareas pendientes cuya fecha limite ya paso |
@@ -152,7 +165,7 @@
 | `get_sentiment_analysis` | Analisis IA | query | Analiza el sentimiento e intencion del cliente en una conversacion usando IA. Devuelve score (0-10), categoria, inten... |
 | `get_sentiment_trend` | Analisis IA | query | Muestra la evolucion del sentimiento a lo largo del tiempo. Sin phone muestra tendencia global de todas las conversac... |
 | `get_shop_status` | Configuracion General | query | Obtiene el estado actual de la tienda: idioma, creditos, configuracion basica |
-| `get_smart_followup_config` | Seguimiento Inteligente | query | Obtiene la configuracion actual de seguimiento inteligente. Incluye: hora de ejecucion, nivel de intencion minimo, in... |
+| `get_smart_followup_config` | Seguimiento Inteligente | query | Obtiene la configuracion actual del sistema de seguimiento inteligente (Smart Follow-up) |
 | `get_smart_followup_logs` | Seguimiento Inteligente | query | Lista las acciones recientes de seguimiento inteligente: que clientes se contactaron, nivel de intencion, producto me... |
 | `get_smart_followup_stats` | Seguimiento Inteligente | query | Estadisticas de recuperacion de ventas: embudo de conversion, tasa de respuesta, productos mas mencionados, rendimien... |
 | `get_smart_reply_suggestions` | Analisis IA | query | Genera 3 sugerencias de respuesta basadas en la conversacion actual |
@@ -184,19 +197,26 @@
 | `get_workflow_logs` | WhatsApp | query | Muestra las ejecuciones recientes de workflows automaticos de WhatsApp |
 | `get_workflow_session_stats` | Automatizacion | query | Obtiene estadísticas de workflows para una sesión específica de WhatsApp: mensajes de hoy, ejecuciones, volumen de 7 ... |
 | `global_search` | Clientes | query | Busca en todas las fuentes de datos de clientes: CRM, contactos, conversaciones. Devuelve resultados unificados sin d... |
-| `import_contacts_from_all_conversations` | Marketing Masivo | mutation | Importa a una lista de marketing masivo todos los telefonos del historial completo de conversaciones WhatsApp (conver... |
-| `import_contacts_from_conversations` | Marketing Masivo | mutation | Importa a una lista de marketing masivo todos los telefonos de las conversaciones WhatsApp de la tienda. |
-| `import_contacts_from_crm` | Marketing Masivo | mutation | Importa a una lista de marketing masivo los contactos del CRM interno de WAzion. |
-| `import_contacts_from_platform` | Marketing Masivo | mutation | Importa a una lista de marketing masivo los clientes con telefono de la plataforma conectada (Shopify, WooCommerce, P... |
-| `import_contacts_manual` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo escribiendo los telefonos. Un telefono por linea o separados por co... |
+| `import_contacts_from_all_conversations` | Marketing Masivo | mutation | Importa todos los contactos de conversaciones de WhatsApp a una lista de marketing |
+| `import_contacts_from_conversations` | Marketing Masivo | mutation | Importa contactos seleccionados desde conversaciones de WhatsApp a una lista de marketing |
+| `import_contacts_from_crm` | Marketing Masivo | mutation | Importa contactos del CRM interno de WAzion a una lista de marketing masivo |
+| `import_contacts_from_platform` | Marketing Masivo | mutation | Importa contactos de clientes desde la plataforma ecommerce conectada (Shopify, WooCommerce, etc.) |
+| `import_contacts_manual` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo escribiendo los telefonos manualmente |
 | `import_marketing_contacts` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo. Soporta entrada manual de telefonos o importacion desde conversaci... |
 | `improve_prompt` | Prompt e IA | query | Analiza el prompt actual con IA y devuelve puntuaciones por categoria, sugerencias de mejora y una version mejorada d... |
-| `list_agents` | Agentes | query | Muestra todos los agentes de atencion configurados con sus nombres y colores |
+| `keep_both_knowledge_snippets` | Base de Conocimiento | mutation | Mantiene ambos snippets en conflicto activando los dos |
+| `link_oauth_calendar` | Calendario | mutation | Vincula un calendario externo (Google/Microsoft) a la tienda |
+| `list_agents` | Agentes | query | Lista todos los agentes del comercio con detalles de perfil y permisos |
 | `list_agents_json` | Agentes | query | Devuelve todos los agentes configurados en formato JSON con sus datos completos: nombre, email, teléfono, color, perm... |
 | `list_blacklist` | Marketing Masivo | query | Obtiene los numeros bloqueados manualmente que no recibiran campanas masivas, distinta de las bajas voluntarias |
+| `list_calendar_agents` | Calendario | query | Lista agentes asignados a un calendario especifico con sus roles |
+| `list_calendar_availability` | Calendario | query | Lista todas las reglas de disponibilidad de un calendario (horarios, excepciones, bloqueos) |
 | `list_calendar_connections` | Calendario | query | List all connected calendar providers (Google, Microsoft) for this shop |
 | `list_calendar_events` | Calendario | query | List upcoming appointments/events in a date range |
+| `list_calendar_events_ops` | Calendario | query | Lista eventos del calendario para un rango de fechas, con filtrado por agente o telefono |
+| `list_calendar_notifications` | Calendario | query | Lista las notificaciones configuradas para un calendario (confirmaciones, recordatorios, etc.) |
 | `list_calendar_services` | Calendario | query | List all appointment types/services configured for a calendar |
+| `list_calendars` | Calendario | query | Lista todos los calendarios disponibles con conteo de servicios y eventos proximos |
 | `list_campaigns` | Marketing Masivo | query | Obtiene todas las campanas de marketing masivo de la tienda |
 | `list_contact_lists` | Marketing Masivo | query | Obtiene todas las listas de contactos de marketing masivo de la tienda |
 | `list_conversation_files` | Almacenamiento | query | Lista los archivos compartidos en una conversacion con un cliente |
@@ -208,8 +228,9 @@
 | `list_email_rules` | Email | query | Lista todas las reglas automaticas de email configuradas para la tienda. Las reglas se aplican a los emails entrantes... |
 | `list_email_threads` | Email | query | Lista los hilos de email de la tienda, con filtros por estado y cuenta |
 | `list_knowledge_files` | Almacenamiento | query | Muestra todos los archivos subidos a la base de conocimiento (PDFs, documentos, etc.) |
-| `list_knowledge_snippets` | Prompt e IA | query | Muestra los datos (facts) que la IA ha aprendido automaticamente de las conversaciones. Estos son datos concretos del... |
+| `list_knowledge_snippets` | Base de Conocimiento | query | Lista snippets de conocimiento filtrados por estado (pendiente, activo, en conflicto, obsoleto, rechazado) |
 | `list_notifications` | Notificaciones | query | Obtiene las notificaciones del sistema con filtros opcionales |
+| `list_oauth_calendars` | Calendario | query | Lista los calendarios disponibles de una conexion OAuth (Google/Microsoft) para vincular |
 | `list_plugin_configs` | Plugins | query | Lista todos los plugins instalados con su configuracion y estado |
 | `list_scheduled_emails` | Email | query | Muestra los emails que estan programados para enviarse en el futuro. |
 | `list_scheduled_messages` | WhatsApp | query | Lists scheduled WhatsApp messages with optional status filter. Returns id, session info, phone, message text, schedul... |
@@ -234,6 +255,7 @@
 | `regenerate_api_key` | Avanzado | mutation | Genera una nueva API key (token_ext) para la tienda. Esto invalida la key actual e impide el acceso de cualquier cone... |
 | `regenerate_docqa_token` | Plugins | mutation | Genera un nuevo token de acceso para un asistente Doc-QA |
 | `regenerate_plugin_token` | Plugins | mutation | Genera un nuevo token para los plugins (invalida el anterior) |
+| `reject_knowledge_snippet` | Base de Conocimiento | mutation | Rechaza un snippet de conocimiento pendiente |
 | `remove_contact_from_list` | Marketing Masivo | mutation | Elimina un contacto individual de una lista de marketing |
 | `remove_contacts_bulk` | Marketing Masivo | mutation | Elimina múltiples contactos de una lista de marketing |
 | `remove_customer_tag` | Clientes | mutation | Elimina una etiqueta (tag) de un cliente |
@@ -242,14 +264,17 @@
 | `remove_whatsapp_optout` | WhatsApp | mutation | Elimina un numero de la lista de opt-out para que pueda recibir mensajes automaticos de nuevo |
 | `remove_whatsapp_profile_picture` | Automatizacion | mutation | Elimina la foto de perfil de una sesion de WhatsApp |
 | `reorder_whatsapp_workflows` | Automatizacion | mutation | Cambia el orden de ejecucion de los workflows de WhatsApp |
+| `republish_faq` | Plugins | mutation | Republica una o varias FAQs previamente despublicadas |
 | `request_referral_payout` | Referidos | mutation | Solicita el pago de las comisiones pendientes (mínimo 50€). Solo disponible si no hay otra solicitud abierta. |
 | `reset_crm_errors` | Avanzado | mutation | Resetea el contador de errores CRM y reactiva los endpoints si estaban deshabilitados por errores consecutivos |
+| `resolve_knowledge_conflict` | Base de Conocimiento | mutation | Resuelve un conflicto entre snippets de conocimiento eligiendo cual mantener |
 | `restore_default_prompt` | Prompt e IA | query | Obtiene el prompt por defecto segun el idioma |
 | `resume_campaign` | Marketing Masivo | mutation | Reanuda una campana de marketing masivo que fue pausada |
 | `retry_email_account` | Email | mutation | Resetea el estado de error de una cuenta de email y reintenta la conexion. Util cuando una cuenta esta en estado de e... |
 | `rollback_prompt` | Prompt e IA | mutation | Revierte la parte autogenerada del prompt a una version anterior del historial. La parte personalizada del usuario se... |
 | `save_agent_permissions` | Agentes | mutation | Actualiza los permisos de un agente. Enviar null para dar todos los permisos, o un objeto con los permisos especifico... |
 | `save_as_whatsapp_template` | WhatsApp | mutation | Guarda un mensaje como plantilla reutilizable de WhatsApp |
+| `save_calendar_settings` | Calendario | mutation | Guarda la configuracion global del modulo de calendario |
 | `save_mass_marketing_config` | Marketing Masivo | mutation | Guarda la configuracion de marketing masivo: auto-respuesta, traduccion y opciones de envio |
 | `save_plugin_conversation_note` | Plugins | mutation | Genera un resumen IA de una conversacion del plugin de chat web y lo guarda como nota en el perfil del cliente. Requi... |
 | `save_prompt` | Prompt e IA | mutation | Guarda un nuevo prompt para la IA. FLUJO OBLIGATORIO: 1) Llama a esta accion con el prompt completo. 2) Recibiras req... |
@@ -269,7 +294,7 @@
 | `snooze_email_thread` | Email | mutation | Pospone un hilo de email hasta una fecha y hora especifica. El hilo se reabrira automaticamente cuando llegue el mome... |
 | `start_campaign` | Marketing Masivo | mutation | Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas. |
 | `sync_knowledge_now` | Almacenamiento | mutation | Fuerza la sincronizacion inmediata de los facts aprendidos al Vector Store (normalmente se hace automaticamente) |
-| `test_crm_endpoint` | Avanzado | mutation | Envia una peticion de prueba a un endpoint CRM para verificar que funciona correctamente |
+| `test_crm_endpoint` | Avanzado | query | Prueba la conectividad y respuesta de un endpoint CRM personalizado configurado en la tienda |
 | `test_ecommerce_connection` | Integraciones | query | Verifica que la conexion con la plataforma e-commerce (Shopify, WooCommerce, PrestaShop o VTEX) funciona correctament... |
 | `test_email_connection` | Email | query | Verifica que la conexion IMAP y SMTP de una cuenta de email funciona correctamente. |
 | `test_shopify_connection` | Integraciones | query | Valida la conexion con una tienda Shopify verificando las credenciales y los permisos OAuth. Si no se proporcionan cr... |
@@ -280,18 +305,26 @@
 | `toggle_auto_translate` | Configuracion General | mutation | Activa o desactiva la traduccion automatica de mensajes |
 | `toggle_autolearning` | Prompt e IA | mutation | Activa o desactiva el aprendizaje automatico de la IA |
 | `toggle_knowledge_file` | Almacenamiento | mutation | Activa o pausa un archivo sin eliminarlo (la IA solo usa archivos activos) |
+| `toggle_snippet_permanent` | Base de Conocimiento | mutation | Alterna el estado permanente de un snippet (protege de expiracion por antiguedad) |
 | `toggle_web_search` | Prompt e IA | mutation | Activa o desactiva la busqueda en internet de la IA. Cuando esta activa, la IA puede buscar informacion actualizada e... |
 | `toggle_whatsapp_workflow` | Automatizacion | mutation | Activa o pausa un workflow de WhatsApp existente |
 | `translate_conversation` | Analisis IA | query | Traduce los ultimos mensajes de una conversacion a otro idioma usando IA |
 | `trigger_smart_followup` | Seguimiento Inteligente | mutation | Lanza manualmente el analisis de seguimiento inteligente para esta tienda. Si ya hay una ejecucion en curso (cron o m... |
 | `unarchive_campaign` | Marketing Masivo | mutation | Restaura una campaña archivada a la lista principal |
+| `unassign_calendar_agent` | Calendario | mutation | Desasigna un agente de un calendario |
+| `unpublish_faq` | Plugins | mutation | Despublica una o varias FAQs del plugin Product Q&A |
 | `unsnooze_email_thread` | Email | mutation | Reactiva un hilo de email que estaba pospuesto, devolviendolo a estado abierto. |
 | `update_agent` | Agentes | mutation | Modifica los datos de un agente existente |
 | `update_ai_error` | Base de Conocimiento | mutation | Update an existing AI correction. Can change the content, category, or status (active/rejected). |
 | `update_billing_info` | Cuenta | mutation | Actualiza los datos de facturacion para las facturas |
 | `update_business_info` | Configuracion General | mutation | Actualiza el tipo de negocio, tipo de venta y descripcion del negocio. Esta informacion ayuda a la IA a entender mejo... |
 | `update_business_name` | Configuracion General | mutation | Actualiza el nombre publico de tu negocio. Se muestra en los mensajes de marketing y en la pagina de baja de WhatsApp. |
+| `update_calendar` | Calendario | mutation | Actualiza propiedades de un calendario (nombre, descripcion, color, estado por defecto) |
+| `update_calendar_availability` | Calendario | mutation | Actualiza una regla de disponibilidad existente |
 | `update_calendar_event` | Calendario | mutation | Modifica un evento existente del calendario |
+| `update_calendar_event_status` | Calendario | mutation | Cambia el estado de un evento de calendario (pendiente, confirmado, cancelado, completado, no-show) |
+| `update_calendar_notification` | Calendario | mutation | Actualiza una notificacion automatica de calendario |
+| `update_calendar_service` | Calendario | mutation | Actualiza propiedades de un servicio/tipo de cita existente |
 | `update_campaign` | Marketing Masivo | mutation | Modifica los datos de una campaña de marketing masivo existente (solo en estado borrador) |
 | `update_contact_info` | Cuenta | mutation | Actualiza nombre, email y telefono de la cuenta |
 | `update_crm_endpoints` | Avanzado | mutation | Define endpoints para sincronizar datos con tu CRM |
