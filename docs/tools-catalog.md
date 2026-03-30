@@ -231,7 +231,7 @@
 | `list_email_rules` | Email | query | Lista todas las reglas automaticas de email configuradas para la tienda. Las reglas se aplican a los emails entrantes... |
 | `list_email_threads` | Email | query | Lista los hilos de email de la tienda, con filtros por estado y cuenta |
 | `list_knowledge_files` | Almacenamiento | query | Muestra todos los archivos subidos a la base de conocimiento (PDFs, documentos, etc.) |
-| `list_knowledge_snippets` | Base de Conocimiento | query | Lista snippets de conocimiento filtrados por estado (pendiente, activo, en conflicto, obsoleto, rechazado) |
+| `list_knowledge_snippets` | Prompt e IA | query | Lista snippets de conocimiento filtrados por estado (pendiente, activo, en conflicto, obsoleto, rechazado) |
 | `list_notifications` | Notificaciones | query | Obtiene las notificaciones del sistema con filtros opcionales |
 | `list_oauth_calendars` | Calendario | query | Lista los calendarios disponibles de una conexion OAuth (Google/Microsoft) para vincular |
 | `list_plugin_configs` | Plugins | query | Lista todos los plugins instalados con su configuracion y estado |

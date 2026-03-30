@@ -412,9 +412,6 @@ components:
         suggestion_id:
           type: integer
           description: "ID de la sugerencia a aplicar"
-        instruction:
-          type: string
-          description: "Instruccion personalizada de aplicacion"
       required: ["action", "suggestion_id"]
 
     ApproveCampaignArgs:
@@ -4316,10 +4313,7 @@ components:
         list_id:
           type: integer
           description: "ID de la lista destino"
-        phones:
-          type: array
-          description: "Array de telefonos seleccionados"
-      required: ["source", "list_id", "phones"]
+      required: ["source", "list_id"]
 
     ImportContactsFromCrmArgs:
       description: |
@@ -4362,8 +4356,8 @@ components:
           type: integer
           description: "ID de la lista destino"
         phones:
-          type: array
-          description: "Array de objetos {phone, name} a importar"
+          type: string
+          description: "Telefonos a importar, uno por linea o separados por comas. Incluir prefijo internacional (ej: +34600000000)"
       required: ["source", "list_id", "phones"]
 
     ImportMarketingContactsArgs:
@@ -4783,13 +4777,15 @@ components:
 
     ListKnowledgeSnippetsArgs:
       description: |
-        **list_knowledge_snippets** [knowledge] (query)
+        **list_knowledge_snippets** [prompt] (query)
         Lista snippets de conocimiento filtrados por estado (pendiente, activo, en conflicto, obsoleto, rechazado)
       type: object
       properties:
         filter:
           type: string
           description: "Filtro por estado: pending, active, conflicts, stale, rejected"
+          enum: ["pending", "active", "conflicts", "stale", "rejected", "all"]
+          default: "all"
         category:
           type: string
           description: "Filtrar por categoria"
@@ -4802,12 +4798,15 @@ components:
         offset:
           type: integer
           description: "Offset para paginacion"
+          default: 0
         limit:
           type: integer
           description: "Limite de resultados"
+          default: 50
         risk_level:
           type: string
           description: "Filtrar por nivel de riesgo"
+          enum: ["low", "medium", "high"]
 
     ListNotificationsArgs:
       description: |
@@ -6086,12 +6085,15 @@ components:
         type:
           type: string
           description: "Tipo de endpoint: sidePanel_CustomerInfo, ai_CustomerInitialInfo, sidePanel_CustomerFindToJoin, search_Products, globalSearch"
+          enum: ["sidePanel_CustomerInfo", "ai_CustomerInitialInfo", "sidePanel_CustomerFindToJoin", "search_Products", "globalSearch"]
         url:
           type: string
           description: "URL del endpoint a probar"
         method:
           type: string
           description: "Metodo HTTP (GET o POST, default GET)"
+          enum: ["GET", "POST"]
+          default: "GET"
         auth:
           type: object
           description: "Configuracion de autenticacion con type (header, basic, body, query) y campos"
