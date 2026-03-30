@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    346 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    353 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -2067,6 +2067,20 @@ components:
           description: "UUID del archivo a descargar"
       required: ["file_uuid"]
 
+    DownloadEmailAttachmentArgs:
+      description: |
+        **download_email_attachment** [email] (query)
+        Obtiene la URL de descarga de un adjunto de email
+      type: object
+      properties:
+        attachment_id:
+          type: integer
+          description: "ID del adjunto"
+        json:
+          type: boolean
+          description: "Devolver URL como JSON en vez de redirigir"
+      required: ["attachment_id"]
+
     DownloadKnowledgeFileArgs:
       description: |
         **download_knowledge_file** [knowledge] (query)
@@ -2220,6 +2234,12 @@ components:
           type: string
           description: "Texto del mensaje a enviar o eliminar"
       required: ["action"]
+
+    ForceEmailSyncArgs:
+      description: |
+        **force_email_sync** [email] (mutation)
+        Fuerza una sincronizacion inmediata de todas las cuentas de email via IMAP
+      type: object
 
     GdprDeleteCustomerDataArgs:
       description: |
@@ -4401,6 +4421,20 @@ components:
           description: "ID del snippet en conflicto"
       required: ["action", "id"]
 
+    LinkEmailContactArgs:
+      description: |
+        **link_email_contact** [email] (mutation)
+        Vincula un contacto de WhatsApp a un hilo de email para asociar conversaciones
+      type: object
+      properties:
+        thread_id:
+          type: integer
+          description: "ID del hilo de email"
+        phone:
+          type: string
+          description: "Telefono del contacto a vincular (con prefijo +)"
+      required: ["thread_id", "phone"]
+
     LinkOauthCalendarArgs:
       description: |
         **link_oauth_calendar** [calendar] (mutation)
@@ -5436,6 +5470,17 @@ components:
           type: string
       required: ["action"]
 
+    ResolveEmailContactArgs:
+      description: |
+        **resolve_email_contact** [email] (query)
+        Busca la direccion de email asociada a un contacto de WhatsApp usando CRM y plataforma e-commerce
+      type: object
+      properties:
+        phone_hash:
+          type: string
+          description: "Hash del telefono del contacto"
+      required: ["phone_hash"]
+
     ResolveKnowledgeConflictArgs:
       description: |
         **resolve_knowledge_conflict** [knowledge] (mutation)
@@ -5794,6 +5839,20 @@ components:
         secondary_phone:
           type: string
           description: "Telefono secundario para merge"
+      required: ["action", "query"]
+
+    SearchEmailContactsArgs:
+      description: |
+        **search_email_contacts** [email] (query)
+        Busca clientes por nombre o telefono para vincularlos a hilos de email
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        query:
+          type: string
+          description: "Texto de busqueda (nombre o telefono)"
       required: ["action", "query"]
 
     SearchProductsArgs:
@@ -6300,6 +6359,20 @@ components:
           type: integer
           description: "ID del agente"
       required: ["action", "calendar_id", "agent_id"]
+
+    UnlinkEmailContactArgs:
+      description: |
+        **unlink_email_contact** [email] (mutation)
+        Elimina la vinculacion de un contacto de WhatsApp con un hilo de email
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        thread_id:
+          type: integer
+          description: "ID del hilo de email"
+      required: ["action", "thread_id"]
 
     UnpublishFaqArgs:
       description: |
@@ -7299,6 +7372,29 @@ components:
           description: "Estado del workflow: 'enabled' para activar, 'disabled' para desactivar"
           enum: ["enabled", "disabled"]
       required: ["id"]
+
+    UploadEmailAttachmentArgs:
+      description: |
+        **upload_email_attachment** [email] (mutation)
+        Sube un archivo para adjuntarlo a un email
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        file_data:
+          type: string
+          description: "Contenido del archivo en base64"
+        file_name:
+          type: string
+          description: "Nombre del archivo"
+        file_mime:
+          type: string
+          description: "Tipo MIME del archivo"
+        file_size:
+          type: integer
+          description: "Tamano del archivo en bytes"
+      required: ["action", "file_data", "file_name", "file_mime", "file_size"]
 
     VerifyEcommerceWritePermissionArgs:
       description: |

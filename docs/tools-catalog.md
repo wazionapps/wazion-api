@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 346 (excluding hidden)
+> Total tools: 353 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -86,6 +86,7 @@
 | `discover_email_folders` | Email | query | Conecta al servidor IMAP de una cuenta de email y descubre las carpetas disponibles (Enviados, Papelera, Archivo, Spa... |
 | `dismiss_training_suggestion` | Base de Conocimiento | mutation | Descarta una sugerencia de entrenamiento de IA con motivo opcional. |
 | `download_conversation_file` | Almacenamiento | query | Obtiene la URL de descarga de un archivo compartido en una conversacion |
+| `download_email_attachment` | Email | query | Obtiene la URL de descarga de un adjunto de email |
 | `download_knowledge_file` | Base de Conocimiento | query | Obtiene la URL de descarga de un archivo de la base de conocimiento |
 | `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada real. Usar cuando el usuario diga 'prueba... |
 | `duplicate_campaign` | Marketing Masivo | mutation | Crea una copia de una campaña existente en estado borrador |
@@ -93,6 +94,7 @@
 | `email_thread_action` | Email | mutation | Ejecuta una accion sobre un hilo de email: archivar, eliminar, spam, restaurar, marcar como no leido, posponer (snooz... |
 | `export_campaign_csv` | Marketing Masivo | query | Descarga los logs de envio de una campana completada como archivo CSV. Solo funciona con campanas completadas, cancel... |
 | `export_conversations` | Conversaciones | query | Exporta conversaciones con todos los mensajes en formato estructurado |
+| `force_email_sync` | Email | mutation | Fuerza una sincronizacion inmediata de todas las cuentas de email via IMAP |
 | `gdpr_delete_customer_data` | Clientes | mutation | Elimina todos los datos personales de un cliente para cumplimiento GDPR (Art. 17 - Derecho al olvido). Los registros ... |
 | `gdpr_export_customer_data` | Clientes | query | Exporta todos los datos almacenados de un cliente para cumplimiento GDPR (Art. 15 - Derecho de acceso) |
 | `generate_email_draft` | Email | mutation | Genera un borrador de respuesta usando IA para un hilo de email |
@@ -205,6 +207,7 @@
 | `import_marketing_contacts` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo. Soporta entrada manual de telefonos o importacion desde conversaci... |
 | `improve_prompt` | Prompt e IA | query | Analiza el prompt actual con IA y devuelve puntuaciones por categoria, sugerencias de mejora y una version mejorada d... |
 | `keep_both_knowledge_snippets` | Base de Conocimiento | mutation | Mantiene ambos snippets en conflicto activando los dos |
+| `link_email_contact` | Email | mutation | Vincula un contacto de WhatsApp a un hilo de email para asociar conversaciones |
 | `link_oauth_calendar` | Calendario | mutation | Vincula un calendario externo (Google/Microsoft) a la tienda |
 | `list_agents` | Agentes | query | Lista todos los agentes del comercio con detalles de perfil y permisos |
 | `list_agents_json` | Agentes | query | Devuelve todos los agentes configurados en formato JSON con sus datos completos: nombre, email, teléfono, color, perm... |
@@ -267,6 +270,7 @@
 | `republish_faq` | Plugins | mutation | Republica una o varias FAQs previamente despublicadas |
 | `request_referral_payout` | Referidos | mutation | Solicita el pago de las comisiones pendientes (mínimo 50€). Solo disponible si no hay otra solicitud abierta. |
 | `reset_crm_errors` | Avanzado | mutation | Resetea el contador de errores CRM y reactiva los endpoints si estaban deshabilitados por errores consecutivos |
+| `resolve_email_contact` | Email | query | Busca la direccion de email asociada a un contacto de WhatsApp usando CRM y plataforma e-commerce |
 | `resolve_knowledge_conflict` | Base de Conocimiento | mutation | Resuelve un conflicto entre snippets de conocimiento eligiendo cual mantener |
 | `restore_default_prompt` | Prompt e IA | query | Obtiene el prompt por defecto segun el idioma |
 | `resume_campaign` | Marketing Masivo | mutation | Reanuda una campana de marketing masivo que fue pausada |
@@ -282,6 +286,7 @@
 | `search_conversations` | Conversaciones | query | Busca conversaciones por texto, telefono o rango de fechas. Ejemplo: 'busca conversaciones que mencionen devolucion' |
 | `search_customer_comments` | Clientes | query | Busca texto en los comentarios de todos los clientes |
 | `search_customers` | Clientes | query | Busca clientes por nombre, telefono o email en el CRM y en los contactos |
+| `search_email_contacts` | Email | query | Busca clientes por nombre o telefono para vincularlos a hilos de email |
 | `search_products` | Productos | query | Busca productos en tu tienda online o en el CRM configurado |
 | `send_email_reply` | Email | mutation | Envia una respuesta a un hilo de email existente o compone un nuevo email |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
@@ -312,6 +317,7 @@
 | `trigger_smart_followup` | Seguimiento Inteligente | mutation | Lanza manualmente el analisis de seguimiento inteligente para esta tienda. Si ya hay una ejecucion en curso (cron o m... |
 | `unarchive_campaign` | Marketing Masivo | mutation | Restaura una campaña archivada a la lista principal |
 | `unassign_calendar_agent` | Calendario | mutation | Desasigna un agente de un calendario |
+| `unlink_email_contact` | Email | mutation | Elimina la vinculacion de un contacto de WhatsApp con un hilo de email |
 | `unpublish_faq` | Plugins | mutation | Despublica una o varias FAQs del plugin Product Q&A |
 | `unsnooze_email_thread` | Email | mutation | Reactiva un hilo de email que estaba pospuesto, devolviendolo a estado abierto. |
 | `update_agent` | Agentes | mutation | Modifica los datos de un agente existente |
@@ -351,6 +357,7 @@
 | `update_whatsapp_profile` | WhatsApp | mutation | Actualiza campos del perfil de WhatsApp: info/about, y datos de empresa (descripcion, direccion, email, web, horario)... |
 | `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada. Util para identificar numeros (ej: 'Soporte', 'Ve... |
 | `update_whatsapp_workflow` | Automatizacion | mutation | Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar, activa... |
+| `upload_email_attachment` | Email | mutation | Sube un archivo para adjuntarlo a un email |
 | `verify_ecommerce_write_permission` | Integraciones | query | Verifica si la conexion con la plataforma e-commerce tiene permisos de escritura para sincronizar FAQs. Requiere plat... |
 
 ---
