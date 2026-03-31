@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 353 (excluding hidden)
+> Total tools: 357 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -45,6 +45,7 @@
 | `create_calendar_service` | Calendario | mutation | Crea un tipo de cita/servicio para un calendario (ej: consulta 30min, reunion 60min) |
 | `create_campaign` | Marketing Masivo | mutation | Crea una nueva campana de marketing masivo. Puede crearse como borrador o programarse para una fecha futura. Soporta ... |
 | `create_contact_list` | Marketing Masivo | mutation | Crea una nueva lista de contactos para campanas de marketing masivo |
+| `create_crm_customer` | CRM | mutation | Crea un nuevo contacto en el CRM interno de WAzion |
 | `create_docqa_assistant` | Plugins | mutation | Crea un nuevo asistente de documentacion. Despues de crearlo, podras subir archivos (PDF, Word, etc.) desde el dashbo... |
 | `create_email_account` | Email | mutation | Crea una nueva cuenta de correo electronico con configuracion IMAP/SMTP. Maximo 10 cuentas por tienda. |
 | `create_email_rule` | Email | mutation | Crea una nueva regla automatica para procesar emails entrantes. Puede filtrar por remitente, asunto, etc. y ejecutar ... |
@@ -100,6 +101,7 @@
 | `generate_email_draft` | Email | mutation | Genera un borrador de respuesta usando IA para un hilo de email |
 | `generate_referral_code` | Referidos | mutation | Genera el enlace único de referido del usuario para compartir. Si ya tiene uno, lo devuelve. |
 | `get_agent_activity` | Agentes | query | Muestra la actividad y carga de trabajo de un agente especifico |
+| `get_agent_assignments` | Agentes | query | Devuelve los agentes asignados a una lista de telefonos de clientes |
 | `get_agent_performance` | Agentes | query | Metricas detalladas de rendimiento de un agente: clientes asignados, tareas, tasa de completado |
 | `get_agent_permissions` | Agentes | query | Obtiene los permisos configurados de un agente y el registro completo de permisos disponibles |
 | `get_agent_stats` | Agentes | query | Metricas de rendimiento del equipo: mensajes enviados, recibidos, tareas completadas |
@@ -125,6 +127,7 @@
 | `get_conversations_summary` | Conversaciones | query | Resumen estadistico de las conversaciones de un periodo: total, satisfaccion media, urgencia, etc. |
 | `get_credit_history` | Actividad | query | Muestra el consumo de creditos OpenAI por dia y por endpoint |
 | `get_credits_info` | Estadisticas | query | Muestra informacion detallada sobre los creditos disponibles: gratuitos, comprados, porcentaje usado y fecha de renov... |
+| `get_crm_customer` | CRM | query | Obtiene los datos de un contacto del CRM interno por su numero de WhatsApp |
 | `get_crm_health_status` | Avanzado | query | Muestra el estado actual de los endpoints CRM configurados: si estan activos o deshabilitados por errores consecutivo... |
 | `get_customer_ai_errors` | Base de Conocimiento | query | List corrections for the CUSTOMER-FACING WhatsApp AI. To list ALL corrections, pass no parameters. Only use category ... |
 | `get_customer_comments` | Clientes | query | Obtiene los comentarios y tags asociados a un cliente |
@@ -333,6 +336,7 @@
 | `update_calendar_service` | Calendario | mutation | Actualiza propiedades de un servicio/tipo de cita existente |
 | `update_campaign` | Marketing Masivo | mutation | Modifica los datos de una campaña de marketing masivo existente (solo en estado borrador) |
 | `update_contact_info` | Cuenta | mutation | Actualiza nombre, email y telefono de la cuenta |
+| `update_crm_customer` | CRM | mutation | Actualiza los datos de un contacto existente en el CRM interno |
 | `update_crm_endpoints` | Avanzado | mutation | Define endpoints para sincronizar datos con tu CRM |
 | `update_custom_functions` | Avanzado | mutation | Define APIs que la IA puede llamar durante conversaciones |
 | `update_customer_ai_error` | Base de Conocimiento | mutation | Edit an existing correction for the customer-facing WhatsApp AI. |

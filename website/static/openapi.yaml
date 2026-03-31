@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    353 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    357 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -57,6 +57,8 @@ tags:
     description: Eventos y citas programadas
   - name: conversations
     description: Buscar, ver y analizar conversaciones con clientes
+  - name: crm
+    description: Gestion de contactos del CRM interno
   - name: customers
     description: Informacion de clientes, comentarios, tags y busqueda
   - name: email
@@ -350,6 +352,15 @@ components:
         note_text:
           type: string
           description: "Texto de la nota"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        agent_color:
+          type: string
+          description: "Color del agente"
+        avatar_url:
+          type: string
+          description: "URL del avatar del agente"
       required: ["action", "thread_id", "note_text"]
 
     AddToBlacklistArgs:
@@ -919,6 +930,24 @@ components:
         vtex_store_url:
           type: string
           description: "Solo VTEX: URL de la tienda (opcional, se genera automaticamente si no se proporciona)"
+        platform_enabled:
+          type: string
+          description: "Activar/desactivar plataforma"
+        shopify_locale_mode:
+          type: string
+          description: "Modo de locale (auto/fixed)"
+        shopify_fixed_locale:
+          type: string
+          description: "Locale fijo para Shopify"
+        shopify_content_locale_mode:
+          type: string
+          description: "Modo de locale para contenido"
+        shopify_content_fixed_locale:
+          type: string
+          description: "Locale fijo para contenido"
+        shopify_fallback_locale:
+          type: string
+          description: "Locale de fallback"
       required: ["platform_type"]
 
     ConnectWhatsappArgs:
@@ -1211,6 +1240,20 @@ components:
           type: string
           description: "Descripcion opcional de la lista"
       required: ["action", "name"]
+
+    CreateCrmCustomerArgs:
+      description: |
+        **create_crm_customer** [crm] (mutation)
+        Crea un nuevo contacto en el CRM interno de WAzion
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        whatsapp_number:
+          type: string
+          description: "Numero de WhatsApp del contacto (con prefijo +)"
+      required: ["action", "whatsapp_number"]
 
     CreateDocqaAssistantArgs:
       description: |
@@ -1822,6 +1865,18 @@ components:
         note_id:
           type: integer
           description: "ID de la nota a eliminar"
+        note_text:
+          type: string
+          description: "Texto de la nota"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        agent_color:
+          type: string
+          description: "Color del agente"
+        avatar_url:
+          type: string
+          description: "URL del avatar"
       required: ["action", "thread_id", "note_id"]
 
     DeleteEmailRuleArgs:
@@ -2309,6 +2364,17 @@ components:
           description: "Numero de dias a consultar"
       required: ["action", "agent_id"]
 
+    GetAgentAssignmentsArgs:
+      description: |
+        **get_agent_assignments** [agents] (query)
+        Devuelve los agentes asignados a una lista de telefonos de clientes
+      type: object
+      properties:
+        phones:
+          type: array
+          description: "Lista de numeros de telefono para consultar sus agentes asignados"
+      required: ["phones"]
+
     GetAgentPerformanceArgs:
       description: |
         **get_agent_performance** [agents] (query)
@@ -2491,9 +2557,13 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+          enum: ["last_7_days", "last_30_days", "this_month"]
         date:
           type: string
           description: "Fecha de referencia YYYY-MM-DD"
+        phone:
+          type: string
+          description: "Filtrar por telefono de cliente"
       required: ["action"]
 
     GetAutolearningMetricsArgs:
@@ -2528,9 +2598,13 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+          enum: ["last_7_days", "last_30_days", "this_month"]
         date:
           type: string
           description: "Fecha de referencia YYYY-MM-DD"
+        phone:
+          type: string
+          description: "Filtrar por telefono de cliente"
       required: ["action"]
 
     GetCalendarSettingsArgs:
@@ -2879,6 +2953,20 @@ components:
         Muestra informacion detallada sobre los creditos disponibles: gratuitos, comprados, porcentaje usado y fecha de renovacion. Usa esta accion cuando el usuario pregunte especificamente por creditos.
       type: object
 
+    GetCrmCustomerArgs:
+      description: |
+        **get_crm_customer** [crm] (query)
+        Obtiene los datos de un contacto del CRM interno por su numero de WhatsApp
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        whatsapp_number:
+          type: string
+          description: "Numero de WhatsApp del contacto a consultar"
+      required: ["action", "whatsapp_number"]
+
     GetCrmHealthStatusArgs:
       description: |
         **get_crm_health_status** [advanced] (query)
@@ -3025,9 +3113,13 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+          enum: ["last_7_days", "last_30_days", "this_month"]
         days:
           type: integer
           description: "Numero de dias a incluir"
+        phone:
+          type: string
+          description: "Filtrar por telefono de cliente"
       required: ["action"]
 
     GetDocqaDetailArgs:
@@ -3096,12 +3188,16 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+          enum: ["last_7_days", "last_30_days", "this_month"]
         days:
           type: integer
           description: "Numero de dias de lookback"
         date:
           type: string
           description: "Fecha de referencia"
+        phone:
+          type: string
+          description: "Filtrar por telefono de cliente"
       required: ["action"]
 
     GetEmailAccountArgs:
@@ -3166,6 +3262,7 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         date_from:
           type: string
           description: "Fecha inicio YYYY-MM-DD (solo para period=custom)"
@@ -3307,6 +3404,9 @@ components:
         days:
           type: integer
           description: "Numero de dias del periodo"
+        phone:
+          type: string
+          description: "Filtrar por telefono de cliente"
       required: ["action"]
 
     GetPluginChatSessionsArgs:
@@ -3643,6 +3743,15 @@ components:
         action:
           type: string
           description: "Accion fija"
+        exclude_phones:
+          type: array
+          description: "Lista de telefonos excluidos del seguimiento"
+        sending_window_start:
+          type: string
+          description: "Hora de inicio de ventana de envio (HH:MM)"
+        sending_window_end:
+          type: string
+          description: "Hora de fin de ventana de envio (HH:MM)"
       required: ["action"]
 
     GetSmartFollowupLogsArgs:
@@ -3812,6 +3921,9 @@ components:
         limit:
           type: integer
           default: 10
+        query:
+          type: string
+          description: "Buscar por nombre de producto"
       required: ["action"]
 
     GetTopTopicsArgs:
@@ -3829,9 +3941,13 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
+          enum: ["last_7_days", "last_30_days", "this_month"]
         date:
           type: string
           description: "Fecha de referencia YYYY-MM-DD"
+        phone:
+          type: string
+          description: "Filtrar por telefono de cliente"
       required: ["action"]
 
     GetTrainingSuggestionsArgs:
@@ -4056,6 +4172,12 @@ components:
         session_id:
           type: integer
           description: "ID de sesion de WhatsApp"
+        direction:
+          type: string
+          description: "Filtrar por direccion"
+        phone:
+          type: string
+          description: "Filtrar por telefono"
       required: ["action"]
 
     GetWhatsappMessageLogsArgs:
@@ -4086,6 +4208,9 @@ components:
         days:
           type: integer
           description: "Numero de dias de lookback"
+        message:
+          type: string
+          description: "Buscar en contenido del mensaje"
       required: ["action"]
 
     GetWhatsappProfileArgs:
@@ -4119,6 +4244,12 @@ components:
         session_id:
           type: integer
           description: "ID de la sesión WhatsApp"
+        direction:
+          type: string
+          description: "Filtrar por direccion"
+        phone:
+          type: string
+          description: "Filtrar por telefono"
       required: ["action"]
 
     GetWhatsappStatusArgs:
@@ -4132,6 +4263,12 @@ components:
         session_id:
           type: integer
           description: "ID de sesion WhatsApp especifica"
+        direction:
+          type: string
+          description: "Filtrar por direccion (incoming/outgoing)"
+        phone:
+          type: string
+          description: "Filtrar por telefono"
       required: ["action"]
 
     GetWhatsappTemplateArgs:
@@ -4162,6 +4299,12 @@ components:
         session_id:
           type: integer
           description: "ID de la sesion WhatsApp"
+        direction:
+          type: string
+          description: "Filtrar por direccion"
+        phone:
+          type: string
+          description: "Filtrar por telefono"
       required: ["action"]
 
     GetWhatsappWorkflowLogsArgs:
@@ -4234,6 +4377,12 @@ components:
         days:
           type: integer
           description: "Numero de dias de lookback"
+        direction:
+          type: string
+          description: "Filtrar por direccion"
+        phone:
+          type: string
+          description: "Filtrar por telefono"
       required: ["action"]
 
     GetWorkflowSessionStatsArgs:
@@ -4567,6 +4716,27 @@ components:
         phone:
           type: string
           description: "Filtrar por telefono del cliente"
+        title:
+          type: string
+          description: "Titulo del evento"
+        description:
+          type: string
+          description: "Descripcion del evento"
+        start_datetime:
+          type: string
+          description: "Fecha/hora inicio"
+        end_datetime:
+          type: string
+          description: "Fecha/hora fin"
+        all_day:
+          type: boolean
+          description: "Si es evento de dia completo"
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente asignado"
+        event_id:
+          type: integer
+          description: "ID del evento"
       required: ["action"]
 
     ListCalendarNotificationsArgs:
@@ -4721,6 +4891,18 @@ components:
         thread_id:
           type: integer
           description: "ID del hilo"
+        note_text:
+          type: string
+          description: "Texto de la nota"
+        agent_name:
+          type: string
+          description: "Nombre del agente"
+        agent_color:
+          type: string
+          description: "Color del agente"
+        avatar_url:
+          type: string
+          description: "URL del avatar"
       required: ["thread_id"]
 
     ListEmailRulesArgs:
@@ -5869,6 +6051,9 @@ components:
         limit:
           type: integer
           default: 10
+        days:
+          type: integer
+          description: "Dias de historial a buscar"
       required: ["action", "query"]
 
     SendEmailReplyArgs:
@@ -5946,6 +6131,9 @@ components:
         archive_after_send:
           type: boolean
           description: "Archivar chat tras enviar"
+        direction:
+          type: string
+          description: "Filtrar por direccion"
       required: ["action", "phone", "message"]
 
     SetAiErrorArgs:
@@ -6198,6 +6386,9 @@ components:
         auto_describe_images:
           type: boolean
           description: "true para activar, false para desactivar"
+        auto_sentiment_analysis:
+          type: boolean
+          description: "Estado actual del analisis de sentimiento"
       required: ["auto_describe_images"]
 
     ToggleAutoSentimentAnalysisArgs:
@@ -6209,6 +6400,9 @@ components:
         auto_sentiment_analysis:
           type: boolean
           description: "true para activar, false para desactivar"
+        auto_describe_images:
+          type: boolean
+          description: "Estado actual de la descripcion automatica de imagenes"
       required: ["auto_sentiment_analysis"]
 
     ToggleAutoTranslateArgs:
@@ -6270,6 +6464,9 @@ components:
         enable_web_search:
           type: boolean
           description: "true para activar busqueda web, false para desactivar"
+        prompt:
+          type: string
+          description: "Prompt actual (se preserva al cambiar web search)"
       required: ["enable_web_search"]
 
     ToggleWhatsappWorkflowArgs:
@@ -6497,6 +6694,9 @@ components:
         client_phone:
           type: string
           description: "Telefono de contacto de la cuenta"
+        email_change_code:
+          type: string
+          description: "Codigo de verificacion para cambio de email"
 
     UpdateBusinessInfoArgs:
       description: |
@@ -6801,6 +7001,62 @@ components:
         billing_country:
           type: string
           description: "Pais"
+        email_change_code:
+          type: string
+          description: "Codigo de verificacion para cambio de email"
+
+    UpdateCrmCustomerArgs:
+      description: |
+        **update_crm_customer** [crm] (mutation)
+        Actualiza los datos de un contacto existente en el CRM interno
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        whatsapp_number:
+          type: string
+          description: "Numero de WhatsApp del contacto a actualizar"
+        full_name:
+          type: string
+          description: "Nombre completo"
+        company_alias:
+          type: string
+          description: "Nombre de empresa"
+        email:
+          type: string
+          description: "Email de contacto"
+        alternate_phone:
+          type: string
+          description: "Telefono alternativo"
+        address_street:
+          type: string
+          description: "Calle"
+        address_city:
+          type: string
+          description: "Ciudad"
+        address_state_province:
+          type: string
+          description: "Provincia o estado"
+        address_postal_code:
+          type: string
+          description: "Codigo postal"
+        address_country:
+          type: string
+          description: "Codigo de pais (ISO 2 letras)"
+        tax_id:
+          type: string
+          description: "NIF/CIF/Tax ID"
+        is_company:
+          type: boolean
+          description: "Si es empresa (true) o persona (false)"
+        preferred_language:
+          type: string
+          description: "Idioma preferido del contacto"
+        time_zone:
+          type: string
+          description: "Zona horaria del contacto"
+      required: ["action", "whatsapp_number"]
 
     UpdateCrmEndpointsArgs:
       description: |
@@ -6862,6 +7118,9 @@ components:
         remove_tag:
           type: string
           description: "Nombre de la etiqueta a eliminar"
+        customerTags:
+          type: array
+          description: "Array completo de tags (reemplaza todos)"
 
     UpdateDateFormatArgs:
       description: |
@@ -7203,6 +7462,15 @@ components:
         remove_helper:
           type: string
           description: "Nombre corto del atajo a eliminar (ej: bastidor)"
+        ignore_phones:
+          type: string
+          description: "Lista de telefonos a ignorar (JSON array)"
+        ignore_emails:
+          type: string
+          description: "Lista de emails a ignorar (JSON array)"
+        helpers:
+          type: string
+          description: "Lista de helpers (JSON array)"
 
     UpdateScheduledMessageArgs:
       description: |
