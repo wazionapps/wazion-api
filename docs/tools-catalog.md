@@ -12,7 +12,7 @@
 | `add_email_note` | Email | mutation | Agrega una nota interna a un hilo de email. Solo visible para agentes. |
 | `add_to_blacklist` | Marketing Masivo | mutation | Bloquea un numero de telefono para que no reciba campanas de marketing masivo |
 | `add_whatsapp_optout` | WhatsApp | mutation | Anade un numero a la lista de opt-out para que no reciba mensajes automaticos |
-| `apply_prompt_instruction` | Prompt e IA | query | Genera una version modificada del prompt segun una instruccion. NO guarda los cambios - solo devuelve el prompt modif... |
+| `apply_prompt_instruction` | Prompt e IA | query | Modifica el prompt existente segun una instruccion en lenguaje natural. ESTA ES LA ACCION CORRECTA cuando el usuario ... |
 | `apply_training_suggestion` | Base de Conocimiento | mutation | Aplica una sugerencia de entrenamiento de IA. Segun el nivel, crea un snippet de conocimiento o actualiza el prompt d... |
 | `approve_campaign` | Marketing Masivo | mutation | Aprueba una campaña pendiente de aprobación para que pueda ser enviada |
 | `approve_knowledge_snippet` | Base de Conocimiento | mutation | Aprueba un snippet de conocimiento pendiente y lo activa |
@@ -284,7 +284,7 @@
 | `save_calendar_settings` | Calendario | mutation | Guarda la configuracion global del modulo de calendario |
 | `save_mass_marketing_config` | Marketing Masivo | mutation | Guarda la configuracion de marketing masivo: auto-respuesta, traduccion y opciones de envio |
 | `save_plugin_conversation_note` | Plugins | mutation | Genera un resumen IA de una conversacion del plugin de chat web y lo guarda como nota en el perfil del cliente. Requi... |
-| `save_prompt` | Prompt e IA | mutation | Guarda un nuevo prompt para la IA. FLUJO OBLIGATORIO: 1) Llama a esta accion con el prompt completo. 2) Recibiras req... |
+| `save_prompt` | Prompt e IA | mutation | Guarda un nuevo prompt para la IA. IMPORTANTE: Si el usuario quiere AÑADIR, MODIFICAR o QUITAR algo del prompt existe... |
 | `save_smart_followup_config` | Seguimiento Inteligente | mutation | Actualiza la configuracion de seguimiento inteligente. Solo envia los campos que quieras cambiar. El sistema verifica... |
 | `search_conversations` | Conversaciones | query | Busca conversaciones por texto, telefono o rango de fechas. Ejemplo: 'busca conversaciones que mencionen devolucion' |
 | `search_customer_comments` | Clientes | query | Busca texto en los comentarios de todos los clientes |

@@ -400,7 +400,7 @@ components:
     ApplyPromptInstructionArgs:
       description: |
         **apply_prompt_instruction** [prompt] (query)
-        Genera una version modificada del prompt segun una instruccion. NO guarda los cambios - solo devuelve el prompt modificado como preview. Despues de obtener el resultado, DEBES llamar a save_prompt para guardar los cambios. Ejemplos: 'Anade horario de atencion de 9 a 18h', 'Quita la parte de devoluciones', 'Hazlo mas formal'.
+        Modifica el prompt existente segun una instruccion en lenguaje natural. ESTA ES LA ACCION CORRECTA cuando el usuario quiere añadir, cambiar o quitar algo del prompt (ej: 'add a rule about...', 'anade horario', 'add a shop-level rule', 'quita la parte de devoluciones', 'hazlo mas formal'). NO guarda los cambios - solo devuelve el prompt modificado como preview. Despues de obtener el resultado, DEBES llamar a save_prompt para guardar los cambios.
       type: object
       properties:
         prompt:
@@ -5817,7 +5817,7 @@ components:
     SavePromptArgs:
       description: |
         **save_prompt** [prompt] (mutation)
-        Guarda un nuevo prompt para la IA. FLUJO OBLIGATORIO: 1) Llama a esta accion con el prompt completo. 2) Recibiras requires_confirmation=true con success=false — esto NO es un error, es el flujo normal. 3) Describe brevemente al usuario que cambios se van a guardar y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente. NUNCA vuelvas a llamar save_prompt tras recibir requires_confirmation=true, ni siquiera si el usuario escribe 'si', 'yes', 'hazlo', 'confirma', 'dale' o cualquier variante afirmativa en texto. La confirmacion SOLO se completa con los botones del sistema. Si el usuario insiste por texto, respondele: 'Usa el boton de Confirmar que aparecio arriba para completar el guardado.' Si el usuario quiere MODIFICAR el prompt existente (no reemplazarlo), usa apply_prompt_instruction primero.
+        Guarda un nuevo prompt para la IA. IMPORTANTE: Si el usuario quiere AÑADIR, MODIFICAR o QUITAR algo del prompt existente (ej: 'add a rule', 'anade horario', 'quita la parte de...', 'add a shop-level rule'), usa apply_prompt_instruction PRIMERO — esa accion modifica el prompt existente sin reemplazarlo. Solo usa save_prompt directamente si el usuario proporciona un prompt COMPLETO de reemplazo. FLUJO DE CONFIRMACION: 1) Llama a esta accion con el prompt completo. 2) Recibiras requires_confirmation=true con success=false — esto NO es un error, es el flujo normal. 3) Describe brevemente al usuario que cambios se van a guardar y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones de Confirmar/Cancelar automaticamente. NUNCA vuelvas a llamar save_prompt tras recibir requires_confirmation=true, ni siquiera si el usuario escribe 'si', 'yes', 'hazlo', 'confirma', 'dale', 'do it' o cualquier variante afirmativa en texto. La confirmacion SOLO se completa con los botones del sistema. Si el usuario insiste por texto, respondele: 'Please use the Confirm button that appeared above to complete the save.' (en el idioma de la conversacion).
         ⚠️ Requires confirmation
       type: object
       properties:
