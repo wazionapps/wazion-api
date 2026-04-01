@@ -2557,7 +2557,7 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         date:
           type: string
           description: "Fecha de referencia YYYY-MM-DD"
@@ -2598,7 +2598,7 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         date:
           type: string
           description: "Fecha de referencia YYYY-MM-DD"
@@ -2712,7 +2712,7 @@ components:
         period:
           type: string
           description: "Periodo de tiempo"
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         phone:
           type: string
           description: "Filtrar por telefono del cliente"
@@ -2941,7 +2941,7 @@ components:
         period:
           type: string
           description: "Periodo de tiempo"
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         phone:
           type: string
           description: "Filtrar por telefono del cliente"
@@ -3080,7 +3080,7 @@ components:
         period:
           type: string
           description: "Periodo de tiempo"
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         days:
           type: integer
           description: "Numero de dias a consultar"
@@ -3113,7 +3113,7 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         days:
           type: integer
           description: "Numero de dias a incluir"
@@ -3188,7 +3188,7 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         days:
           type: integer
           description: "Numero de dias de lookback"
@@ -3396,7 +3396,7 @@ components:
           type: string
         period:
           type: string
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
           default: "last_7_days"
         date:
           type: string
@@ -3941,7 +3941,7 @@ components:
         period:
           type: string
           description: "Periodo: last_7_days, last_30_days, this_month, last_month, last_90_days, all_time, custom"
-          enum: ["last_7_days", "last_30_days", "this_month"]
+          enum: ["last_7_days", "last_30_days", "this_month", "last_month", "last_90_days", "all_time", "custom"]
         date:
           type: string
           description: "Fecha de referencia YYYY-MM-DD"
