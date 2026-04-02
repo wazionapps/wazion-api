@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    357 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    365 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -722,6 +722,17 @@ components:
           type: integer
           description: "ID del agente que cancela el mensaje"
       required: ["action", "id"]
+
+    CheckDocqaFileStatusArgs:
+      description: |
+        **check_docqa_file_status** [plugins] (query)
+        Comprueba el estado de procesamiento de los archivos subidos a un asistente Doc-QA
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente Doc-QA"
+      required: ["assistant_id"]
 
     CheckPluginConversationNoteArgs:
       description: |
@@ -2286,6 +2297,23 @@ components:
           type: string
           description: "Texto del mensaje a enviar o eliminar"
       required: ["action"]
+
+    ExportCrmContactsArgs:
+      description: |
+        **export_crm_contacts** [crm] (query)
+        Exporta los contactos del CRM interno como archivo CSV
+      type: object
+      properties:
+        format:
+          type: string
+          description: "Formato de exportacion"
+        tag:
+          type: string
+          description: "Filtrar por etiqueta de cliente"
+        since:
+          type: string
+          description: "Fecha minima de actualizacion (formato ISO 8601, ej: 2026-01-01T00:00:00Z)"
+      required: ["format"]
 
     ForceEmailSyncArgs:
       description: |
@@ -4436,6 +4464,23 @@ components:
           description: "Telefono secundario para merge"
       required: ["action", "query"]
 
+    ImportContactsCsvArgs:
+      description: |
+        **import_contacts_csv** [mass_marketing] (mutation)
+        Importa contactos a una lista de marketing desde un archivo CSV
+      type: object
+      properties:
+        source:
+          type: string
+          description: "Fuente de importacion"
+        list_id:
+          type: integer
+          description: "ID de la lista de contactos destino"
+        file:
+          type: string
+          description: "Archivo CSV a importar (multipart/form-data)"
+      required: ["source", "list_id", "file"]
+
     ImportContactsFromAllConversationsArgs:
       description: |
         **import_contacts_from_all_conversations** [mass_marketing] (mutation)
@@ -4508,6 +4553,63 @@ components:
           type: string
           description: "Telefonos a importar, uno por linea o separados por comas. Incluir prefijo internacional (ej: +34600000000)"
       required: ["source", "list_id", "phones"]
+
+    ImportContactsTxtArgs:
+      description: |
+        **import_contacts_txt** [mass_marketing] (mutation)
+        Importa contactos a una lista de marketing desde un archivo de texto (un telefono por linea)
+      type: object
+      properties:
+        source:
+          type: string
+          description: "Fuente de importacion"
+        list_id:
+          type: integer
+          description: "ID de la lista de contactos destino"
+        file:
+          type: string
+          description: "Archivo TXT a importar (multipart/form-data)"
+      required: ["source", "list_id", "file"]
+
+    ImportCrmContactsArgs:
+      description: |
+        **import_crm_contacts** [crm] (mutation)
+        Importa contactos al CRM interno desde un archivo CSV
+      type: object
+      properties:
+        file:
+          type: string
+          description: "Archivo CSV a importar (multipart/form-data)"
+        skip_header:
+          type: boolean
+          description: "Omitir la primera fila como encabezado (default: true)"
+        update_existing:
+          type: boolean
+          description: "Actualizar contactos existentes si ya existen (default: false)"
+      required: ["file"]
+
+    ImportMappedContactsArgs:
+      description: |
+        **import_mapped_contacts** [mass_marketing] (mutation)
+        Importa contactos desde un archivo CSV previamente previsualizado, especificando que columna contiene el telefono y el nombre
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        list_id:
+          type: integer
+          description: "ID de la lista de contactos destino"
+        tmp_id:
+          type: string
+          description: "ID temporal del archivo obtenido en la previsualizacion"
+        phone_column:
+          type: integer
+          description: "Indice de la columna que contiene los telefonos"
+        name_column:
+          type: integer
+          description: "Indice de la columna que contiene los nombres"
+      required: ["action", "list_id", "tmp_id", "phone_column"]
 
     ImportMarketingContactsArgs:
       description: |
@@ -5372,6 +5474,20 @@ components:
           type: integer
           description: "ID de la sesión a verificar"
       required: ["session_id"]
+
+    PreviewImportFileArgs:
+      description: |
+        **preview_import_file** [mass_marketing] (query)
+        Previsualiza las columnas y primeras filas de un archivo CSV antes de importar contactos
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        file:
+          type: string
+          description: "Archivo CSV a previsualizar (multipart/form-data)"
+      required: ["action", "file"]
 
     PreviewSmartFollowupArgs:
       description: |
@@ -7642,6 +7758,20 @@ components:
           description: "Estado del workflow: 'enabled' para activar, 'disabled' para desactivar"
           enum: ["enabled", "disabled"]
       required: ["id"]
+
+    UploadDocqaFileArgs:
+      description: |
+        **upload_docqa_file** [plugins] (mutation)
+        Sube un documento a un asistente Doc-QA para que pueda responder preguntas sobre su contenido
+      type: object
+      properties:
+        assistant_id:
+          type: integer
+          description: "ID del asistente Doc-QA"
+        file:
+          type: string
+          description: "Archivo a subir (multipart/form-data)"
+      required: ["assistant_id", "file"]
 
     UploadEmailAttachmentArgs:
       description: |

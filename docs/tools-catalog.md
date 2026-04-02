@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 357 (excluding hidden)
+> Total tools: 365 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -29,6 +29,7 @@
 | `cancel_campaign_schedule` | Marketing Masivo | mutation | Cancela la programacion de una campana programada, cambiandola a estado borrador. No elimina la campana. |
 | `cancel_scheduled_email` | Email | mutation | Cancela un email que estaba programado para enviarse. El email se elimina. |
 | `cancel_scheduled_message` | WhatsApp | mutation | Cancela un mensaje de WhatsApp que esta programado para envio futuro |
+| `check_docqa_file_status` | Plugins | query | Comprueba el estado de procesamiento de los archivos subidos a un asistente Doc-QA |
 | `check_plugin_conversation_note` | Plugins | query | Comprueba si ya existe una nota guardada para una sesion de chat del plugin y muestra los datos del cliente asociado. |
 | `check_whatsapp_optout` | WhatsApp | query | Comprueba si un numero de telefono esta en la lista de opt-out de automatizacion WhatsApp |
 | `configure_ecommerce_locales` | Integraciones | mutation | Configura como se manejan los idiomas y URLs de tu plataforma e-commerce |
@@ -95,6 +96,7 @@
 | `email_thread_action` | Email | mutation | Ejecuta una accion sobre un hilo de email: archivar, eliminar, spam, restaurar, marcar como no leido, posponer (snooz... |
 | `export_campaign_csv` | Marketing Masivo | query | Descarga los logs de envio de una campana completada como archivo CSV. Solo funciona con campanas completadas, cancel... |
 | `export_conversations` | Conversaciones | query | Exporta conversaciones con todos los mensajes en formato estructurado |
+| `export_crm_contacts` | CRM | query | Exporta los contactos del CRM interno como archivo CSV |
 | `force_email_sync` | Email | mutation | Fuerza una sincronizacion inmediata de todas las cuentas de email via IMAP |
 | `gdpr_delete_customer_data` | Clientes | mutation | Elimina todos los datos personales de un cliente para cumplimiento GDPR (Art. 17 - Derecho al olvido). Los registros ... |
 | `gdpr_export_customer_data` | Clientes | query | Exporta todos los datos almacenados de un cliente para cumplimiento GDPR (Art. 15 - Derecho de acceso) |
@@ -202,11 +204,15 @@
 | `get_workflow_logs` | WhatsApp | query | Muestra las ejecuciones recientes de workflows automaticos de WhatsApp |
 | `get_workflow_session_stats` | Automatizacion | query | Obtiene estadísticas de workflows para una sesión específica de WhatsApp: mensajes de hoy, ejecuciones, volumen de 7 ... |
 | `global_search` | Clientes | query | Busca en todas las fuentes de datos de clientes: CRM, contactos, conversaciones. Devuelve resultados unificados sin d... |
+| `import_contacts_csv` | Marketing Masivo | mutation | Importa contactos a una lista de marketing desde un archivo CSV |
 | `import_contacts_from_all_conversations` | Marketing Masivo | mutation | Importa todos los contactos de conversaciones de WhatsApp a una lista de marketing |
 | `import_contacts_from_conversations` | Marketing Masivo | mutation | Importa contactos seleccionados desde conversaciones de WhatsApp a una lista de marketing |
 | `import_contacts_from_crm` | Marketing Masivo | mutation | Importa contactos del CRM interno de WAzion a una lista de marketing masivo |
 | `import_contacts_from_platform` | Marketing Masivo | mutation | Importa contactos de clientes desde la plataforma ecommerce conectada (Shopify, WooCommerce, etc.) |
 | `import_contacts_manual` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo escribiendo los telefonos manualmente |
+| `import_contacts_txt` | Marketing Masivo | mutation | Importa contactos a una lista de marketing desde un archivo de texto (un telefono por linea) |
+| `import_crm_contacts` | CRM | mutation | Importa contactos al CRM interno desde un archivo CSV |
+| `import_mapped_contacts` | Marketing Masivo | mutation | Importa contactos desde un archivo CSV previamente previsualizado, especificando que columna contiene el telefono y e... |
 | `import_marketing_contacts` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo. Soporta entrada manual de telefonos o importacion desde conversaci... |
 | `improve_prompt` | Prompt e IA | query | Analiza el prompt actual con IA y devuelve puntuaciones por categoria, sugerencias de mejora y una version mejorada d... |
 | `keep_both_knowledge_snippets` | Base de Conocimiento | mutation | Mantiene ambos snippets en conflicto activando los dos |
@@ -255,6 +261,7 @@
 | `merge_email_threads` | Email | mutation | Fusiona un hilo de email en otro. Los mensajes y notas del hilo origen se mueven al destino. Solo se pueden fusionar ... |
 | `pause_campaign` | Marketing Masivo | mutation | Pausa temporalmente una campana de marketing masivo en curso |
 | `precheck_delete_whatsapp_session` | WhatsApp | query | Muestra qué configuraciones se verían afectadas al eliminar una sesión de WhatsApp (workflows, campañas, seguimiento ... |
+| `preview_import_file` | Marketing Masivo | query | Previsualiza las columnas y primeras filas de un archivo CSV antes de importar contactos |
 | `preview_smart_followup` | Seguimiento Inteligente | query | Genera una vista previa del mensaje de seguimiento que se enviaria a un cliente sin enviarlo realmente |
 | `publish_question_as_faq` | Plugins | mutation | Publica manualmente una pregunta del historial como FAQ en tu tienda online. Util para promover preguntas importantes... |
 | `reconnect_whatsapp` | Automatizacion | mutation | Intenta reconectar una sesion de WhatsApp existente (puede requerir escanear QR manualmente). Si hay multiples numero... |
@@ -361,6 +368,7 @@
 | `update_whatsapp_profile` | WhatsApp | mutation | Actualiza campos del perfil de WhatsApp: info/about, y datos de empresa (descripcion, direccion, email, web, horario)... |
 | `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada. Util para identificar numeros (ej: 'Soporte', 'Ve... |
 | `update_whatsapp_workflow` | Automatizacion | mutation | Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar, activa... |
+| `upload_docqa_file` | Plugins | mutation | Sube un documento a un asistente Doc-QA para que pueda responder preguntas sobre su contenido |
 | `upload_email_attachment` | Email | mutation | Sube un archivo para adjuntarlo a un email |
 | `verify_ecommerce_write_permission` | Integraciones | query | Verifica si la conexion con la plataforma e-commerce tiene permisos de escritura para sincronizar FAQs. Requiere plat... |
 
