@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    365 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    366 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -5560,6 +5560,26 @@ components:
           description: "Tipo de plugin cuyo token regenerar"
           enum: ["chat", "product-qa"]
           default: "chat"
+
+    RejectAndProposeKnowledgeSnippetArgs:
+      description: |
+        **reject_and_propose_knowledge_snippet** [knowledge] (mutation)
+        Rechaza un snippet (y su conflicto si existe) y crea uno nuevo con el contenido propuesto por el usuario
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        id:
+          type: integer
+          description: "ID del snippet a rechazar"
+        proposed_content:
+          type: string
+          description: "Contenido del nuevo snippet propuesto"
+        conflict_with_id:
+          type: integer
+          description: "ID del snippet en conflicto a rechazar tambien"
+      required: ["action", "id", "proposed_content"]
 
     RejectKnowledgeSnippetArgs:
       description: |
