@@ -5564,7 +5564,8 @@ components:
     RejectAndProposeKnowledgeSnippetArgs:
       description: |
         **reject_and_propose_knowledge_snippet** [knowledge] (mutation)
-        Rechaza un snippet (y su conflicto si existe) y crea uno nuevo con el contenido propuesto por el usuario
+        Rechaza ambos snippets en conflicto y crea uno nuevo con el contenido propuesto por el usuario
+        ⚠️ Requires confirmation
       type: object
       properties:
         action:
@@ -5572,13 +5573,10 @@ components:
           description: "Accion fija"
         id:
           type: integer
-          description: "ID del snippet a rechazar"
+          description: "ID del snippet en conflicto"
         proposed_content:
           type: string
-          description: "Contenido del nuevo snippet propuesto"
-        conflict_with_id:
-          type: integer
-          description: "ID del snippet en conflicto a rechazar tambien"
+          description: "Contenido correcto propuesto por el usuario"
       required: ["action", "id", "proposed_content"]
 
     RejectKnowledgeSnippetArgs:
@@ -7542,8 +7540,8 @@ components:
           description: "ID del snippet a gestionar"
         action:
           type: string
-          description: "Accion a realizar: approve, reject, edit, delete, resolve_conflict, keep_both, toggle_permanent"
-          enum: ["approve", "reject", "edit", "delete", "resolve_conflict", "keep_both", "toggle_permanent"]
+          description: "Accion a realizar: approve, reject, edit, delete, resolve_conflict, keep_both, toggle_permanent, reject_and_propose"
+          enum: ["approve", "reject", "edit", "delete", "resolve_conflict", "keep_both", "toggle_permanent", "reject_and_propose"]
         content:
           type: string
           description: "Nuevo contenido (solo para action=edit)"

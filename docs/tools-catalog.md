@@ -268,7 +268,7 @@
 | `regenerate_api_key` | Avanzado | mutation | Genera una nueva API key (token_ext) para la tienda. Esto invalida la key actual e impide el acceso de cualquier cone... |
 | `regenerate_docqa_token` | Plugins | mutation | Genera un nuevo token de acceso para un asistente Doc-QA |
 | `regenerate_plugin_token` | Plugins | mutation | Genera un nuevo token para los plugins (invalida el anterior) |
-| `reject_and_propose_knowledge_snippet` | Base de Conocimiento | mutation | Rechaza un snippet (y su conflicto si existe) y crea uno nuevo con el contenido propuesto por el usuario |
+| `reject_and_propose_knowledge_snippet` | Base de Conocimiento | mutation | Rechaza ambos snippets en conflicto y crea uno nuevo con el contenido propuesto por el usuario |
 | `reject_knowledge_snippet` | Base de Conocimiento | mutation | Rechaza un snippet de conocimiento pendiente |
 | `remove_contact_from_list` | Marketing Masivo | mutation | Elimina un contacto individual de una lista de marketing |
 | `remove_contacts_bulk` | Marketing Masivo | mutation | Elimina múltiples contactos de una lista de marketing |
