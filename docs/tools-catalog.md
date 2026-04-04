@@ -113,7 +113,7 @@
 | `get_analytics` | Estadisticas | query | Muestra metricas de rendimiento: conversaciones, mensajes, actividad diaria |
 | `get_api_key` | Avanzado | query | Muestra la API key actual de la tienda (token_ext) y la URL del servidor MCP. Usa esta accion cuando el usuario pregu... |
 | `get_api_usage_stats` | Actividad | query | Consumo de tokens y costes por modelo de IA |
-| `get_autolearning_metrics` | Estadisticas | query | Muestra las metricas del sistema de aprendizaje automatico. Se puede filtrar por estado de los snippets. |
+| `get_autolearning_metrics` | Estadisticas | query | Muestra las metricas del sistema de aprendizaje automatico incluyendo KPIs, distribucion por categoria y evolucion de... |
 | `get_autolearning_stats` | Estadisticas | query | Obtiene estadisticas detalladas del sistema de auto-learning: snippets activos, pendientes, rechazados, etc. |
 | `get_busiest_hours` | Actividad | query | Analiza a que horas del dia se reciben mas mensajes de clientes |
 | `get_calendar_settings` | Calendario | query | Get calendar integration settings (enabled, timezone, booking rules) |

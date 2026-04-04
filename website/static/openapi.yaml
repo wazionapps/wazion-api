@@ -2231,9 +2231,6 @@ components:
         agent_hash:
           type: string
           description: "Hash del agente a asignar (solo para action=assign, null para desasignar)"
-        status:
-          type: string
-          description: "Nuevo estado: archive, trash, unarchive, star, unstar, mark_read, mark_unread, restore"
       required: ["action", "thread_id"]
 
     ExportCampaignCsvArgs:
@@ -2597,13 +2594,8 @@ components:
     GetAutolearningMetricsArgs:
       description: |
         **get_autolearning_metrics** [stats] (query)
-        Muestra las metricas del sistema de aprendizaje automatico. Se puede filtrar por estado de los snippets.
+        Muestra las metricas del sistema de aprendizaje automatico incluyendo KPIs, distribucion por categoria y evolucion de similitud.
       type: object
-      properties:
-        filter:
-          type: string
-          description: "Filtrar metricas por estado: active (aprobados), pending (pendientes), disputed (en conflicto), stale (obsoletos)"
-          enum: ["active", "pending", "disputed", "stale"]
 
     GetAutolearningStatsArgs:
       description: |
@@ -4888,9 +4880,6 @@ components:
         action:
           type: string
           description: "Accion fija: list"
-        status:
-          type: string
-          description: "Filtrar por estado de campana"
       required: ["action"]
 
     ListContactListsArgs:
