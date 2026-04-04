@@ -5577,6 +5577,9 @@ components:
         proposed_content:
           type: string
           description: "Contenido correcto propuesto por el usuario"
+        conflict_with_id:
+          type: integer
+          description: "ID del snippet en conflicto a rechazar tambien (si no se toma del campo conflict_with_id del snippet)"
       required: ["action", "id", "proposed_content"]
 
     RejectKnowledgeSnippetArgs:
