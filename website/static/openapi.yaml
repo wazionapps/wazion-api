@@ -6903,6 +6903,15 @@ components:
         is_available:
           type: boolean
           description: "Si esta disponible"
+        rule_type:
+          type: string
+          description: "Tipo de regla: weekly o specific_date"
+        day_of_week:
+          type: integer
+          description: "Dia de la semana (0=lunes, 6=domingo). Solo para rule_type=weekly"
+        specific_date:
+          type: string
+          description: "Fecha especifica YYYY-MM-DD. Solo para rule_type=specific_date"
       required: ["action", "rule_id"]
 
     UpdateCalendarEventArgs:
@@ -7028,6 +7037,12 @@ components:
         requires_confirmation:
           type: boolean
           description: "Si requiere confirmacion"
+        is_active:
+          type: boolean
+          description: "Si el servicio esta activo"
+        sort_order:
+          type: integer
+          description: "Orden de visualizacion"
       required: ["action", "service_id"]
 
     UpdateCampaignArgs:
