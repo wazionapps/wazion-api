@@ -838,18 +838,6 @@ components:
         custom_css:
           type: string
           description: "CSS personalizado para inyectar en el widget"
-        session_close_email_enabled:
-          type: boolean
-          description: "Activar envio de email al cerrar conversacion de chat web"
-        session_close_email_to:
-          type: string
-          description: "Email destino para notificaciones de sesion cerrada (default: email de la tienda)"
-        session_close_timeout_minutes:
-          type: integer
-          description: "Minutos de inactividad para considerar una conversacion cerrada (default: 10)"
-        session_close_min_messages:
-          type: integer
-          description: "Minimo de mensajes para enviar notificacion (default: 2)"
       required: ["plugin_type"]
 
     ConfigurePluginProductqaArgs:
