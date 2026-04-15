@@ -1110,7 +1110,7 @@ components:
           description: "Tipo: confirmation, reminder, cancellation, follow_up, no_show"
         channel:
           type: string
-          description: "Canal: whatsapp, email"
+          description: "Canal: whatsapp, email, both"
         timing_minutes:
           type: integer
           description: "Minutos antes/despues del evento"
@@ -1355,6 +1355,18 @@ components:
         signature_html:
           type: string
           description: "Firma HTML para los emails enviados desde esta cuenta"
+        oauth_provider:
+          type: string
+          description: "Proveedor OAuth: 'gmail', 'microsoft' o 'none'. Requerido cuando auth_type=oauth2"
+        is_active:
+          type: integer
+          description: "1 para activar, 0 para desactivar. Default: 1"
+        ai_classification_enabled:
+          type: integer
+          description: "1 para activar clasificacion IA de emails, 0 para desactivar. Default: 1"
+        ai_transcription_enabled:
+          type: integer
+          description: "1 para activar transcripcion IA de adjuntos, 0 para desactivar. Default: 1"
       required: ["action", "label", "email_address"]
 
     CreateEmailRuleArgs:
@@ -4941,6 +4953,18 @@ components:
         filter:
           type: string
           description: "Debe ser 'drafts'"
+        account_id:
+          type: integer
+          description: "Filtrar por cuenta de email"
+        page:
+          type: integer
+          description: "Pagina para paginacion"
+        limit:
+          type: integer
+          description: "Limite de resultados por pagina"
+        search:
+          type: string
+          description: "Buscar en asunto y contenido"
         from_filter:
           type: string
           description: "Filtrar por remitente"
@@ -5355,13 +5379,15 @@ components:
     MarkEmailReadArgs:
       description: |
         **mark_email_read** [email] (mutation)
-        Marca un hilo de email como leido
+        Marca un hilo o mensaje de email como leido. Se requiere al menos thread_id o message_id.
       type: object
       properties:
         thread_id:
           type: integer
-          description: "ID del hilo"
-      required: ["thread_id"]
+          description: "ID del hilo (marca todo el hilo como leido)"
+        message_id:
+          type: integer
+          description: "ID del mensaje individual a marcar como leido"
 
     MarkNotificationReadArgs:
       description: |
@@ -7365,6 +7391,18 @@ components:
         agent_hashes:
           type: array
           description: "Lista de phone_hash de agentes asignados. Reemplaza la asignacion actual"
+        auth_type:
+          type: string
+          description: "Tipo de autenticacion: 'basic' (IMAP/SMTP) o 'oauth2'"
+        oauth_provider:
+          type: string
+          description: "Proveedor OAuth: 'gmail', 'microsoft' o 'none'. Requerido cuando auth_type=oauth2"
+        ai_classification_enabled:
+          type: integer
+          description: "1 para activar clasificacion IA de emails, 0 para desactivar"
+        ai_transcription_enabled:
+          type: integer
+          description: "1 para activar transcripcion IA de adjuntos, 0 para desactivar"
       required: ["action", "id"]
 
     UpdateEmailAgentsArgs:
@@ -7411,6 +7449,9 @@ components:
         auto_responder_daily_limit:
           type: integer
           description: "Limite diario de auto-respuestas"
+        auto_responder_custom_instructions:
+          type: string
+          description: "Instrucciones personalizadas para la IA del auto-responder"
       required: ["action", "id"]
 
     UpdateEmailFoldersArgs:

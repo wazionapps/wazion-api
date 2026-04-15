@@ -255,7 +255,7 @@
 | `list_whatsapp_workflows` | Automatizacion | query | Obtiene la lista de todos los workflows de automatizacion de WhatsApp. OBLIGATORIO llamar esta accion ANTES de cualqu... |
 | `manage_faq` | Plugins | mutation | Permite despublicar, republicar o eliminar FAQs del plugin Product Q&A. Util para gestionar contenido que ya no es re... |
 | `mark_all_notifications_read` | Notificaciones | mutation | Marca todas las notificaciones no leidas como leidas |
-| `mark_email_read` | Email | mutation | Marca un hilo de email como leido |
+| `mark_email_read` | Email | mutation | Marca un hilo o mensaje de email como leido. Se requiere al menos thread_id o message_id. |
 | `mark_notification_read` | Notificaciones | mutation | Marca una notificacion especifica como leida |
 | `merge_customers` | Clientes | mutation | Fusiona dos registros de cliente en uno, combinando comentarios, tags y datos CRM |
 | `merge_email_threads` | Email | mutation | Fusiona un hilo de email en otro. Los mensajes y notas del hilo origen se mueven al destino. Solo se pueden fusionar ... |
