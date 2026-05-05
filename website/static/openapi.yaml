@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    366 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    370 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -590,6 +590,17 @@ components:
           type: integer
           description: "Ultimos N mensajes a procesar"
       required: ["action", "phone"]
+
+    BackfillEmailPhonesArgs:
+      description: |
+        **backfill_email_phones** [email] (mutation)
+        Procesa hasta 50 hilos de email sin telefono asociado e intenta resolver el contacto a partir de la direccion del remitente, consultando CRM, plataforma e-commerce y mappings cacheados. Util tras conectar una plataforma o anadir contactos al CRM.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'backfill_phones'"
+      required: ["action"]
 
     BulkAddToBlacklistArgs:
       description: |
@@ -5389,6 +5400,41 @@ components:
           type: integer
           description: "ID del mensaje individual a marcar como leido"
 
+    MarkEmailThreadSpamArgs:
+      description: |
+        **mark_email_thread_spam** [email] (mutation)
+        Marca un hilo de email como spam y lo mueve a la carpeta de spam via IMAP. Anade el remitente a la lista de bloqueados de la tienda.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'spam'"
+        thread_id:
+          type: integer
+          description: "ID del hilo a marcar como spam"
+        message_ids:
+          type: array
+          description: "IDs de mensajes especificos a marcar como spam. Si se omite, se aplica a todo el hilo."
+      required: ["action", "thread_id"]
+
+    MarkEmailThreadUnreadArgs:
+      description: |
+        **mark_email_thread_unread** [email] (mutation)
+        Marca como no leidos todos los mensajes de un hilo de email (o solo los message_ids especificados). Sincroniza el estado con IMAP cuando es posible.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'mark_unread'"
+        thread_id:
+          type: integer
+          description: "ID del hilo"
+        message_ids:
+          type: array
+          description: "IDs de mensajes especificos a marcar como no leidos. Si se omite, se aplica a todo el hilo."
+      required: ["action", "thread_id"]
+
     MarkNotificationReadArgs:
       description: |
         **mark_notification_read** [notifications] (mutation)
@@ -5824,6 +5870,23 @@ components:
         **restore_default_prompt** [prompt] (query)
         Obtiene el prompt por defecto segun el idioma
       type: object
+
+    RestoreEmailThreadArgs:
+      description: |
+        **restore_email_thread** [email] (mutation)
+        Restaura un hilo de email previamente eliminado, archivado o marcado como spam, devolviendolo a la bandeja de entrada. Si estaba en spam, tambien elimina el remitente de la lista de bloqueados.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Debe ser 'restore'"
+        thread_id:
+          type: integer
+          description: "ID del hilo a restaurar"
+        message_ids:
+          type: array
+          description: "IDs de mensajes especificos a restaurar. Si se omite, se aplica a todo el hilo."
+      required: ["action", "thread_id"]
 
     ResumeCampaignArgs:
       description: |

@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 366 (excluding hidden)
+> Total tools: 370 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -22,6 +22,7 @@
 | `assign_marketing_session` | Marketing Masivo | mutation | Habilita o deshabilita una sesión de WhatsApp para envío de campañas de marketing |
 | `auto_categorize_conversations` | Analisis IA | query | Categoriza conversaciones recientes por tema, intento y prioridad usando IA |
 | `auto_tag_customer` | Analisis IA | query | Analiza la conversacion con IA y sugiere tags relevantes para el cliente |
+| `backfill_email_phones` | Email | mutation | Procesa hasta 50 hilos de email sin telefono asociado e intenta resolver el contacto a partir de la direccion del rem... |
 | `bulk_add_to_blacklist` | Marketing Masivo | mutation | Añade varios números de teléfono a la lista negra de marketing masivo de una vez |
 | `bulk_delete_workflows` | Automatizacion | mutation | Elimina multiples workflows de WhatsApp a la vez. OBLIGATORIO: Antes de llamar, usa list_whatsapp_workflows para obte... |
 | `bulk_toggle_workflows` | Automatizacion | mutation | Activa o desactiva multiples workflows a la vez |
@@ -256,6 +257,8 @@
 | `manage_faq` | Plugins | mutation | Permite despublicar, republicar o eliminar FAQs del plugin Product Q&A. Util para gestionar contenido que ya no es re... |
 | `mark_all_notifications_read` | Notificaciones | mutation | Marca todas las notificaciones no leidas como leidas |
 | `mark_email_read` | Email | mutation | Marca un hilo o mensaje de email como leido. Se requiere al menos thread_id o message_id. |
+| `mark_email_thread_spam` | Email | mutation | Marca un hilo de email como spam y lo mueve a la carpeta de spam via IMAP. Anade el remitente a la lista de bloqueado... |
+| `mark_email_thread_unread` | Email | mutation | Marca como no leidos todos los mensajes de un hilo de email (o solo los message_ids especificados). Sincroniza el est... |
 | `mark_notification_read` | Notificaciones | mutation | Marca una notificacion especifica como leida |
 | `merge_customers` | Clientes | mutation | Fusiona dos registros de cliente en uno, combinando comentarios, tags y datos CRM |
 | `merge_email_threads` | Email | mutation | Fusiona un hilo de email en otro. Los mensajes y notas del hilo origen se mueven al destino. Solo se pueden fusionar ... |
@@ -284,6 +287,7 @@
 | `resolve_email_contact` | Email | query | Busca la direccion de email asociada a un contacto de WhatsApp usando CRM y plataforma e-commerce |
 | `resolve_knowledge_conflict` | Base de Conocimiento | mutation | Resuelve un conflicto entre snippets de conocimiento eligiendo cual mantener |
 | `restore_default_prompt` | Prompt e IA | query | Obtiene el prompt por defecto segun el idioma |
+| `restore_email_thread` | Email | mutation | Restaura un hilo de email previamente eliminado, archivado o marcado como spam, devolviendolo a la bandeja de entrada... |
 | `resume_campaign` | Marketing Masivo | mutation | Reanuda una campana de marketing masivo que fue pausada |
 | `retry_email_account` | Email | mutation | Resetea el estado de error de una cuenta de email y reintenta la conexion. Util cuando una cuenta esta en estado de e... |
 | `rollback_prompt` | Prompt e IA | mutation | Revierte la parte autogenerada del prompt a una version anterior del historial. La parte personalizada del usuario se... |
