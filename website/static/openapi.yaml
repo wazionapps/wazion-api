@@ -6549,12 +6549,6 @@ components:
         shopify_token:
           type: string
           description: "Token de acceso Shopify. Si no se proporciona, usa el token guardado"
-        url:
-          type: string
-          description: "URL de la tienda Shopify a probar"
-        token:
-          type: string
-          description: "Token de acceso a probar"
 
     TestWebhookArgs:
       description: |
