@@ -6278,6 +6278,9 @@ components:
         body_html:
           type: string
           description: "Contenido HTML del email"
+        body_text:
+          type: string
+          description: "Version en texto plano del email (opcional, alternativa a body_html para clientes sin soporte HTML)"
         scheduled_at:
           type: string
           description: "Fecha y hora para programar el envio (ISO 8601)"
