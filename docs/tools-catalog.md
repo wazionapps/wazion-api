@@ -40,7 +40,7 @@
 | `connect_ecommerce` | Integraciones | mutation | Conecta tu tienda online (Shopify, WooCommerce, PrestaShop o VTEX) para buscar productos, pedidos y clientes. Pregunt... |
 | `connect_whatsapp` | WhatsApp | mutation | Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve un código QR para escanear con el teléfono. |
 | `count_filtered_contacts` | Marketing Masivo | query | Cuenta cuantos contactos de una lista cumplen con filtros de segmentacion (tags, actividad reciente, historial WhatsApp) |
-| `create_agent` | Agentes | mutation | Crea un nuevo agente de atencion. Puede fallar si se ha alcanzado el limite de agentes del plan actual. |
+| `create_agent` | Agentes | mutation | Crea un nuevo agente de atencion. PREFLIGHT OBLIGATORIO: antes de llamar a esta accion, llama PRIMERO a list_agents p... |
 | `create_calendar_availability` | Calendario | mutation | Crea una regla de disponibilidad en un calendario (semanal, excepcion por fecha, bloqueo) |
 | `create_calendar_event` | Calendario | mutation | Agenda un nuevo evento o cita en el calendario |
 | `create_calendar_notification` | Calendario | mutation | Crea una notificacion automatica para un calendario (confirmacion, recordatorio, cancelacion, seguimiento, no-show) |

@@ -993,7 +993,7 @@ components:
     CreateAgentArgs:
       description: |
         **create_agent** [agents] (mutation)
-        Crea un nuevo agente de atencion. Puede fallar si se ha alcanzado el limite de agentes del plan actual.
+        Crea un nuevo agente de atencion. PREFLIGHT OBLIGATORIO: antes de llamar a esta accion, llama PRIMERO a list_agents para confirmar que hay cupo disponible (compara count con el limite del plan, que tambien viene en el campo buy_agents de get_shop_status). Si ya estan al limite, NO intentes crear: en su lugar, lista los agentes existentes al usuario y ofrece dos alternativas accionables — (a) eliminar un agente existente con delete_agent para liberar un slot, o (b) ampliar el plan desde https://www.wazion.com/dashboard/buy_agents. Si aun asi llamas a esta accion y recibes error_code=agent_limit_reached, la respuesta incluye current_count y max_allowed: muestra esos numeros al usuario y ofrece las mismas dos alternativas (eliminar o ampliar). NUNCA reintentes create_agent tras un agent_limit_reached sin que el usuario haya eliminado un agente primero.
       type: object
       properties:
         action:
