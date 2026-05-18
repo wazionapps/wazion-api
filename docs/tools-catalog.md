@@ -36,7 +36,7 @@
 | `configure_ecommerce_locales` | Integraciones | mutation | Configura como se manejan los idiomas y URLs de tu plataforma e-commerce |
 | `configure_plugin_chat` | Plugins | mutation | Configura el widget de chat web. Soporta actualizacion parcial: solo envia los campos que quieras cambiar. Los campos... |
 | `configure_plugin_productqa` | Plugins | mutation | Activa y configura el widget de preguntas sobre productos |
-| `configure_webhooks` | Avanzado | mutation | Modifica la configuracion de webhooks. IMPORTANTE: Antes de llamar esta accion, llama SIEMPRE a get_webhook_config pa... |
+| `configure_webhooks` | Avanzado | mutation | Modifica la configuracion de webhooks. ACTUALIZACION PARCIAL: solo se modifican los campos que envies; los que omitas... |
 | `connect_ecommerce` | Integraciones | mutation | Conecta tu tienda online (Shopify, WooCommerce, PrestaShop o VTEX) para buscar productos, pedidos y clientes. Pregunt... |
 | `connect_whatsapp` | WhatsApp | mutation | Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve un código QR para escanear con el teléfono. |
 | `count_filtered_contacts` | Marketing Masivo | query | Cuenta cuantos contactos de una lista cumplen con filtros de segmentacion (tags, actividad reciente, historial WhatsApp) |

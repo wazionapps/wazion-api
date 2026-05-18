@@ -878,22 +878,22 @@ components:
     ConfigureWebhooksArgs:
       description: |
         **configure_webhooks** [advanced] (mutation)
-        Modifica la configuracion de webhooks. IMPORTANTE: Antes de llamar esta accion, llama SIEMPRE a get_webhook_config para ver la configuracion actual y confirmar con el usuario que datos quiere cambiar. Solo llama esta accion cuando tengas los datos concretos (URL, eventos, etc). Tras llamar esta accion, el sistema pedira confirmacion con botones - NO vuelvas a llamar a esta accion.
+        Modifica la configuracion de webhooks. ACTUALIZACION PARCIAL: solo se modifican los campos que envies; los que omitas (webhook_url, webhook_secret, webhook_events) conservan su valor actual en la base de datos. EXCEPCION CRITICA: webhook_events es REEMPLAZO COMPLETO, no merge incremental. Si el usuario pide AÑADIR o QUITAR eventos sin sustituir el resto, DEBES: (1) llamar get_webhook_config primero para obtener la lista actual, (2) calcular tu mismo la nueva lista (actual + nuevos, o actual - eliminados), (3) enviar webhook_events con la lista COMPLETA resultante. Si envias solo los nuevos eventos, perderas los anteriores. FLUJO DE CONFIRMACION: tras llamar esta accion el sistema mostrara botones de confirmacion al usuario - NO vuelvas a llamar la accion ni pidas confirmacion por texto; el sistema completa el flujo automaticamente cuando el usuario pulsa el boton. Antes de llamar, resume al usuario en lenguaje natural los cambios concretos que vas a aplicar.
         ⚠️ Requires confirmation
       type: object
       properties:
         webhook_enabled:
           type: boolean
-          description: "true para activar webhooks"
+          description: "true para activar webhooks, false para desactivarlos. Si solo cambias eventos/URL/secret y los webhooks ya estan activos, envia true para mantenerlos activos."
         webhook_url:
           type: string
-          description: "URL del endpoint que recibira los webhooks"
+          description: "URL HTTPS del endpoint que recibira los webhooks. Omite este campo si no quieres cambiar la URL actual."
         webhook_secret:
           type: string
-          description: "Secret para verificar la firma HMAC-SHA256"
+          description: "Secret para firmar los webhooks con HMAC-SHA256. Omite este campo si no quieres cambiar el secret actual."
         webhook_events:
           type: array
-          description: "Lista de eventos a enviar. Disponibles: phone.detected (nuevo telefono detectado), followup.detected (Seguimiento Inteligente detecta intencion de compra), followup.replied (cliente respondio al seguimiento), followup.converted (cliente compro tras el seguimiento), plugin_chat.session_closed (conversacion de chat web cerrada por inactividad)"
+          description: "Lista COMPLETA de eventos a suscribir. Reemplaza la lista existente, no hace merge. Para añadir/quitar eventos sin perder los demas: llama primero a get_webhook_config y envia la lista completa resultante (existentes + nuevos, o existentes - eliminados). Omite este campo si no quieres cambiar los eventos."
       required: ["webhook_enabled"]
 
     ConnectEcommerceArgs:
