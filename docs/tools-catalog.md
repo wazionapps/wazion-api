@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 371 (excluding hidden)
+> Total tools: 372 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -191,6 +191,7 @@
 | `get_usage_stats` | Estadisticas | query | Muestra el uso de creditos, tokens y costes de los ultimos dias |
 | `get_usage_stats_detail` | Estadisticas | query | Muestra el detalle individual de cada consulta de IA con tokens y costes |
 | `get_webhook_config` | Avanzado | query | Lee la configuracion actual de webhooks de la tienda: si estan activados, URL configurada, eventos suscritos y si tie... |
+| `get_whatsapp_chat_archive_status` | WhatsApp | query | Consulta si el chat de WhatsApp de un telefono esta archivado actualmente. La API resuelve automaticamente la sesion ... |
 | `get_whatsapp_connection_status` | WhatsApp | query | Muestra todas las sesiones de WhatsApp de la tienda con su estado actual (conectado, desconectado, pendiente QR) |
 | `get_whatsapp_conversation_history` | Automatizacion | query | Muestra el historial de mensajes de WhatsApp con un telefono especifico |
 | `get_whatsapp_health` | WhatsApp | query | Estado combinado de sesiones, actividad de mensajes 24h y workflows activos |

@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    371 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    372 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -4190,6 +4190,22 @@ components:
         Lee la configuracion actual de webhooks de la tienda: si estan activados, URL configurada, eventos suscritos y si tiene secret. Usa esta accion SIEMPRE antes de configurar o modificar webhooks, y cuando el usuario pregunte sobre su configuracion de webhooks.
       type: object
 
+    GetWhatsappChatArchiveStatusArgs:
+      description: |
+        **get_whatsapp_chat_archive_status** [whatsapp_ops] (query)
+        Consulta si el chat de WhatsApp de un telefono esta archivado actualmente. La API resuelve automaticamente la sesion conectada y devuelve true, false o null si WhatsApp no tiene estado local suficiente.
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del chat a consultar en formato E.164 o con prefijo internacional (ej: +34612345678). OBLIGATORIO"
+        session_id:
+          type: integer
+          description: "ID de sesion especifica (opcional). Si se omite, la API usa la sesion conectada mas reciente para ese telefono o la primera conectada"
+      required: ["action", "phone"]
+
     GetWhatsappConnectionStatusArgs:
       description: |
         **get_whatsapp_connection_status** [whatsapp_ops] (query)
@@ -6355,7 +6371,11 @@ components:
           description: "ID de sesion especifica (opcional, usa la primera conectada)"
         archive_after_send:
           type: boolean
-          description: "Archivar chat tras enviar"
+          description: "Archivar chat tras enviar. Si se usa archive_policy, esta bandera queda como compatibilidad legacy."
+        archive_policy:
+          type: string
+          description: "Politica de archivado tras enviar: never no archiva; always archiva siempre; preserve_if_previously_archived consulta si el chat estaba archivado antes de enviar y solo lo rearchiva en ese caso."
+          enum: ["never", "always", "preserve_if_previously_archived"]
         direction:
           type: string
           description: "Filtrar por direccion"
