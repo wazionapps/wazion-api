@@ -6100,7 +6100,7 @@ components:
           description: "Whether to automatically send WhatsApp follow-up messages"
         archive_after_send:
           type: boolean
-          description: "Whether to archive the WhatsApp chat after sending follow-up"
+          description: "Whether to keep follow-up chats out of the active inbox after sending. Active chats stay active; archived/new chats are archived again."
         delay_days:
           type: integer
           description: "Days to wait before sending follow-up (0-7)"
@@ -6374,7 +6374,7 @@ components:
           description: "Archivar chat tras enviar. Si se usa archive_policy, esta bandera queda como compatibilidad legacy."
         archive_policy:
           type: string
-          description: "Politica de archivado tras enviar: never no archiva; always archiva siempre; preserve_if_previously_archived consulta si el chat estaba archivado antes de enviar y solo lo rearchiva en ese caso."
+          description: "Politica de archivado tras enviar: never no archiva; always archiva siempre; preserve_if_previously_archived conserva sin archivar solo los chats que ya estaban activos antes de enviar; si estaban archivados o no existian/no estaban en activos, los archiva tras enviar."
           enum: ["never", "always", "preserve_if_previously_archived"]
         direction:
           type: string
