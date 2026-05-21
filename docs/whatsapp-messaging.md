@@ -67,6 +67,25 @@ result = send_message("wz_abc123...", "+34600000000", "Hello!", 1)
 print(result)
 ```
 
+## Archiving a Chat
+
+Use `archive_whatsapp_chat` when you want to archive or unarchive a conversation without sending a new message. In most cases, pass only the phone number; WAzion resolves the connected WhatsApp session automatically.
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "params": {
+    "name": "archive_whatsapp_chat",
+    "arguments": {
+      "phone": "+34600000000",
+      "archive": true
+    }
+  },
+  "id": 1
+}
+```
+
 ## Phone Number Format
 
 Phone numbers must include the international prefix with `+`:
@@ -253,6 +272,7 @@ Respect customer opt-out preferences:
 | Tool | Description |
 |------|-------------|
 | `send_whatsapp_message` | Send a text message |
+| `archive_whatsapp_chat` | Archive or unarchive a chat by phone number |
 | `get_whatsapp_status` | Check all session statuses |
 | `get_whatsapp_health` | Combined health check |
 | `get_whatsapp_message_logs` | View message history |
@@ -278,5 +298,6 @@ Respect customer opt-out preferences:
 - The `session_id` parameter refers to the internal session ID (integer), not the phone number. Use `get_whatsapp_status` to find session IDs.
 - Messages are sent through the WAzion VPS WhatsApp bridge, not the official WhatsApp Business API. This means standard WhatsApp rate limits apply.
 - The `archive_after_send` parameter in `send_whatsapp_message` will archive the chat on WhatsApp after sending.
+- Use `archive_whatsapp_chat` when you only want to archive/unarchive an existing chat by phone number.
 - Minimum 3 seconds between messages per session (rate limited server-side).
 - If the billing/credits API is unreachable, message sends are blocked (fail-closed). The system prioritizes preventing unpaid usage over message delivery.
