@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    370 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    371 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -464,6 +464,25 @@ components:
           type: integer
           description: "ID de la campaña a archivar"
       required: ["action", "campaign_id"]
+
+    ArchiveWhatsappChatArgs:
+      description: |
+        **archive_whatsapp_chat** [whatsapp_ops] (mutation)
+        Archiva o desarchiva un chat de WhatsApp indicando solo el telefono. La API resuelve automaticamente la sesion conectada, el session_key y las identidades internas de WhatsApp.
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del chat a archivar/desarchivar en formato E.164 o con prefijo internacional (ej: +34612345678). OBLIGATORIO"
+        archive:
+          type: boolean
+          description: "true para archivar, false para desarchivar. Por defecto true"
+        session_id:
+          type: integer
+          description: "ID de sesion especifica (opcional). Si se omite, la API usa la sesion conectada mas reciente para ese telefono o la primera conectada"
+      required: ["action", "phone"]
 
     AssignCalendarAgentArgs:
       description: |

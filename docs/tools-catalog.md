@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 370 (excluding hidden)
+> Total tools: 371 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -17,6 +17,7 @@
 | `approve_campaign` | Marketing Masivo | mutation | Aprueba una campaña pendiente de aprobación para que pueda ser enviada |
 | `approve_knowledge_snippet` | Base de Conocimiento | mutation | Aprueba un snippet de conocimiento pendiente y lo activa |
 | `archive_campaign` | Marketing Masivo | mutation | Archiva una campaña completada para mantener la lista limpia |
+| `archive_whatsapp_chat` | WhatsApp | mutation | Archiva o desarchiva un chat de WhatsApp indicando solo el telefono. La API resuelve automaticamente la sesion conect... |
 | `assign_calendar_agent` | Calendario | mutation | Asigna un agente a un calendario con un rol especifico |
 | `assign_email_thread` | Email | mutation | Asigna un hilo de email a un agente especifico. Usar assign_to=null para desasignar. |
 | `assign_marketing_session` | Marketing Masivo | mutation | Habilita o deshabilita una sesión de WhatsApp para envío de campañas de marketing |
