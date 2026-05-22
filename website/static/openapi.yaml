@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    372 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    374 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -4190,6 +4190,34 @@ components:
         Lee la configuracion actual de webhooks de la tienda: si estan activados, URL configurada, eventos suscritos y si tiene secret. Usa esta accion SIEMPRE antes de configurar o modificar webhooks, y cuando el usuario pregunte sobre su configuracion de webhooks.
       type: object
 
+    GetWhatsappActiveChatsArgs:
+      description: |
+        **get_whatsapp_active_chats** [whatsapp_ops] (query)
+        Devuelve los chats activos de WhatsApp, entendidos como chats no archivados en la bandeja real de WhatsApp. Ideal para que un MCP o LLM priorice urgencias sin mezclar chats viejos con chats realmente activos.
+      type: object
+      properties:
+        action:
+          type: string
+        session_id:
+          type: integer
+          description: "ID de sesion especifica (opcional). Si se omite, consulta todos los chats activos de la tienda usando una sesion conectada valida."
+        limit:
+          type: integer
+          description: "Numero maximo de chats a devolver (1-200)"
+          default: 25
+        offset:
+          type: integer
+          description: "Desplazamiento para paginacion"
+          default: 0
+        include_recent_messages:
+          type: boolean
+          description: "Si true, incluye unos pocos mensajes recientes por chat para poder priorizar urgencia sin hacer una llamada extra por cada numero."
+        messages_per_chat:
+          type: integer
+          description: "Cuantos mensajes recientes incluir por chat cuando include_recent_messages=true (1-10)"
+          default: 3
+      required: ["action"]
+
     GetWhatsappChatArchiveStatusArgs:
       description: |
         **get_whatsapp_chat_archive_status** [whatsapp_ops] (query)
@@ -4245,6 +4273,26 @@ components:
           type: string
           description: "Filtrar por telefono"
       required: ["action"]
+
+    GetWhatsappLiveChatMessagesArgs:
+      description: |
+        **get_whatsapp_live_chat_messages** [whatsapp_ops] (query)
+        Obtiene los mensajes recientes de un chat directamente desde el VPS de WhatsApp, combinando memoria viva y logs recientes. Sirve para analizar urgencia o contexto actual sin depender solo del historial persistido.
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del chat en formato E.164 o con prefijo internacional (ej: +34612345678). OBLIGATORIO"
+        limit:
+          type: integer
+          description: "Numero maximo de mensajes a devolver (1-200)"
+          default: 50
+        session_id:
+          type: integer
+          description: "ID de sesion especifica (opcional). Si se omite, la API resuelve automaticamente la sesion conectada mas adecuada para ese telefono."
+      required: ["action", "phone"]
 
     GetWhatsappMessageLogsArgs:
       description: |

@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 372 (excluding hidden)
+> Total tools: 374 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -191,10 +191,12 @@
 | `get_usage_stats` | Estadisticas | query | Muestra el uso de creditos, tokens y costes de los ultimos dias |
 | `get_usage_stats_detail` | Estadisticas | query | Muestra el detalle individual de cada consulta de IA con tokens y costes |
 | `get_webhook_config` | Avanzado | query | Lee la configuracion actual de webhooks de la tienda: si estan activados, URL configurada, eventos suscritos y si tie... |
+| `get_whatsapp_active_chats` | WhatsApp | query | Devuelve los chats activos de WhatsApp, entendidos como chats no archivados en la bandeja real de WhatsApp. Ideal par... |
 | `get_whatsapp_chat_archive_status` | WhatsApp | query | Consulta si el chat de WhatsApp de un telefono esta archivado actualmente. La API resuelve automaticamente la sesion ... |
 | `get_whatsapp_connection_status` | WhatsApp | query | Muestra todas las sesiones de WhatsApp de la tienda con su estado actual (conectado, desconectado, pendiente QR) |
 | `get_whatsapp_conversation_history` | Automatizacion | query | Muestra el historial de mensajes de WhatsApp con un telefono especifico |
 | `get_whatsapp_health` | WhatsApp | query | Estado combinado de sesiones, actividad de mensajes 24h y workflows activos |
+| `get_whatsapp_live_chat_messages` | WhatsApp | query | Obtiene los mensajes recientes de un chat directamente desde el VPS de WhatsApp, combinando memoria viva y logs recie... |
 | `get_whatsapp_message_logs` | WhatsApp | query | Muestra los ultimos mensajes enviados y recibidos por WhatsApp |
 | `get_whatsapp_profile` | WhatsApp | query | Obtiene el perfil de WhatsApp de una sesion conectada: nombre, foto, estado/info, y datos de empresa si es WhatsApp B... |
 | `get_whatsapp_qr` | Automatizacion | query | Obtiene el codigo QR de WhatsApp para que el usuario lo escanee. IMPORTANTE: Requiere que exista una sesion previa (e... |
