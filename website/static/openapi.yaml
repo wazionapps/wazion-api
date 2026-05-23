@@ -1225,7 +1225,7 @@ components:
           default: true
         archive_after_send:
           type: boolean
-          description: "Si true, archiva automaticamente cada chat de WhatsApp tras enviar el mensaje"
+          description: "Si true, archiva tras enviar solo chats que no estaban activos antes del envio; las conversaciones activas se mantienen visibles."
           default: false
         session_ids:
           type: array
@@ -7237,7 +7237,7 @@ components:
           description: "Incluir enlace de baja"
         archive_after_send:
           type: boolean
-          description: "Archivar chat tras enviar"
+          description: "Archivar tras enviar solo si el chat no estaba activo antes del envio"
         scheduled_at:
           type: string
           description: "Fecha/hora de envío programado (ISO 8601)"
