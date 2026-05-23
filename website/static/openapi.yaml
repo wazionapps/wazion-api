@@ -6148,7 +6148,7 @@ components:
           description: "Whether to automatically send WhatsApp follow-up messages"
         archive_after_send:
           type: boolean
-          description: "Whether to keep follow-up chats out of the active inbox after sending. Active chats stay active; archived/new chats are archived again."
+          description: "Whether to archive the chat after sending an automatic smart follow-up. If the customer replies later, WhatsApp reopens it as active."
         delay_days:
           type: integer
           description: "Days to wait before sending follow-up (0-7)"
