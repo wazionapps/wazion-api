@@ -6269,6 +6269,12 @@ components:
         voice_by_lang:
           type: object
           description: "Mapa { lang: { provider, voiceId, model? } } para asignar voz por idioma. Providers soportados por el catalogo: 11labs, cartesia y azure."
+        web_plugin_enabled:
+          type: boolean
+          description: "Activa o desactiva el boton web flotante. Si false, /api/plugins/voice/init.js devuelve no-op aunque el snippet siga instalado."
+        conversation_model:
+          type: string
+          description: "Modelo LLM de la capa conversacional de Vapi. Opciones soportadas: gpt-4o-mini (recomendado por latencia) o gpt-4o (mas calidad, mas latencia/coste). Cambiarlo reprovisiona el assistant Vapi."
         transcriber_id:
           type: string
           description: "ID del transcriptor del catalogo de voz, por ejemplo deepgram-nova-3-multi, assembly-ai-universal-multi o gladia-multi. Cambiarlo actualiza el assistant Vapi."
