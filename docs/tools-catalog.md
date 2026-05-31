@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 378 (excluding hidden)
+> Total tools: 379 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -221,6 +221,7 @@
 | `import_crm_contacts` | CRM | mutation | Importa contactos al CRM interno desde un archivo CSV |
 | `import_mapped_contacts` | Marketing Masivo | mutation | Importa contactos desde un archivo CSV previamente previsualizado, especificando que columna contiene el telefono y e... |
 | `import_marketing_contacts` | Marketing Masivo | mutation | Importa contactos a una lista de marketing masivo. Soporta entrada manual de telefonos o importacion desde conversaci... |
+| `import_vapi_voice_config` | Asistente de Voz | mutation | Lee el assistant actual en Vapi con la API key guardada y sincroniza hacia WAzion solo los campos seguros soportados:... |
 | `improve_prompt` | Prompt e IA | query | Analiza el prompt actual con IA y devuelve puntuaciones por categoria, sugerencias de mejora y una version mejorada d... |
 | `keep_both_knowledge_snippets` | Base de Conocimiento | mutation | Mantiene ambos snippets en conflicto activando los dos |
 | `link_email_contact` | Email | mutation | Vincula un contacto de WhatsApp a un hilo de email para asociar conversaciones |

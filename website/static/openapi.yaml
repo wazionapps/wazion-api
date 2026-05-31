@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    378 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    379 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -4754,6 +4754,17 @@ components:
           description: "Nombre de la columna de nombre en el CSV"
       required: ["source", "list_id"]
 
+    ImportVapiVoiceConfigArgs:
+      description: |
+        **import_vapi_voice_config** [voice] (mutation)
+        Lee el assistant actual en Vapi con la API key guardada y sincroniza hacia WAzion solo los campos seguros soportados: modelo, voz, transcriptor, keyterms, ruido, tiempos y limites.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        voice_assistant_id:
+          type: string
+          description: "Assistant ID de Vapi a importar. Si se omite, usa el assistant guardado en la tienda."
+
     ImprovePromptArgs:
       description: |
         **improve_prompt** [prompt] (query)
@@ -6268,13 +6279,43 @@ components:
           description: "Idioma principal del asistente (codigo ISO 639-1). Define el system prompt base y la voz por defecto."
         voice_by_lang:
           type: object
-          description: "Mapa { lang: { provider, voiceId, model? } } para asignar voz por idioma. Providers soportados por el catalogo: 11labs, cartesia y azure."
+          description: "Mapa { lang: { provider, voiceId, model? } } para asignar voz por idioma. Providers soportados por el catalogo: 11labs, cartesia, azure y vapi."
         web_plugin_enabled:
           type: boolean
           description: "Activa o desactiva el boton web flotante. Si false, /api/plugins/voice/init.js devuelve no-op aunque el snippet siga instalado."
         conversation_model:
           type: string
           description: "Modelo LLM de la capa conversacional de Vapi. Opciones soportadas: gpt-4o-mini (recomendado por latencia) o gpt-4o (mas calidad, mas latencia/coste). Cambiarlo reprovisiona el assistant Vapi."
+        assistant_preset:
+          type: string
+          description: "Preset guiado de calidad del assistant: balanced, fast, quality, noisy o low_cost. Ajusta valores seguros de modelo, ruido, tiempos y voz."
+        voice_speed:
+          type: number
+          description: "Velocidad de voz Vapi/TTS entre 0.75 y 1.25. Default 1.0."
+        voice_caching_enabled:
+          type: boolean
+          description: "Activa cache de audio repetido para reducir coste/latencia en saludos y mensajes frecuentes."
+        background_sound:
+          type: string
+          description: "Sonido de fondo del assistant. Opciones seguras: office u off."
+        noise_reduction:
+          type: string
+          description: "Reduccion de ruido/voz de fondo. Opciones: off, smart o smart_fourier."
+        silence_timeout_seconds:
+          type: integer
+          description: "Segundos de silencio antes de cerrar o considerar la llamada inactiva. Rango seguro 10-60."
+        max_duration_seconds:
+          type: integer
+          description: "Duracion maxima de llamada. Rango seguro 60-1800 segundos."
+        idle_timeout_seconds:
+          type: integer
+          description: "Segundos antes de que Vapi reproduzca un mensaje de espera por silencio. Rango seguro 10-120."
+        tool_timeout_seconds:
+          type: integer
+          description: "Timeout de la consulta ask_wazion desde Vapi. Rango seguro 20-120 segundos."
+        first_message_interruptions_enabled:
+          type: boolean
+          description: "Permite que el cliente interrumpa el saludo inicial del assistant."
         transcriber_id:
           type: string
           description: "ID del transcriptor del catalogo de voz, por ejemplo deepgram-nova-3-multi, assembly-ai-universal-multi o gladia-multi. Cambiarlo actualiza el assistant Vapi."
