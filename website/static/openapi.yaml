@@ -6249,7 +6249,7 @@ components:
     SaveVoiceConfigArgs:
       description: |
         **save_voice_config** [voice] (mutation)
-        Actualiza la configuracion del asistente de voz. Solo envia los campos que quieras cambiar (merge en voice_config JSON). Si activas transferencia humana, debes dar tambien voice_transfer_number. Idiomas, voces, transcriptor, palabras clave y plantilla follow-up son configurables desde WAzion y pueden reprovisionar el assistant Vapi.
+        Actualiza la configuracion del asistente de voz desde WAzion. El cliente solo pega su API key Vapi y WAzion crea/actualiza el assistant; no se debe mandar al cliente a dashboard.vapi.ai. La transferencia humana esta desactivada hasta que exista transferencia real en Vapi/telefonia.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -6258,19 +6258,19 @@ components:
           description: "Master toggle on/off del asistente de voz"
         voice_assistant_id:
           type: string
-          description: "Vapi assistant id (UUID que aparece tras importar el JSON en dashboard.vapi.ai)"
+          description: "Vapi assistant id gestionado por WAzion. Normalmente se rellena automaticamente al conectar la API key Vapi."
         voice_public_key:
           type: string
           description: "Vapi public key (browser-safe, usada por el boton 'Llamar' de la web)"
         voice_api_key:
           type: string
-          description: "Vapi private/server key. Se almacena cifrada. Solo necesaria si WAzion debe crear o actualizar el assistant programaticamente (opcional para BYOK)."
+          description: "Vapi private/server key. Se almacena cifrada y permite que WAzion cree o actualice el assistant programaticamente."
         voice_phone_number:
           type: string
           description: "Numero publico desde el que se reciben llamadas (informativo, no se usa por backend)"
         voice_transfer_number:
           type: string
-          description: "Numero E.164 al que transferir cuando el cliente pida hablar con humano. Obligatorio si transfer_enabled=true."
+          description: "Reservado para transferencia humana futura. No activar mientras transfer_enabled este bloqueado."
         languages:
           type: array
           description: "Lista de codigos ISO 639-1 (es, en, de, fr, it, pt) que el asistente debe atender"
@@ -6279,7 +6279,7 @@ components:
           description: "Idioma principal del asistente (codigo ISO 639-1). Define el system prompt base y la voz por defecto."
         voice_by_lang:
           type: object
-          description: "Mapa { lang: { provider, voiceId, model? } } para asignar voz por idioma. Providers soportados por el catalogo: 11labs, cartesia, azure y vapi."
+          description: "Mapa { lang: { provider, voiceId, model? } } para preparar voces por idioma. En el assistant Vapi actual se aplica la voz del idioma principal."
         web_plugin_enabled:
           type: boolean
           description: "Activa o desactiva el boton web flotante. Si false, /api/plugins/voice/init.js devuelve no-op aunque el snippet siga instalado."
@@ -6316,9 +6316,12 @@ components:
         first_message_interruptions_enabled:
           type: boolean
           description: "Permite que el cliente interrumpa el saludo inicial del assistant."
+        auto_followup_enabled:
+          type: boolean
+          description: "Si true, envia un resumen automatico por WhatsApp al colgar cuando el numero esta confirmado. Default seguro: false."
         transcriber_id:
           type: string
-          description: "ID del transcriptor del catalogo de voz, por ejemplo deepgram-nova-3-multi, assembly-ai-universal-multi o gladia-multi. Cambiarlo actualiza el assistant Vapi."
+          description: "ID del transcriptor del catalogo de voz. Valores validos: deepgram-nova-3-multi, assembly-ai-universal, gladia-solaria, speechmatics. Cambiarlo actualiza el assistant Vapi."
         keyterms:
           type: array
           description: "Lista de palabras clave del negocio para mejorar la transcripcion de marcas, modelos y referencias. Maximo recomendado: 50 strings cortos."
@@ -6330,13 +6333,10 @@ components:
           description: "Reglas especificas en lenguaje natural que se anaden al prompt del asistente (ej: 'no consultes compatibilidad de piezas por telefono')"
         tools_enabled:
           type: array
-          description: "Subconjunto de tools activas: consultar_pedido, consultar_envio, buscar_kb, derivar_whatsapp, transferir_humano"
+          description: "Subconjunto de capacidades de voz. Valores activos actuales: consultar_pedido, consultar_envio, buscar_kb, derivar_whatsapp. No usar transferir_humano hasta que la transferencia real este implementada."
         transfer_enabled:
           type: boolean
-          description: "Toggle: si true, la tool transferir_humano se anade automaticamente a tools_enabled y requiere voice_transfer_number. Default false."
-        webhook_secret:
-          type: string
-          description: "Secreto opcional para autenticar los webhooks y tool calls de Vapi. WAzion acepta X-Vapi-Secret, Authorization: Bearer o firma HMAC compatible."
+          description: "Reservado. Debe permanecer false hasta que la transferencia real este conectada en Vapi y telefonia."
         button_color:
           type: string
           description: "Color principal del boton web de voz, en hexadecimal CSS."
