@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 376 (excluding hidden)
+> Total tools: 378 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -190,6 +190,7 @@
 | `get_unsubscribed_list` | Marketing Masivo | query | Obtiene la lista de contactos que se han dado de baja de los envios masivos de la tienda |
 | `get_usage_stats` | Estadisticas | query | Muestra el uso de creditos, tokens y costes de los ultimos dias |
 | `get_usage_stats_detail` | Estadisticas | query | Muestra el detalle individual de cada consulta de IA con tokens y costes |
+| `get_voice_call` | Asistente de Voz | query | Devuelve una llamada de voz concreta con su transcripcion completa y el registro de tools que ejecuto el asistente du... |
 | `get_voice_config` | Asistente de Voz | query | Devuelve la configuracion actual del asistente de voz (Vapi BYOK): activo, assistant_id, public_key, idiomas, voces, ... |
 | `get_webhook_config` | Avanzado | query | Lee la configuracion actual de webhooks de la tienda: si estan activados, URL configurada, eventos suscritos y si tie... |
 | `get_whatsapp_active_chats` | WhatsApp | query | Devuelve los chats activos de WhatsApp, entendidos como chats no archivados en la bandeja real de WhatsApp. Ideal par... |
@@ -254,6 +255,7 @@
 | `list_scheduled_messages` | WhatsApp | query | Lists scheduled WhatsApp messages with optional status filter. Returns id, session info, phone, message text, schedul... |
 | `list_storage_files` | Almacenamiento | query | Muestra la lista de archivos subidos a la base de conocimiento con su tamano y fecha |
 | `list_tasks` | Tareas | query | Lista las tareas de la tienda con filtros opcionales por estado, agente o telefono |
+| `list_voice_calls` | Asistente de Voz | query | Devuelve el registro paginado de llamadas del asistente de voz (Vapi) de la tienda: telefono, cliente, duracion, esta... |
 | `list_whatsapp_agents` | Agentes | query | Muestra todos los agentes disponibles para asignar en workflows de WhatsApp |
 | `list_whatsapp_optout` | WhatsApp | query | Muestra los contactos que han solicitado no recibir mensajes automaticos de WhatsApp |
 | `list_whatsapp_scheduled_sessions` | WhatsApp | query | Devuelve las sesiones de WhatsApp conectadas disponibles para enviar mensajes programados. |

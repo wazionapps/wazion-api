@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    376 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    378 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -4186,6 +4186,20 @@ components:
           description: "Resultados por página"
       required: ["action"]
 
+    GetVoiceCallArgs:
+      description: |
+        **get_voice_call** [voice] (query)
+        Devuelve una llamada de voz concreta con su transcripcion completa y el registro de tools que ejecuto el asistente durante la llamada.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        call_id:
+          type: string
+          description: "Identificador de la llamada a consultar"
+      required: ["action", "call_id"]
+
     GetVoiceConfigArgs:
       description: |
         **get_voice_config** [voice] (query)
@@ -5383,6 +5397,34 @@ components:
           type: boolean
           description: "Incluir tareas completadas"
       required: ["action"]
+
+    ListVoiceCallsArgs:
+      description: |
+        **list_voice_calls** [voice] (query)
+        Devuelve el registro paginado de llamadas del asistente de voz (Vapi) de la tienda: telefono, cliente, duracion, estado, resultado, idioma detectado y coste. Permite filtrar por resultado, origen, fecha y busqueda de texto.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija (list es el valor por defecto)"
+        limit:
+          type: integer
+          description: "Numero de llamadas a devolver (1-200, default 50)"
+        offset:
+          type: integer
+          description: "Desplazamiento para paginacion (default 0)"
+        outcome:
+          type: string
+          description: "Filtrar por resultado de la llamada"
+        source:
+          type: string
+          description: "Filtrar por origen de la llamada (ej: web, telefono)"
+        since:
+          type: string
+          description: "Fecha minima de inicio en formato YYYY-MM-DD"
+        q:
+          type: string
+          description: "Texto de busqueda en telefono, nombre, email o resumen del cliente"
 
     ListWhatsappAgentsArgs:
       description: |
