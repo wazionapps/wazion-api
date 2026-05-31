@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 374 (excluding hidden)
+> Total tools: 376 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -190,6 +190,7 @@
 | `get_unsubscribed_list` | Marketing Masivo | query | Obtiene la lista de contactos que se han dado de baja de los envios masivos de la tienda |
 | `get_usage_stats` | Estadisticas | query | Muestra el uso de creditos, tokens y costes de los ultimos dias |
 | `get_usage_stats_detail` | Estadisticas | query | Muestra el detalle individual de cada consulta de IA con tokens y costes |
+| `get_voice_config` | Asistente de Voz | query | Devuelve la configuracion actual del asistente de voz (Vapi BYOK): activo, assistant_id, public_key, idiomas, voces, ... |
 | `get_webhook_config` | Avanzado | query | Lee la configuracion actual de webhooks de la tienda: si estan activados, URL configurada, eventos suscritos y si tie... |
 | `get_whatsapp_active_chats` | WhatsApp | query | Devuelve los chats activos de WhatsApp, entendidos como chats no archivados en la bandeja real de WhatsApp. Ideal par... |
 | `get_whatsapp_chat_archive_status` | WhatsApp | query | Consulta si el chat de WhatsApp de un telefono esta archivado actualmente. La API resuelve automaticamente la sesion ... |
@@ -302,6 +303,7 @@
 | `save_plugin_conversation_note` | Plugins | mutation | Genera un resumen IA de una conversacion del plugin de chat web y lo guarda como nota en el perfil del cliente. Requi... |
 | `save_prompt` | Prompt e IA | mutation | Guarda un nuevo prompt para la IA. IMPORTANTE: el endpoint REEMPLAZA el prompt completo (no soporta merge/append/secc... |
 | `save_smart_followup_config` | Seguimiento Inteligente | mutation | Actualiza la configuracion de seguimiento inteligente. Solo envia los campos que quieras cambiar. El sistema verifica... |
+| `save_voice_config` | Asistente de Voz | mutation | Actualiza la configuracion del asistente de voz. Solo envia los campos que quieras cambiar (merge en voice_config JSO... |
 | `search_conversations` | Conversaciones | query | Busca conversaciones por texto, telefono o rango de fechas. Ejemplo: 'busca conversaciones que mencionen devolucion' |
 | `search_customer_comments` | Clientes | query | Busca texto en los comentarios de todos los clientes |
 | `search_customers` | Clientes | query | Busca clientes por nombre, telefono o email en el CRM y en los contactos |

@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    374 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    376 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -91,6 +91,8 @@ tags:
     description: Contacto con soporte tecnico
   - name: tasks
     description: Gestion de tareas y recordatorios asociados a clientes
+  - name: voice
+    description: Asistente IA que atiende llamadas (telefono y boton web), consulta pedidos y deriva a WhatsApp lo que no se gestione por voz. BYOK Vapi.
   - name: whatsapp_ops
     description: Estado de sesiones, logs de mensajes y ejecucion de workflows
 
@@ -4184,6 +4186,17 @@ components:
           description: "Resultados por página"
       required: ["action"]
 
+    GetVoiceConfigArgs:
+      description: |
+        **get_voice_config** [voice] (query)
+        Devuelve la configuracion actual del asistente de voz (Vapi BYOK): activo, assistant_id, public_key, idiomas, voces, reglas, herramientas habilitadas, transferencia humana, plantilla follow-up, URL webhook y estadisticas.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
+
     GetWebhookConfigArgs:
       description: |
         **get_webhook_config** [advanced] (query)
@@ -6179,6 +6192,56 @@ components:
         sending_window_end:
           type: integer
           description: "Hora de fin de la ventana de envio (0-23). null para desactivar ventana"
+
+    SaveVoiceConfigArgs:
+      description: |
+        **save_voice_config** [voice] (mutation)
+        Actualiza la configuracion del asistente de voz. Solo envia los campos que quieras cambiar (merge en voice_config JSON). Si activas transferencia humana, debes dar tambien voice_transfer_number. Idiomas, voces y plantilla follow-up son por-idioma.
+        ⚠️ Requires confirmation
+      type: object
+      properties:
+        voice_enabled:
+          type: boolean
+          description: "Master toggle on/off del asistente de voz"
+        voice_assistant_id:
+          type: string
+          description: "Vapi assistant id (UUID que aparece tras importar el JSON en dashboard.vapi.ai)"
+        voice_public_key:
+          type: string
+          description: "Vapi public key (browser-safe, usada por el boton 'Llamar' de la web)"
+        voice_api_key:
+          type: string
+          description: "Vapi private/server key. Se almacena cifrada. Solo necesaria si WAzion debe crear o actualizar el assistant programaticamente (opcional para BYOK)."
+        voice_phone_number:
+          type: string
+          description: "Numero publico desde el que se reciben llamadas (informativo, no se usa por backend)"
+        voice_transfer_number:
+          type: string
+          description: "Numero E.164 al que transferir cuando el cliente pida hablar con humano. Obligatorio si transfer_enabled=true."
+        languages:
+          type: array
+          description: "Lista de codigos ISO 639-1 (es, en, de, fr, it, pt) que el asistente debe atender"
+        primary_language:
+          type: string
+          description: "Idioma principal del asistente (codigo ISO 639-1). Define el system prompt base y la voz por defecto."
+        voice_by_lang:
+          type: object
+          description: "Mapa { lang: { provider, voiceId } } para asignar voz por idioma. Provider: '11labs' o 'azure'."
+        followup_templates:
+          type: object
+          description: "Mapa { lang: 'plantilla' } para el WhatsApp post-llamada. Variables disponibles: {customer_name}, {business_name}, {summary}, {summary_bullets}"
+        voice_rules:
+          type: string
+          description: "Reglas especificas en lenguaje natural que se anaden al prompt del asistente (ej: 'no consultes compatibilidad de piezas por telefono')"
+        tools_enabled:
+          type: array
+          description: "Subconjunto de tools activas: consultar_pedido, consultar_envio, buscar_kb, derivar_whatsapp, transferir_humano"
+        transfer_enabled:
+          type: boolean
+          description: "Toggle: si true, la tool transferir_humano se anade automaticamente a tools_enabled y requiere voice_transfer_number. Default false."
+        webhook_secret:
+          type: string
+          description: "Secret HMAC opcional. Si se configura, el webhook valida X-Vapi-Signature en cada evento."
 
     SearchConversationsArgs:
       description: |
