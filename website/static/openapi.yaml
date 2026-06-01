@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    379 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    382 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -4186,6 +4186,20 @@ components:
           description: "Resultados por página"
       required: ["action"]
 
+    GetVoiceAssistantConfigArgs:
+      description: |
+        **get_voice_assistant_config** [voice] (query)
+        Devuelve el payload sanitizado del assistant de Vapi de la tienda (modelo, voz, transcriptor, herramientas y mensajes), tal y como WAzion lo provisiona. Opcionalmente lo entrega como archivo descargable.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        download:
+          type: boolean
+          description: "Si es true, marca la respuesta para descarga como archivo JSON."
+      required: ["action"]
+
     GetVoiceCallArgs:
       description: |
         **get_voice_call** [voice] (query)
@@ -4210,6 +4224,12 @@ components:
           type: string
           description: "Accion fija"
       required: ["action"]
+
+    GetVoiceLibraryArgs:
+      description: |
+        **get_voice_library** [voice] (query)
+        Devuelve el catalogo curado de voces compatibles con Vapi por idioma, los transcriptores disponibles y los textos de previsualizacion. Util para elegir voz y transcriptor al configurar el asistente de voz.
+      type: object
 
     GetWebhookConfigArgs:
       description: |
@@ -4761,9 +4781,13 @@ components:
         ⚠️ Requires confirmation
       type: object
       properties:
+        action:
+          type: string
+          description: "Accion fija"
         voice_assistant_id:
           type: string
           description: "Assistant ID de Vapi a importar. Si se omite, usa el assistant guardado en la tienda."
+      required: ["action"]
 
     ImprovePromptArgs:
       description: |
@@ -6812,6 +6836,20 @@ components:
         shopify_token:
           type: string
           description: "Token de acceso Shopify. Si no se proporciona, usa el token guardado"
+
+    TestVapiKeyArgs:
+      description: |
+        **test_vapi_key** [voice] (query)
+        Valida una API key de Vapi contra el servicio sin guardarla. Util para comprobar que la clave es correcta antes de activar el asistente de voz.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        voice_api_key:
+          type: string
+          description: "API key privada de Vapi a validar. No se almacena, solo se comprueba contra el servicio."
+      required: ["action", "voice_api_key"]
 
     TestWebhookArgs:
       description: |

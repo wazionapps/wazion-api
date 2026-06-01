@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 379 (excluding hidden)
+> Total tools: 382 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -190,8 +190,10 @@
 | `get_unsubscribed_list` | Marketing Masivo | query | Obtiene la lista de contactos que se han dado de baja de los envios masivos de la tienda |
 | `get_usage_stats` | Estadisticas | query | Muestra el uso de creditos, tokens y costes de los ultimos dias |
 | `get_usage_stats_detail` | Estadisticas | query | Muestra el detalle individual de cada consulta de IA con tokens y costes |
+| `get_voice_assistant_config` | Asistente de Voz | query | Devuelve el payload sanitizado del assistant de Vapi de la tienda (modelo, voz, transcriptor, herramientas y mensajes... |
 | `get_voice_call` | Asistente de Voz | query | Devuelve una llamada de voz concreta con su transcripcion completa y el registro de tools que ejecuto el asistente du... |
 | `get_voice_config` | Asistente de Voz | query | Devuelve la configuracion actual del asistente de voz (Vapi BYOK): activo, assistant_id, public_key, idiomas, voces, ... |
+| `get_voice_library` | Asistente de Voz | query | Devuelve el catalogo curado de voces compatibles con Vapi por idioma, los transcriptores disponibles y los textos de ... |
 | `get_webhook_config` | Avanzado | query | Lee la configuracion actual de webhooks de la tienda: si estan activados, URL configurada, eventos suscritos y si tie... |
 | `get_whatsapp_active_chats` | WhatsApp | query | Devuelve los chats activos de WhatsApp, entendidos como chats no archivados en la bandeja real de WhatsApp. Ideal par... |
 | `get_whatsapp_chat_archive_status` | WhatsApp | query | Consulta si el chat de WhatsApp de un telefono esta archivado actualmente. La API resuelve automaticamente la sesion ... |
@@ -327,6 +329,7 @@
 | `test_ecommerce_connection` | Integraciones | query | Verifica que la conexion con la plataforma e-commerce (Shopify, WooCommerce, PrestaShop o VTEX) funciona correctament... |
 | `test_email_connection` | Email | query | Verifica que la conexion IMAP y SMTP de una cuenta de email funciona correctamente. |
 | `test_shopify_connection` | Integraciones | query | Valida la conexion con una tienda Shopify verificando las credenciales y los permisos OAuth. Si no se proporcionan cr... |
+| `test_vapi_key` | Asistente de Voz | query | Valida una API key de Vapi contra el servicio sin guardarla. Util para comprobar que la clave es correcta antes de ac... |
 | `test_webhook` | Avanzado | mutation | Envia un webhook de prueba. Usa automaticamente la URL y secret configurados en la tienda si no se proporcionan param... |
 | `toggle_analytics` | Estadisticas | mutation | Activa o desactiva el registro de analytics con structured outputs para esta tienda |
 | `toggle_auto_describe_images` | Configuracion General | mutation | Activa o desactiva el analisis automatico de imagenes, documentos PDF y audios enviados por clientes via WhatsApp. Af... |
