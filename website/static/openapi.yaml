@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    382 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    392 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -91,6 +91,8 @@ tags:
     description: Contacto con soporte tecnico
   - name: tasks
     description: Gestion de tareas y recordatorios asociados a clientes
+  - name: tickets
+    description: Tickets internos cliente-IA-agente para gestionar escalados sin vigilar WhatsApp manualmente
   - name: voice
     description: Asistente IA que atiende llamadas (telefono y boton web), consulta pedidos y deriva a WhatsApp lo que no se gestione por voz. BYOK Vapi.
   - name: whatsapp_ops
@@ -244,6 +246,23 @@ components:
             - type: integer
 
     # ── Tool Schemas ──────────────────────────────────
+
+    AddAiTicketNoteArgs:
+      description: |
+        **add_ai_ticket_note** [tickets] (mutation)
+        Anade una nota interna al ticket. No se envia al cliente y puede contener informacion privada para el agente/IA.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        body:
+          type: string
+          description: "Nota interna"
+      required: ["action", "ticket_id", "body"]
 
     AddContactsToListArgs:
       description: |
@@ -485,6 +504,23 @@ components:
           type: integer
           description: "ID de sesion especifica (opcional). Si se omite, la API usa la sesion conectada mas reciente para ese telefono o la primera conectada"
       required: ["action", "phone"]
+
+    AssignAiTicketArgs:
+      description: |
+        **assign_ai_ticket** [tickets] (mutation)
+        Asigna un ticket interno a un agente.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        assigned_agent_id:
+          type: integer
+          description: "ID del agente asignado. Usa 0 para desasignar"
+      required: ["action", "ticket_id", "assigned_agent_id"]
 
     AssignCalendarAgentArgs:
       description: |
@@ -1045,6 +1081,42 @@ components:
           type: object
           description: "Permisos del agente (objeto JSON con permisos por seccion)"
       required: ["action", "nickname", "full_name", "email"]
+
+    CreateAiTicketArgs:
+      description: |
+        **create_ai_ticket** [tickets] (mutation)
+        Crea o actualiza un ticket interno para un cliente. No envia nada al cliente. El contenido de message/internal_note queda como nota interna IA-agente.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        phone:
+          type: string
+          description: "Telefono del cliente"
+        customer_email:
+          type: string
+          description: "Email del cliente si no hay telefono"
+        title:
+          type: string
+          description: "Titulo breve del ticket"
+        description:
+          type: string
+          description: "Descripcion interna del caso"
+        priority:
+          type: string
+          description: "Prioridad interna"
+          enum: ["P0", "P1", "P2", "P3"]
+        category:
+          type: string
+          description: "Categoria interna"
+        message:
+          type: string
+          description: "Nota interna inicial. No se envia al cliente"
+        dedupe_customer:
+          type: boolean
+          description: "Si true, actualiza un ticket abierto del mismo cliente en vez de crear otro"
+      required: ["action", "title"]
 
     CreateCalendarAvailabilityArgs:
       description: |
@@ -2187,6 +2259,26 @@ components:
           description: "ID del archivo de conocimiento"
       required: ["id"]
 
+    DraftAiTicketCustomerReplyArgs:
+      description: |
+        **draft_ai_ticket_customer_reply** [tickets] (mutation)
+        Genera un borrador seguro para cliente a partir de instrucciones internas. No envia el mensaje; solo crea un customer_draft revisable.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        instruction:
+          type: string
+          description: "Instruccion interna del agente. La IA usa la intencion, no el texto literal"
+        customer_safe_facts:
+          type: array
+          description: "Hechos seguros que se pueden mencionar al cliente"
+      required: ["action", "ticket_id"]
+
     DryRunWorkflowArgs:
       description: |
         **dry_run_workflow** [automation] (query)
@@ -2376,6 +2468,20 @@ components:
           type: string
           description: "Telefono del cliente"
       required: ["action", "phone"]
+
+    GenerateAiTicketBriefArgs:
+      description: |
+        **generate_ai_ticket_brief** [tickets] (mutation)
+        Genera un resumen operativo interno, posible solucion, datos faltantes y hechos seguros para el cliente.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+      required: ["action", "ticket_id"]
 
     GenerateEmailDraftArgs:
       description: |
@@ -2582,6 +2688,23 @@ components:
           type: integer
           description: "Ultimos N mensajes a procesar"
       required: ["action", "phone"]
+
+    GetAiTicketArgs:
+      description: |
+        **get_ai_ticket** [tickets] (query)
+        Obtiene un ticket interno con mensajes, eventos, adjuntos y contexto de cliente/conversacion.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID numerico del ticket"
+        ticket_uid:
+          type: string
+          description: "UID publico interno del ticket, por ejemplo TKT-260609-ABC123"
+      required: ["action"]
 
     GetAnalyticsArgs:
       description: |
@@ -4870,6 +4993,30 @@ components:
           description: "Acción fija"
       required: ["action"]
 
+    ListAiTicketsArgs:
+      description: |
+        **list_ai_tickets** [tickets] (query)
+        Lista tickets internos IA-agente. Usa phone para filtrar por cliente actual o queue para bandejas open, mine, unassigned, urgent, overdue o closed.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        queue:
+          type: string
+          description: "Bandeja a listar"
+          enum: ["open", "mine", "unassigned", "urgent", "overdue", "closed"]
+        phone:
+          type: string
+          description: "Telefono del cliente para filtrar"
+        search:
+          type: string
+          description: "Busqueda por UID, titulo, descripcion, telefono o email"
+        limit:
+          type: integer
+          description: "Limite de resultados, maximo 100"
+      required: ["action"]
+
     ListBlacklistArgs:
       description: |
         **list_blacklist** [mass_marketing] (query)
@@ -5965,6 +6112,23 @@ components:
           description: "ID de la sesion de WhatsApp"
       required: ["action", "session_id"]
 
+    ReopenAiTicketArgs:
+      description: |
+        **reopen_ai_ticket** [tickets] (mutation)
+        Reabre un ticket resuelto/cerrado cuando el cliente insiste o aparece informacion nueva.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        reason:
+          type: string
+          description: "Motivo interno de reapertura"
+      required: ["action", "ticket_id"]
+
     ReorderWhatsappWorkflowsArgs:
       description: |
         **reorder_whatsapp_workflows** [automation] (mutation)
@@ -6009,6 +6173,23 @@ components:
         action:
           type: string
       required: ["action"]
+
+    ResolveAiTicketArgs:
+      description: |
+        **resolve_ai_ticket** [tickets] (mutation)
+        Marca un ticket interno como resuelto.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        reason:
+          type: string
+          description: "Motivo interno del cierre"
+      required: ["action", "ticket_id"]
 
     ResolveEmailContactArgs:
       description: |
@@ -6538,6 +6719,26 @@ components:
           type: integer
           description: "Dias de historial a buscar"
       required: ["action", "query"]
+
+    SendAiTicketCustomerReplyArgs:
+      description: |
+        **send_ai_ticket_customer_reply** [tickets] (mutation)
+        Envia al cliente un borrador seguro. El endpoint aplica control anti-filtracion contra notas internas antes de enviar.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        draft_id:
+          type: integer
+          description: "ID del mensaje customer_draft"
+        message:
+          type: string
+          description: "Mensaje seguro final para el cliente si se quiere sobreescribir el borrador"
+      required: ["action", "ticket_id"]
 
     SendEmailReplyArgs:
       description: |
@@ -8161,7 +8362,7 @@ components:
           description: "Objeto con 'logic' (AND/OR) y 'rules' (array de condiciones). Si no se envia, se mantienen las condiciones actuales"
         actions:
           type: array
-          description: "Array de acciones a ejecutar. Si no se envia, se mantienen las acciones actuales. IMPORTANTE: si envias este campo, debes enviar el array COMPLETO de acciones (no solo la que cambias). Para editar solo el mensaje de una accion reply/reply_with_ai: 1) llama list_whatsapp_workflows para obtener las acciones actuales, 2) modifica solo el campo que necesitas, 3) envia el array completo con todos los valores existentes preservados. Tipos soportados: reply_with_ai (con pre_send_check opcional), reply (con no_repeat opcional), delay (seconds: 1-300, OBLIGATORIO), ai_filter (filtro IA que decide si responder, previene bucles, ideal como primera accion), ai_archive_decision (decide si archivar; archive_policy:'always' o 'preserve_if_previously_archived'). Para ai_filter y ai_archive_decision se puede añadir prompt:'instrucciones' para personalizar criterios. En ai_archive_decision, archiva cuando no queda tarea humana aunque el siguiente paso sea del cliente. archive_policy define que hacer si la IA decide ARCHIVAR: 'always' archiva el chat; 'preserve_if_previously_archived' archiva solo si el chat no estaba activo antes del mensaje. VALIDACION: cada accion delay DEBE tener 'seconds' entre 1 y 300. Si copias un delay existente, manten su valor original de seconds."
+          description: "Array de acciones a ejecutar. Si no se envia, se mantienen las acciones actuales. IMPORTANTE: si envias este campo, debes enviar el array COMPLETO de acciones (no solo la que cambias). Para editar solo el mensaje de una accion reply/reply_with_ai: 1) llama list_whatsapp_workflows para obtener las acciones actuales, 2) modifica solo el campo que necesitas, 3) envia el array completo con todos los valores existentes preservados. Tipos soportados: reply_with_ai (con pre_send_check opcional), reply (con no_repeat opcional), delay (seconds: 1-300, OBLIGATORIO), ai_filter (filtro IA que decide si responder, previene bucles, ideal como primera accion), ai_archive_decision (decide si archivar; archive_policy:'always' o 'preserve_if_previously_archived'), create_ticket (crea/actualiza Ticket IA interno; campos ticket_title, priority, category, instructions; no envia nada al cliente). Para ai_filter y ai_archive_decision se puede añadir prompt:'instrucciones' para personalizar criterios. En ai_archive_decision, archiva cuando no queda tarea humana aunque el siguiente paso sea del cliente. archive_policy define que hacer si la IA decide ARCHIVAR: 'always' archiva el chat; 'preserve_if_previously_archived' archiva solo si el chat no estaba activo antes del mensaje. VALIDACION: cada accion delay DEBE tener 'seconds' entre 1 y 300. Si copias un delay existente, manten su valor original de seconds."
         session_id:
           type: integer
           description: "ID de la sesion de WhatsApp a la que asignar este workflow. null = todos los numeros. Usa get_whatsapp_status para ver las sesiones."

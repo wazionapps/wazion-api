@@ -2,10 +2,11 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 382 (excluding hidden)
+> Total tools: 392 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
+| `add_ai_ticket_note` | Tickets IA | mutation | Anade una nota interna al ticket. No se envia al cliente y puede contener informacion privada para el agente/IA. |
 | `add_contacts_to_list` | Marketing Masivo | mutation | Añade uno o más contactos a una lista de marketing |
 | `add_customer_comment` | Clientes | mutation | Anade un nuevo comentario interno a la ficha de un cliente |
 | `add_customer_tag` | Clientes | mutation | Anade una etiqueta (tag) a un cliente para clasificarlo |
@@ -18,6 +19,7 @@
 | `approve_knowledge_snippet` | Base de Conocimiento | mutation | Aprueba un snippet de conocimiento pendiente y lo activa |
 | `archive_campaign` | Marketing Masivo | mutation | Archiva una campaña completada para mantener la lista limpia |
 | `archive_whatsapp_chat` | WhatsApp | mutation | Archiva o desarchiva un chat de WhatsApp indicando solo el telefono. La API resuelve automaticamente la sesion conect... |
+| `assign_ai_ticket` | Tickets IA | mutation | Asigna un ticket interno a un agente. |
 | `assign_calendar_agent` | Calendario | mutation | Asigna un agente a un calendario con un rol especifico |
 | `assign_email_thread` | Email | mutation | Asigna un hilo de email a un agente especifico. Usar assign_to=null para desasignar. |
 | `assign_marketing_session` | Marketing Masivo | mutation | Habilita o deshabilita una sesión de WhatsApp para envío de campañas de marketing |
@@ -42,6 +44,7 @@
 | `connect_whatsapp` | WhatsApp | mutation | Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve un código QR para escanear con el teléfono. |
 | `count_filtered_contacts` | Marketing Masivo | query | Cuenta cuantos contactos de una lista cumplen con filtros de segmentacion (tags, actividad reciente, historial WhatsApp) |
 | `create_agent` | Agentes | mutation | Crea un nuevo agente de atencion. PREFLIGHT OBLIGATORIO: antes de llamar a esta accion, llama PRIMERO a list_agents p... |
+| `create_ai_ticket` | Tickets IA | mutation | Crea o actualiza un ticket interno para un cliente. No envia nada al cliente. El contenido de message/internal_note q... |
 | `create_calendar_availability` | Calendario | mutation | Crea una regla de disponibilidad en un calendario (semanal, excepcion por fecha, bloqueo) |
 | `create_calendar_event` | Calendario | mutation | Agenda un nuevo evento o cita en el calendario |
 | `create_calendar_notification` | Calendario | mutation | Crea una notificacion automatica para un calendario (confirmacion, recordatorio, cancelacion, seguimiento, no-show) |
@@ -92,6 +95,7 @@
 | `download_conversation_file` | Almacenamiento | query | Obtiene la URL de descarga de un archivo compartido en una conversacion |
 | `download_email_attachment` | Email | query | Obtiene la URL de descarga de un adjunto de email |
 | `download_knowledge_file` | Base de Conocimiento | query | Obtiene la URL de descarga de un archivo de la base de conocimiento |
+| `draft_ai_ticket_customer_reply` | Tickets IA | mutation | Genera un borrador seguro para cliente a partir de instrucciones internas. No envia el mensaje; solo crea un customer... |
 | `dry_run_workflow` | Automatizacion | query | Simula la ejecucion de un workflow con un mensaje de prueba sin enviar nada real. Usar cuando el usuario diga 'prueba... |
 | `duplicate_campaign` | Marketing Masivo | mutation | Crea una copia de una campaña existente en estado borrador |
 | `edit_knowledge_snippet` | Base de Conocimiento | mutation | Edita el contenido o categoria de un snippet de conocimiento |
@@ -102,6 +106,7 @@
 | `force_email_sync` | Email | mutation | Fuerza una sincronizacion inmediata de todas las cuentas de email via IMAP |
 | `gdpr_delete_customer_data` | Clientes | mutation | Elimina todos los datos personales de un cliente para cumplimiento GDPR (Art. 17 - Derecho al olvido). Los registros ... |
 | `gdpr_export_customer_data` | Clientes | query | Exporta todos los datos almacenados de un cliente para cumplimiento GDPR (Art. 15 - Derecho de acceso) |
+| `generate_ai_ticket_brief` | Tickets IA | mutation | Genera un resumen operativo interno, posible solucion, datos faltantes y hechos seguros para el cliente. |
 | `generate_email_draft` | Email | mutation | Genera un borrador de respuesta usando IA para un hilo de email |
 | `generate_referral_code` | Referidos | mutation | Genera el enlace único de referido del usuario para compartir. Si ya tiene uno, lo devuelve. |
 | `get_agent_activity` | Agentes | query | Muestra la actividad y carga de trabajo de un agente especifico |
@@ -112,6 +117,7 @@
 | `get_agent_tasks` | Tareas | query | Muestra las tareas asignadas a un agente especifico |
 | `get_ai_errors` | Base de Conocimiento | query | List active AI corrections for this assistant. To list ALL corrections, pass no parameters. Only use category or quer... |
 | `get_ai_summary` | Analisis IA | query | Genera un resumen de una conversacion usando IA. Tipos: quick (breve), detailed (completo), actionable (acciones pend... |
+| `get_ai_ticket` | Tickets IA | query | Obtiene un ticket interno con mensajes, eventos, adjuntos y contexto de cliente/conversacion. |
 | `get_analytics` | Estadisticas | query | Muestra metricas de rendimiento: conversaciones, mensajes, actividad diaria |
 | `get_api_key` | Avanzado | query | Muestra la API key actual de la tienda (token_ext) y la URL del servidor MCP. Usa esta accion cuando el usuario pregu... |
 | `get_api_usage_stats` | Actividad | query | Consumo de tokens y costes por modelo de IA |
@@ -230,6 +236,7 @@
 | `link_oauth_calendar` | Calendario | mutation | Vincula un calendario externo (Google/Microsoft) a la tienda |
 | `list_agents` | Agentes | query | Lista todos los agentes del comercio con detalles de perfil y permisos |
 | `list_agents_json` | Agentes | query | Devuelve todos los agentes configurados en formato JSON con sus datos completos: nombre, email, teléfono, color, perm... |
+| `list_ai_tickets` | Tickets IA | query | Lista tickets internos IA-agente. Usa phone para filtrar por cliente actual o queue para bandejas open, mine, unassig... |
 | `list_blacklist` | Marketing Masivo | query | Obtiene los numeros bloqueados manualmente que no recibiran campanas masivas, distinta de las bajas voluntarias |
 | `list_calendar_agents` | Calendario | query | Lista agentes asignados a un calendario especifico con sus roles |
 | `list_calendar_availability` | Calendario | query | Lista todas las reglas de disponibilidad de un calendario (horarios, excepciones, bloqueos) |
@@ -290,10 +297,12 @@
 | `remove_unsubscribed_bulk` | Marketing Masivo | mutation | Elimina registros de bajas de marketing masivo |
 | `remove_whatsapp_optout` | WhatsApp | mutation | Elimina un numero de la lista de opt-out para que pueda recibir mensajes automaticos de nuevo |
 | `remove_whatsapp_profile_picture` | Automatizacion | mutation | Elimina la foto de perfil de una sesion de WhatsApp |
+| `reopen_ai_ticket` | Tickets IA | mutation | Reabre un ticket resuelto/cerrado cuando el cliente insiste o aparece informacion nueva. |
 | `reorder_whatsapp_workflows` | Automatizacion | mutation | Cambia el orden de ejecucion de los workflows de WhatsApp |
 | `republish_faq` | Plugins | mutation | Republica una o varias FAQs previamente despublicadas |
 | `request_referral_payout` | Referidos | mutation | Solicita el pago de las comisiones pendientes (mínimo 50€). Solo disponible si no hay otra solicitud abierta. |
 | `reset_crm_errors` | Avanzado | mutation | Resetea el contador de errores CRM y reactiva los endpoints si estaban deshabilitados por errores consecutivos |
+| `resolve_ai_ticket` | Tickets IA | mutation | Marca un ticket interno como resuelto. |
 | `resolve_email_contact` | Email | query | Busca la direccion de email asociada a un contacto de WhatsApp usando CRM y plataforma e-commerce |
 | `resolve_knowledge_conflict` | Base de Conocimiento | mutation | Resuelve un conflicto entre snippets de conocimiento eligiendo cual mantener |
 | `restore_default_prompt` | Prompt e IA | query | Obtiene el prompt por defecto segun el idioma |
@@ -314,6 +323,7 @@
 | `search_customers` | Clientes | query | Busca clientes por nombre, telefono o email en el CRM y en los contactos |
 | `search_email_contacts` | Email | query | Busca clientes por nombre o telefono para vincularlos a hilos de email |
 | `search_products` | Productos | query | Busca productos en tu tienda online o en el CRM configurado |
+| `send_ai_ticket_customer_reply` | Tickets IA | mutation | Envia al cliente un borrador seguro. El endpoint aplica control anti-filtracion contra notas internas antes de enviar. |
 | `send_email_reply` | Email | mutation | Envia una respuesta a un hilo de email existente o compone un nuevo email |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
 | `send_whatsapp_message` | WhatsApp | mutation | Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345... |
