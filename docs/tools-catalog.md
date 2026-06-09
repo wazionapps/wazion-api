@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 396 (excluding hidden)
+> Total tools: 392 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -36,7 +36,6 @@
 | `check_docqa_file_status` | Plugins | query | Comprueba el estado de procesamiento de los archivos subidos a un asistente Doc-QA |
 | `check_plugin_conversation_note` | Plugins | query | Comprueba si ya existe una nota guardada para una sesion de chat del plugin y muestra los datos del cliente asociado. |
 | `check_whatsapp_optout` | WhatsApp | query | Comprueba si un numero de telefono esta en la lista de opt-out de automatizacion WhatsApp |
-| `close_ai_ticket` | Tickets IA | mutation | Marca un ticket interno como cerrado. |
 | `configure_ecommerce_locales` | Integraciones | mutation | Configura como se manejan los idiomas y URLs de tu plataforma e-commerce |
 | `configure_plugin_chat` | Plugins | mutation | Configura el widget de chat web. Soporta actualizacion parcial: solo envia los campos que quieras cambiar. Los campos... |
 | `configure_plugin_productqa` | Plugins | mutation | Activa y configura el widget de preguntas sobre productos |
@@ -119,7 +118,6 @@
 | `get_ai_errors` | Base de Conocimiento | query | List active AI corrections for this assistant. To list ALL corrections, pass no parameters. Only use category or quer... |
 | `get_ai_summary` | Analisis IA | query | Genera un resumen de una conversacion usando IA. Tipos: quick (breve), detailed (completo), actionable (acciones pend... |
 | `get_ai_ticket` | Tickets IA | query | Obtiene un ticket interno con mensajes, eventos, adjuntos y contexto de cliente/conversacion. |
-| `get_ai_tickets_stats` | Tickets IA | query | Devuelve contadores de tickets internos: abiertos, sin asignar, asignados a mi, urgentes, vencidos y cerrados. |
 | `get_analytics` | Estadisticas | query | Muestra metricas de rendimiento: conversaciones, mensajes, actividad diaria |
 | `get_api_key` | Avanzado | query | Muestra la API key actual de la tienda (token_ext) y la URL del servidor MCP. Usa esta accion cuando el usuario pregu... |
 | `get_api_usage_stats` | Actividad | query | Consumo de tokens y costes por modelo de IA |
@@ -234,7 +232,6 @@
 | `import_vapi_voice_config` | Asistente de Voz | mutation | Lee el assistant actual en Vapi con la API key guardada y sincroniza hacia WAzion solo los campos seguros soportados:... |
 | `improve_prompt` | Prompt e IA | query | Analiza el prompt actual con IA y devuelve puntuaciones por categoria, sugerencias de mejora y una version mejorada d... |
 | `keep_both_knowledge_snippets` | Base de Conocimiento | mutation | Mantiene ambos snippets en conflicto activando los dos |
-| `link_ai_ticket_file` | Tickets IA | mutation | Vincula un archivo existente de una conversacion al ticket como adjunto interno o candidato para el cliente. |
 | `link_email_contact` | Email | mutation | Vincula un contacto de WhatsApp a un hilo de email para asociar conversaciones |
 | `link_oauth_calendar` | Calendario | mutation | Vincula un calendario externo (Google/Microsoft) a la tienda |
 | `list_agents` | Agentes | query | Lista todos los agentes del comercio con detalles de perfil y permisos |
@@ -362,7 +359,6 @@
 | `unsnooze_email_thread` | Email | mutation | Reactiva un hilo de email que estaba pospuesto, devolviendolo a estado abierto. |
 | `update_agent` | Agentes | mutation | Modifica los datos de un agente existente |
 | `update_ai_error` | Base de Conocimiento | mutation | Update an existing AI correction. Can change the content, category, or status (active/rejected). |
-| `update_ai_ticket` | Tickets IA | mutation | Actualiza campos de un ticket interno: titulo, descripcion, estado, prioridad, categoria o fecha limite. |
 | `update_billing_info` | Cuenta | mutation | Actualiza los datos de facturacion para las facturas |
 | `update_business_info` | Configuracion General | mutation | Actualiza el tipo de negocio, tipo de venta y descripcion del negocio. Esta informacion ayuda a la IA a entender mejo... |
 | `update_business_name` | Configuracion General | mutation | Actualiza el nombre publico de tu negocio. Se muestra en los mensajes de marketing y en la pagina de baja de WhatsApp. |

@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    396 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    392 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -826,23 +826,6 @@ components:
           type: string
           description: "Numero de telefono a verificar (con prefijo internacional)"
       required: ["action", "phone"]
-
-    CloseAiTicketArgs:
-      description: |
-        **close_ai_ticket** [tickets] (mutation)
-        Marca un ticket interno como cerrado.
-      type: object
-      properties:
-        action:
-          type: string
-          description: "Accion fija"
-        ticket_id:
-          type: integer
-          description: "ID del ticket"
-        reason:
-          type: string
-          description: "Motivo interno del cierre"
-      required: ["action", "ticket_id"]
 
     ConfigureEcommerceLocalesArgs:
       description: |
@@ -2721,17 +2704,6 @@ components:
         ticket_uid:
           type: string
           description: "UID publico interno del ticket, por ejemplo TKT-260609-ABC123"
-      required: ["action"]
-
-    GetAiTicketsStatsArgs:
-      description: |
-        **get_ai_tickets_stats** [tickets] (query)
-        Devuelve contadores de tickets internos: abiertos, sin asignar, asignados a mi, urgentes, vencidos y cerrados.
-      type: object
-      properties:
-        action:
-          type: string
-          description: "Accion fija"
       required: ["action"]
 
     GetAnalyticsArgs:
@@ -4964,27 +4936,6 @@ components:
           type: integer
           description: "ID del snippet en conflicto"
       required: ["action", "id"]
-
-    LinkAiTicketFileArgs:
-      description: |
-        **link_ai_ticket_file** [tickets] (mutation)
-        Vincula un archivo existente de una conversacion al ticket como adjunto interno o candidato para el cliente.
-      type: object
-      properties:
-        action:
-          type: string
-          description: "Accion fija"
-        ticket_id:
-          type: integer
-          description: "ID del ticket"
-        conversation_file_id:
-          type: integer
-          description: "ID del archivo de conversacion a adjuntar"
-        visibility:
-          type: string
-          description: "Visibilidad del adjunto: interno o candidato para enviar al cliente"
-          enum: ["internal", "customer_candidate"]
-      required: ["action", "ticket_id", "conversation_file_id"]
 
     LinkEmailContactArgs:
       description: |
@@ -7406,39 +7357,6 @@ components:
           description: "New status: active or rejected"
       required: ["id"]
 
-    UpdateAiTicketArgs:
-      description: |
-        **update_ai_ticket** [tickets] (mutation)
-        Actualiza campos de un ticket interno: titulo, descripcion, estado, prioridad, categoria o fecha limite.
-      type: object
-      properties:
-        action:
-          type: string
-          description: "Accion fija"
-        ticket_id:
-          type: integer
-          description: "ID del ticket"
-        title:
-          type: string
-          description: "Nuevo titulo del ticket"
-        description:
-          type: string
-          description: "Nueva descripcion interna"
-        status:
-          type: string
-          description: "Nuevo estado del ticket"
-        priority:
-          type: string
-          description: "Nueva prioridad interna"
-          enum: ["P0", "P1", "P2", "P3"]
-        category:
-          type: string
-          description: "Nueva categoria interna"
-        due_at:
-          type: string
-          description: "Fecha limite en formato YYYY-MM-DD HH:MM:SS"
-      required: ["action", "ticket_id"]
-
     UpdateBillingInfoArgs:
       description: |
         **update_billing_info** [account] (mutation)
@@ -8444,7 +8362,7 @@ components:
           description: "Objeto con 'logic' (AND/OR) y 'rules' (array de condiciones). Si no se envia, se mantienen las condiciones actuales"
         actions:
           type: array
-          description: "Array de acciones a ejecutar. Si no se envia, se mantienen las acciones actuales. IMPORTANTE: si envias este campo, debes enviar el array COMPLETO de acciones (no solo la que cambias). Para editar solo el mensaje de una accion reply/reply_with_ai: 1) llama list_whatsapp_workflows para obtener las acciones actuales, 2) modifica solo el campo que necesitas, 3) envia el array completo con todos los valores existentes preservados. Tipos soportados: reply_with_ai (con pre_send_check opcional), reply (con no_repeat opcional), delay (seconds: 1-300, OBLIGATORIO), ai_filter (filtro IA que decide si responder, previene bucles, ideal como primera accion), ai_archive_decision (decide si archivar; archive_policy:'always' o 'preserve_if_previously_archived'), create_ticket (crea/actualiza Ticket IA interno; campos ticket_title, priority, category, instructions; no envia nada al cliente). Para ai_filter y ai_archive_decision se puede añadir prompt:'instrucciones' para personalizar criterios. En ai_archive_decision, archiva cuando no queda tarea humana aunque el siguiente paso sea del cliente. archive_policy define que hacer si la IA decide ARCHIVAR: 'always' archiva el chat; 'preserve_if_previously_archived' archiva solo si el chat no estaba activo antes del mensaje. VALIDACION: cada accion delay DEBE tener 'seconds' entre 1 y 300. Si copias un delay existente, manten su valor original de seconds."
+          description: "Array de acciones a ejecutar. Si no se envia, se mantienen las acciones actuales. IMPORTANTE: si envias este campo, debes enviar el array COMPLETO de acciones (no solo la que cambias). Para editar solo el mensaje de una accion reply/reply_with_ai: 1) llama list_whatsapp_workflows para obtener las acciones actuales, 2) modifica solo el campo que necesitas, 3) envia el array completo con todos los valores existentes preservados. Tipos soportados: reply_with_ai (con pre_send_check opcional), reply (con no_repeat opcional), delay (seconds: 1-300, OBLIGATORIO), ai_filter (filtro IA que decide si responder, previene bucles, ideal como primera accion), ai_archive_decision (decide si archivar; archive_policy:'always' o 'preserve_if_previously_archived'). Para ai_filter y ai_archive_decision se puede añadir prompt:'instrucciones' para personalizar criterios. En ai_archive_decision, archiva cuando no queda tarea humana aunque el siguiente paso sea del cliente. archive_policy define que hacer si la IA decide ARCHIVAR: 'always' archiva el chat; 'preserve_if_previously_archived' archiva solo si el chat no estaba activo antes del mensaje. VALIDACION: cada accion delay DEBE tener 'seconds' entre 1 y 300. Si copias un delay existente, manten su valor original de seconds."
         session_id:
           type: integer
           description: "ID de la sesion de WhatsApp a la que asignar este workflow. null = todos los numeros. Usa get_whatsapp_status para ver las sesiones."
