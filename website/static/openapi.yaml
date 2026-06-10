@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    392 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    400 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -246,6 +246,27 @@ components:
             - type: integer
 
     # ── Tool Schemas ──────────────────────────────────
+
+    AddAiTicketAgentResolutionArgs:
+      description: |
+        **add_ai_ticket_agent_resolution** [tickets] (mutation)
+        Registra una resolucion interna del agente y encola un seguimiento al cliente. La IA genera el mensaje final al cliente a partir de esta resolucion antes de enviarlo.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        body:
+          type: string
+          description: "Resolucion interna del agente que se usara para generar el mensaje al cliente"
+        resolve_after_notify:
+          type: boolean
+          description: "Si true, marca el ticket como resuelto tras notificar al cliente"
+          default: true
+      required: ["action", "ticket_id", "body"]
 
     AddAiTicketNoteArgs:
       description: |
@@ -826,6 +847,23 @@ components:
           type: string
           description: "Numero de telefono a verificar (con prefijo internacional)"
       required: ["action", "phone"]
+
+    CloseAiTicketArgs:
+      description: |
+        **close_ai_ticket** [tickets] (mutation)
+        Cierra un ticket interno cuando el caso queda terminado. A diferencia de resolver, marca el ticket como cerrado definitivamente.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        reason:
+          type: string
+          description: "Motivo interno del cierre"
+      required: ["action", "ticket_id"]
 
     ConfigureEcommerceLocalesArgs:
       description: |
@@ -2704,6 +2742,34 @@ components:
         ticket_uid:
           type: string
           description: "UID publico interno del ticket, por ejemplo TKT-260609-ABC123"
+      required: ["action"]
+
+    GetAiTicketsSettingsArgs:
+      description: |
+        **get_ai_tickets_settings** [tickets] (query)
+        Devuelve si Tickets IA esta activado para la tienda y el prompt de sistema en uso.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
+
+    GetAiTicketsStatsArgs:
+      description: |
+        **get_ai_tickets_stats** [tickets] (query)
+        Obtiene metricas de tickets internos: abiertos, sin asignar, urgentes, vencidos, creados y resueltos en el periodo, tiempo medio de resolucion y series diarias.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        date_from:
+          type: string
+          description: "Fecha inicial del periodo (YYYY-MM-DD). Por defecto los ultimos 7 dias"
+        date_to:
+          type: string
+          description: "Fecha final del periodo (YYYY-MM-DD). Por defecto hoy"
       required: ["action"]
 
     GetAnalyticsArgs:
@@ -4937,6 +5003,28 @@ components:
           description: "ID del snippet en conflicto"
       required: ["action", "id"]
 
+    LinkAiTicketFileArgs:
+      description: |
+        **link_ai_ticket_file** [tickets] (mutation)
+        Adjunta un archivo de la conversacion al ticket interno. La visibilidad controla si el archivo es solo interno o candidato a enviarse al cliente.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        conversation_file_id:
+          type: integer
+          description: "ID del archivo de conversacion a vincular"
+        visibility:
+          type: string
+          description: "Visibilidad del adjunto"
+          enum: ["internal", "customer_candidate"]
+          default: "internal"
+      required: ["action", "ticket_id", "conversation_file_id"]
+
     LinkEmailContactArgs:
       description: |
         **link_email_contact** [email] (mutation)
@@ -6949,6 +7037,23 @@ components:
           description: "ID de la campana a iniciar"
       required: ["action", "campaign_id"]
 
+    SummarizeAiTicketArgs:
+      description: |
+        **summarize_ai_ticket** [tickets] (mutation)
+        Genera (o devuelve cacheado) un resumen del hilo del ticket con la situacion, contexto del cliente y proximos pasos. Usa force para regenerarlo.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        force:
+          type: boolean
+          description: "Si true, regenera el resumen aunque exista uno cacheado"
+      required: ["action", "ticket_id"]
+
     SyncKnowledgeNowArgs:
       description: |
         **sync_knowledge_now** [storage] (mutation)
@@ -7356,6 +7461,54 @@ components:
           type: string
           description: "New status: active or rejected"
       required: ["id"]
+
+    UpdateAiTicketArgs:
+      description: |
+        **update_ai_ticket** [tickets] (mutation)
+        Actualiza campos de un ticket interno: titulo, descripcion, estado, prioridad, categoria o fecha limite.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        ticket_id:
+          type: integer
+          description: "ID del ticket"
+        title:
+          type: string
+          description: "Nuevo titulo del ticket"
+        description:
+          type: string
+          description: "Nueva descripcion interna del caso"
+        status:
+          type: string
+          description: "Nuevo estado del ticket"
+          enum: ["new", "pending_customer", "pending_internal", "agent_replied", "customer_notified", "resolved", "closed", "reopened", "escalated"]
+        priority:
+          type: string
+          description: "Nueva prioridad interna"
+          enum: ["P0", "P1", "P2", "P3"]
+        category:
+          type: string
+          description: "Nueva categoria interna"
+        due_at:
+          type: string
+          description: "Fecha limite (YYYY-MM-DD HH:MM:SS)"
+      required: ["action", "ticket_id"]
+
+    UpdateAiTicketsSettingsArgs:
+      description: |
+        **update_ai_tickets_settings** [tickets] (mutation)
+        Activa o desactiva el sistema de Tickets IA para la tienda.
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        enabled:
+          type: boolean
+          description: "true para activar Tickets IA, false para desactivarlo"
+      required: ["action", "enabled"]
 
     UpdateBillingInfoArgs:
       description: |
