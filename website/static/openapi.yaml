@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    400 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    402 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -4124,6 +4124,17 @@ components:
           type: integer
           description: "Cantidad de conversaciones recientes a incluir (default 50)"
           default: 50
+
+    GetTasksSettingsArgs:
+      description: |
+        **get_tasks_settings** [tasks] (query)
+        Consulta si el modulo de tareas esta activado para la tienda
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+      required: ["action"]
 
     GetTeamSummaryArgs:
       description: |
@@ -8435,6 +8446,20 @@ components:
           type: boolean
           description: "Incluir tareas completadas"
       required: ["action", "task_id"]
+
+    UpdateTasksSettingsArgs:
+      description: |
+        **update_tasks_settings** [tasks] (mutation)
+        Activa o desactiva el modulo de tareas para la tienda
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Accion fija"
+        enabled:
+          type: boolean
+          description: "Si el modulo de tareas debe quedar activado (true) o desactivado (false)"
+      required: ["action", "enabled"]
 
     UpdateTimezoneArgs:
       description: |

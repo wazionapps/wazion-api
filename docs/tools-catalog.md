@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 400 (excluding hidden)
+> Total tools: 402 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -190,6 +190,7 @@
 | `get_smart_reply_suggestions` | Analisis IA | query | Genera 3 sugerencias de respuesta basadas en la conversacion actual |
 | `get_storage_status` | Almacenamiento | query | Muestra el uso actual de almacenamiento y el plan activo |
 | `get_structured_analytics` | Estadisticas | query | Obtiene analytics detallados de conversaciones usando structured outputs: KPIs, distribucion por intencion, sentimien... |
+| `get_tasks_settings` | Tareas | query | Consulta si el modulo de tareas esta activado para la tienda |
 | `get_team_summary` | Agentes | query | Vista general de todos los agentes con su carga de trabajo actual |
 | `get_top_asked_products` | Productos | query | Muestra los productos sobre los que mas preguntan los clientes en el plugin Q&A |
 | `get_top_topics` | Actividad | query | Muestra los temas/intenciones mas comunes en las conversaciones |
@@ -399,6 +400,7 @@
 | `update_scheduled_message` | WhatsApp | mutation | Updates a pending scheduled WhatsApp message. Can modify the text, datetime, and/or sending session. Only pending mes... |
 | `update_store_url` | Configuracion General | mutation | Actualiza la URL de tu tienda online |
 | `update_task` | Tareas | mutation | Modifica una tarea existente: cambiar estado, texto, prioridad, fecha limite o asignacion |
+| `update_tasks_settings` | Tareas | mutation | Activa o desactiva el modulo de tareas para la tienda |
 | `update_timezone` | Configuracion General | mutation | Cambia la zona horaria para mostrar fechas y horas correctamente |
 | `update_whatsapp_profile` | WhatsApp | mutation | Actualiza campos del perfil de WhatsApp: info/about, y datos de empresa (descripcion, direccion, email, web, horario)... |
 | `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada. Util para identificar numeros (ej: 'Soporte', 'Ve... |
