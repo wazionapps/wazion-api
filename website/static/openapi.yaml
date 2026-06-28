@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    402 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    404 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -864,6 +864,35 @@ components:
           type: string
           description: "Motivo interno del cierre"
       required: ["action", "ticket_id"]
+
+    ConfigureAiLearningArgs:
+      description: |
+        **configure_ai_learning** [prompt] (mutation)
+        Configura el modo de despliegue del aprendizaje automatico para un canal concreto (off, sombra, suave, forzado), cuantas reglas se aplican como maximo y que categorias estan habilitadas o forzadas.
+      type: object
+      properties:
+        action:
+          type: string
+        surface:
+          type: string
+          description: "Canal al que aplica la configuracion (all=todos, chatgpt, whatsapp_workflow, ticket, plugin_chat, email, voice, dashboard)"
+          enum: ["all", "chatgpt", "whatsapp_workflow", "ticket", "plugin_chat", "email", "voice", "dashboard"]
+        mode:
+          type: string
+          description: "Modo de despliegue: off=desactivado, shadow=solo observa, soft=sugiere, enforced=aplica las reglas"
+          enum: ["off", "shadow", "soft", "enforced"]
+          default: "shadow"
+        max_rules:
+          type: integer
+          description: "Numero maximo de reglas que se aplican (entre 1 y 12)"
+          default: 5
+        enabled_categories:
+          type: array
+          description: "Lista de categorias de reglas habilitadas para este canal"
+        enforced_categories:
+          type: array
+          description: "Lista de categorias de reglas que se aplican de forma forzada en este canal"
+      required: ["action", "surface"]
 
     ConfigureEcommerceLocalesArgs:
       description: |
@@ -2689,6 +2718,17 @@ components:
         query:
           type: string
           description: "OPTIONAL single keyword search. Omit to get ALL corrections. Use single words only, not sentences."
+
+    GetAiLearningInsightsArgs:
+      description: |
+        **get_ai_learning_insights** [stats] (query)
+        Muestra metricas del sistema de aprendizaje trazable: KPIs de uso de reglas, eventos de aprendizaje, distribucion por canal, reglas mas usadas y eventos recientes.
+      type: object
+      properties:
+        days:
+          type: integer
+          description: "Ventana de dias a analizar (entre 1 y 90, por defecto 30)"
+          default: 30
 
     GetAiSummaryArgs:
       description: |

@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 402 (excluding hidden)
+> Total tools: 404 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -38,6 +38,7 @@
 | `check_plugin_conversation_note` | Plugins | query | Comprueba si ya existe una nota guardada para una sesion de chat del plugin y muestra los datos del cliente asociado. |
 | `check_whatsapp_optout` | WhatsApp | query | Comprueba si un numero de telefono esta en la lista de opt-out de automatizacion WhatsApp |
 | `close_ai_ticket` | Tickets IA | mutation | Cierra un ticket interno cuando el caso queda terminado. A diferencia de resolver, marca el ticket como cerrado defin... |
+| `configure_ai_learning` | Prompt e IA | mutation | Configura el modo de despliegue del aprendizaje automatico para un canal concreto (off, sombra, suave, forzado), cuan... |
 | `configure_ecommerce_locales` | Integraciones | mutation | Configura como se manejan los idiomas y URLs de tu plataforma e-commerce |
 | `configure_plugin_chat` | Plugins | mutation | Configura el widget de chat web. Soporta actualizacion parcial: solo envia los campos que quieras cambiar. Los campos... |
 | `configure_plugin_productqa` | Plugins | mutation | Activa y configura el widget de preguntas sobre productos |
@@ -118,6 +119,7 @@
 | `get_agent_stats` | Agentes | query | Metricas de rendimiento del equipo: mensajes enviados, recibidos, tareas completadas |
 | `get_agent_tasks` | Tareas | query | Muestra las tareas asignadas a un agente especifico |
 | `get_ai_errors` | Base de Conocimiento | query | List active AI corrections for this assistant. To list ALL corrections, pass no parameters. Only use category or quer... |
+| `get_ai_learning_insights` | Estadisticas | query | Muestra metricas del sistema de aprendizaje trazable: KPIs de uso de reglas, eventos de aprendizaje, distribucion por... |
 | `get_ai_summary` | Analisis IA | query | Genera un resumen de una conversacion usando IA. Tipos: quick (breve), detailed (completo), actionable (acciones pend... |
 | `get_ai_ticket` | Tickets IA | query | Obtiene un ticket interno con mensajes, eventos, adjuntos y contexto de cliente/conversacion. |
 | `get_ai_tickets_settings` | Tickets IA | query | Devuelve si Tickets IA esta activado para la tienda y el prompt de sistema en uso. |
