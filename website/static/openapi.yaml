@@ -6953,7 +6953,13 @@ components:
           description: "Texto del mensaje a enviar. OBLIGATORIO - no enviar vacio"
         session_id:
           type: integer
-          description: "ID de sesion especifica (opcional, usa la primera conectada)"
+          description: "ID de sesion especifica legacy (opcional). Si se indica from_phone, from_phone tiene prioridad."
+        from_phone:
+          type: string
+          description: "Numero emisor opcional en formato E.164 (ej: +34612345678). Si se indica, se envia solo desde esa linea conectada y no se aplica el filtro marketing."
+        marketing:
+          type: boolean
+          description: "Preferencia de linea: true prefiere lineas con Marketing Masivo, false prefiere lineas operativas. Si solo hay una linea, o no hay candidatas del tipo pedido, se envia igualmente por una linea conectada."
         archive_after_send:
           type: boolean
           description: "Archivar chat tras enviar. Si se usa archive_policy, esta bandera queda como compatibilidad legacy."
