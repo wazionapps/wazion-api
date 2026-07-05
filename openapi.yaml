@@ -3048,13 +3048,17 @@ paths:
       - Automatizacion
   /dashboard/api/ops_whatsapp.php:
     post:
-      description: 'Envia un mensaje de WhatsApp a un telefono. El numero debe incluir
+      description: 'Envia o acepta en cola un mensaje de WhatsApp a un telefono. El numero debe incluir
         prefijo internacional formato E.164 (ej: +34612345678). Si el usuario da un
         numero sin prefijo, preguntale el pais antes de enviar. IMPORTANTE: Esta accion
         requiere confirmacion. Cuando la llames, recibiras requires_confirmation=true
         y success=false - esto es NORMAL, NO es un error. Simplemente describe al
         usuario lo que se va a enviar y PARA. El sistema mostrara botones de confirmar/cancelar
-        automaticamente. NO reintentes la accion.'
+        automaticamente. NO reintentes la accion. Tras confirmar, la respuesta puede ser
+        status=sent con message_id real, o status=queued con queue_id cuando el guardrail
+        de ritmo retrasa el envio fisico. status=queued significa aceptado en cola, no
+        enviado real todavia. Para consultar la cola usa este mismo endpoint con
+        action=outbound_queue_status y queue_id.'
       operationId: send_whatsapp_message
       requestBody:
         content:
@@ -3093,6 +3097,24 @@ paths:
                 properties:
                   data:
                     type: object
+                  accepted:
+                    type: boolean
+                  status:
+                    enum:
+                    - sent
+                    - queued
+                    type: string
+                  queued:
+                    type: boolean
+                  queue_id:
+                    nullable: true
+                    type: integer
+                  scheduled_at:
+                    nullable: true
+                    type: string
+                  message_id:
+                    nullable: true
+                    type: string
                   success:
                     type: boolean
                 type: object

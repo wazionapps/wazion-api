@@ -9,6 +9,8 @@ PHONE="+34600000000"
 MESSAGE="Hello from WAzion API!"
 SESSION_ID=1
 
+# If the response contains status="queued", poll
+# get_whatsapp_outbound_queue_status before treating it as physically sent.
 curl -s -X POST "$API_URL" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $WAZION_TOKEN" \

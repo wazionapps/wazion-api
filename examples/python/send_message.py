@@ -68,7 +68,8 @@ def main():
         print(f"Tool Error: {text}", file=sys.stderr)
         sys.exit(1)
 
-    # Success
+    # Success. If the tool text contains status="queued", poll
+    # get_whatsapp_outbound_queue_status before treating it as physically sent.
     text = tool_result["content"][0]["text"]
     print(f"Success: {text}")
 

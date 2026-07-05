@@ -2,7 +2,7 @@
 
 Public API documentation for [WAzion](https://www.wazion.com) -- the WhatsApp Business automation and AI assistant platform.
 
-WAzion exposes **244 tools** via the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) over JSON-RPC 2.0, covering:
+WAzion exposes its tools via the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) over JSON-RPC 2.0, covering:
 
 - WhatsApp messaging, sessions, and templates
 - AI conversation summaries, sentiment analysis, and smart replies
@@ -59,6 +59,11 @@ curl -X POST https://www.wazion.com/api/mcp/ \
   }'
 ```
 
+If the WhatsApp rate guardrail delays the physical send, `send_whatsapp_message`
+returns `success: true`, `status: "queued"` and a `queue_id`. Treat that as
+accepted, not physically sent yet; poll `get_whatsapp_outbound_queue_status`
+until `status: "sent"` includes a real `message_id`.
+
 ## Use as MCP Server
 
 WAzion works natively with any MCP-compatible client (Claude Desktop, Cursor, VS Code, ChatGPT, etc.).
@@ -91,7 +96,7 @@ Add to your MCP configuration:
 | [Knowledge Base](docs/knowledge-base.md) | Document management for AI context |
 | [Webhooks](docs/webhooks.md) | Webhook configuration, custom functions, CRM endpoints |
 | [Error Codes](docs/errors.md) | Error codes and troubleshooting |
-| [Tools Catalog](docs/tools-catalog.md) | Complete table of all 244 tools |
+| [Tools Catalog](docs/tools-catalog.md) | Complete table of available tools |
 
 ## Code Examples
 
@@ -117,7 +122,7 @@ WAzion uses **JSON-RPC 2.0** over HTTP POST (MCP Streamable HTTP transport).
 | Method | Auth | Description |
 |--------|------|-------------|
 | `initialize` | No | MCP handshake |
-| `tools/list` | Yes | List all 244 available tools |
+| `tools/list` | Yes | List all available tools |
 | `tools/call` | Yes | Execute a tool |
 | `resources/list` | Yes | List available resources |
 | `resources/read` | Yes | Read a resource (e.g. `shop://profile`) |

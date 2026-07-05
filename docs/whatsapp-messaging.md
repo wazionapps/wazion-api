@@ -12,7 +12,7 @@ Send and receive WhatsApp messages, manage sessions, schedule messages, and use 
 
 ## Sending a Message
 
-Use the `send_whatsapp_message` tool to send a text message:
+Use the `send_whatsapp_message` tool to send or queue a text message:
 
 ### curl
 
@@ -66,6 +66,15 @@ def send_message(token, phone, message, session_id):
 result = send_message("wz_abc123...", "+34600000000", "Hello!", 1)
 print(result)
 ```
+
+### Delivery acknowledgement
+
+`success: true` means WAzion accepted the request. When the WhatsApp rate
+guardrail needs to delay the physical send, the response includes
+`status: "queued"` and a `queue_id`; this is not a real WhatsApp `message_id`
+yet. If your integration needs proof of physical send, call
+`get_whatsapp_outbound_queue_status` with that `queue_id` until it returns
+`status: "sent"` and a non-empty `message_id`.
 
 ## Archiving a Chat
 
@@ -297,6 +306,7 @@ Respect customer opt-out preferences:
 
 - The `session_id` parameter refers to the internal session ID (integer), not the phone number. Use `get_whatsapp_status` to find session IDs.
 - Messages are sent through the WAzion VPS WhatsApp bridge, not the official WhatsApp Business API. This means standard WhatsApp rate limits apply.
+- Under rate guardrails, a send can be accepted as `queued`; do not treat it as physically sent until a real `message_id` is available.
 - The `archive_after_send` parameter in `send_whatsapp_message` will archive the chat on WhatsApp after sending.
 - Use `archive_whatsapp_chat` when you only want to archive/unarchive an existing chat by phone number.
 - Minimum 3 seconds between messages per session (rate limited server-side).

@@ -934,7 +934,7 @@ components:
           description: "true para activar el plugin, false para desactivar"
         allowed_domains:
           type: array
-          description: "Lista de dominios donde funcionara el chat (ej: ["tutienda.com", "www.tutienda.com"]). Vacio [] para permitir todos."
+          description: 'Lista de dominios donde funcionara el chat (ej: ["tutienda.com", "www.tutienda.com"]). Vacio [] para permitir todos.'
         config_design:
           type: object
           description: "Configuracion visual del widget. Se mergea con valores existentes: puedes enviar solo lo que quieras cambiar."
@@ -957,7 +957,7 @@ components:
           enum: ["es", "en", "de", "fr", "pt", "it", "hu"]
         language_available:
           type: array
-          description: "Lista de idiomas disponibles (ej: ["es", "en", "de"])"
+          description: 'Lista de idiomas disponibles (ej: ["es", "en", "de"])'
         language_show_selector:
           type: boolean
           description: "Mostrar selector de idioma en el widget"
@@ -6447,7 +6447,7 @@ components:
           description: "ID del agente"
         permissions:
           type: object_or_null
-          description: "Objeto con permisos (ej: {"ai_generate": true, "notes_view": true, "crm_edit": false}). null = todos los permisos"
+          description: 'Objeto con permisos (ej: {"ai_generate": true, "notes_view": true, "crm_edit": false}). null = todos los permisos'
       required: ["action", "id", "permissions"]
 
     SaveAsWhatsappTemplateArgs:
@@ -7506,7 +7506,7 @@ components:
           description: "Nuevo PIN numerico para identificacion en la extension de Chrome"
         permissions_json:
           type: string
-          description: "JSON string con los permisos del agente (ej: {"ai_generate": true, "notes_view": true}). Alternativa a save_agent_permissions."
+          description: 'JSON string con los permisos del agente (ej: {"ai_generate": true, "notes_view": true}). Alternativa a save_agent_permissions.'
         permissions:
           type: object
           description: "Permisos del agente (objeto JSON con permisos por seccion)"
@@ -8004,7 +8004,7 @@ components:
       properties:
         add_crm_endpoint:
           type: string
-          description: "JSON de UN endpoint para ANADIR sin borrar los existentes. Formato: {"type": "TIPO", "url": "https://...", "method": "GET|POST"}. Tipos validos: sidePanel_CustomerInfo, ai_CustomerInitialInfo, sidePanel_CustomerFindToJoin, search_Products, globalSearch, verify_conversion. USAR SIEMPRE ESTE."
+          description: 'JSON de UN endpoint para ANADIR sin borrar los existentes. Formato: {"type": "TIPO", "url": "https://...", "method": "GET|POST"}. Tipos validos: sidePanel_CustomerInfo, ai_CustomerInitialInfo, sidePanel_CustomerFindToJoin, search_Products, globalSearch, verify_conversion. USAR SIEMPRE ESTE.'
         remove_crm_endpoint:
           type: string
           description: "Tipo del endpoint a eliminar"
@@ -8051,7 +8051,7 @@ components:
       properties:
         add_tag:
           type: string
-          description: "JSON de UNA etiqueta para ANADIR sin borrar las existentes. Formato: {"name": "VIP", "color": "#ff0000"}. USAR SIEMPRE ESTE."
+          description: 'JSON de UNA etiqueta para ANADIR sin borrar las existentes. Formato: {"name": "VIP", "color": "#ff0000"}. USAR SIEMPRE ESTE.'
         remove_tag:
           type: string
           description: "Nombre de la etiqueta a eliminar"
@@ -8410,7 +8410,7 @@ components:
           description: "Email a eliminar de la lista de ignorados"
         add_helper:
           type: string
-          description: "JSON para crear o actualizar un atajo. Formato: {"name": "NOMBRE_CORTO", "text": "TEXTO_DEL_ATAJO", "send": true/false}. El campo 'send' activa el envio automatico (el atajo se envia al cliente sin que el agente pulse enviar). Si no se incluye 'send', se desactiva por defecto. Ejemplo con envio automatico: {"name": "compra VIN ok", "text": "la compra esta correcta para dicho numero de bastidor", "send": true}. Si ya existe un atajo con el mismo nombre, se actualiza (util para activar/desactivar envio automatico sin recrear el atajo)."
+          description: 'JSON para crear o actualizar un atajo. Formato: {"name": "NOMBRE_CORTO", "text": "TEXTO_DEL_ATAJO", "send": true/false}. El campo "send" activa el envio automatico (el atajo se envia al cliente sin que el agente pulse enviar). Si no se incluye "send", se desactiva por defecto. Ejemplo con envio automatico: {"name": "compra VIN ok", "text": "la compra esta correcta para dicho numero de bastidor", "send": true}. Si ya existe un atajo con el mismo nombre, se actualiza (util para activar/desactivar envio automatico sin recrear el atajo).'
         remove_helper:
           type: string
           description: "Nombre corto del atajo a eliminar (ej: bastidor)"

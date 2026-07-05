@@ -72,6 +72,8 @@ try {
         'session_id' => 1,
     ]);
 
+    // If this contains status="queued", poll get_whatsapp_outbound_queue_status
+    // before treating the message as physically sent.
     echo "Success: " . $result['content'][0]['text'] . "\n";
 } catch (RuntimeException $e) {
     fwrite(STDERR, "Error: " . $e->getMessage() . "\n");

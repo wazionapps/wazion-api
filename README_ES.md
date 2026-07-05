@@ -2,7 +2,7 @@
 
 Documentacion publica de la API de [WAzion](https://www.wazion.com) -- la plataforma de automatizacion de WhatsApp Business con asistente IA.
 
-WAzion expone **244 herramientas** mediante el [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) sobre JSON-RPC 2.0, cubriendo:
+WAzion expone sus herramientas mediante el [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) sobre JSON-RPC 2.0, cubriendo:
 
 - Mensajeria WhatsApp, sesiones y plantillas
 - Resumenes de conversaciones con IA, analisis de sentimiento y respuestas inteligentes
@@ -59,6 +59,12 @@ curl -X POST https://www.wazion.com/api/mcp/ \
   }'
 ```
 
+Si el guardrail de ritmo de WhatsApp retrasa el envio fisico,
+`send_whatsapp_message` devuelve `success: true`, `status: "queued"` y un
+`queue_id`. Tratalo como aceptado, no como enviado real todavia; consulta
+`get_whatsapp_outbound_queue_status` hasta que `status: "sent"` incluya un
+`message_id` real.
+
 ## Usar como servidor MCP
 
 WAzion funciona nativamente con cualquier cliente compatible con MCP (Claude Desktop, Cursor, VS Code, ChatGPT, etc.).
@@ -91,7 +97,7 @@ Anade a tu configuracion MCP:
 | [Base de Conocimiento](docs/knowledge-base.md) | Gestion de documentos para contexto de la IA |
 | [Webhooks](docs/webhooks.md) | Configuracion de webhooks, funciones personalizadas, endpoints CRM |
 | [Codigos de Error](docs/errors.md) | Codigos de error y resolucion de problemas |
-| [Catalogo de Herramientas](docs/tools-catalog.md) | Tabla completa de las 244 herramientas |
+| [Catalogo de Herramientas](docs/tools-catalog.md) | Tabla completa de herramientas disponibles |
 
 ## Ejemplos de Codigo
 
@@ -117,7 +123,7 @@ WAzion usa **JSON-RPC 2.0** sobre HTTP POST (transporte MCP Streamable HTTP).
 | Metodo | Auth | Descripcion |
 |--------|------|-------------|
 | `initialize` | No | Handshake MCP |
-| `tools/list` | Si | Listar las 244 herramientas disponibles |
+| `tools/list` | Si | Listar las herramientas disponibles |
 | `tools/call` | Si | Ejecutar una herramienta |
 | `resources/list` | Si | Listar recursos disponibles |
 | `resources/read` | Si | Leer un recurso (ej: `shop://profile`) |

@@ -56,6 +56,8 @@ async function main() {
       session_id: 1,
     });
 
+    // If this contains status="queued", poll get_whatsapp_outbound_queue_status
+    // before treating the message as physically sent.
     console.log("Success:", result.content[0].text);
   } catch (error) {
     console.error("Error:", error.message);
