@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 404 (excluding hidden)
+> Total tools: 405 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -215,6 +215,7 @@
 | `get_whatsapp_health` | WhatsApp | query | Estado combinado de sesiones, actividad de mensajes 24h y workflows activos |
 | `get_whatsapp_live_chat_messages` | WhatsApp | query | Obtiene los mensajes recientes de un chat directamente desde el VPS de WhatsApp, combinando memoria viva y logs recie... |
 | `get_whatsapp_message_logs` | WhatsApp | query | Muestra los ultimos mensajes enviados y recibidos por WhatsApp |
+| `get_whatsapp_outbound_queue_status` | WhatsApp | query | Consulta el estado real de un mensaje de WhatsApp aceptado en cola por el guardrail anti-bloqueo. Usalo cuando send_w... |
 | `get_whatsapp_profile` | WhatsApp | query | Obtiene el perfil de WhatsApp de una sesion conectada: nombre, foto, estado/info, y datos de empresa si es WhatsApp B... |
 | `get_whatsapp_qr` | Automatizacion | query | Obtiene el codigo QR de WhatsApp para que el usuario lo escanee. IMPORTANTE: Requiere que exista una sesion previa (e... |
 | `get_whatsapp_response_time_stats` | WhatsApp | query | Muestra la distribucion horaria de mensajes entrantes y salientes de WhatsApp |
@@ -334,7 +335,7 @@
 | `send_ai_ticket_customer_reply` | Tickets IA | mutation | Envia al cliente un borrador seguro. El endpoint aplica control anti-filtracion contra notas internas antes de enviar. |
 | `send_email_reply` | Email | mutation | Envia una respuesta a un hilo de email existente o compone un nuevo email |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
-| `send_whatsapp_message` | WhatsApp | mutation | Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345... |
+| `send_whatsapp_message` | WhatsApp | mutation | Envia o acepta en cola un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.1... |
 | `set_ai_error` | Base de Conocimiento | mutation | Record a mistake in YOUR OWN responses or behavior (this dashboard chat). Call this when the user corrects you, AND w... |
 | `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use ON... |
 | `set_email_priority` | Email | mutation | Cambia la prioridad de un hilo de email. |

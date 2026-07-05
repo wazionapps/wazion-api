@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    404 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    405 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -4614,6 +4614,19 @@ components:
           description: "Buscar en contenido del mensaje"
       required: ["action"]
 
+    GetWhatsappOutboundQueueStatusArgs:
+      description: |
+        **get_whatsapp_outbound_queue_status** [whatsapp_ops] (query)
+        Consulta el estado real de un mensaje de WhatsApp aceptado en cola por el guardrail anti-bloqueo. Usalo cuando send_whatsapp_message devuelva queued:true o status:'queued'. Solo debe considerarse enviado real cuando status sea 'sent' y message_id tenga valor.
+      type: object
+      properties:
+        action:
+          type: string
+        queue_id:
+          type: integer
+          description: "queue_id devuelto por send_whatsapp_message cuando queued=true"
+      required: ["action", "queue_id"]
+
     GetWhatsappProfileArgs:
       description: |
         **get_whatsapp_profile** [whatsapp_ops] (query)
@@ -6939,7 +6952,7 @@ components:
     SendWhatsappMessageArgs:
       description: |
         **send_whatsapp_message** [whatsapp_ops] (mutation)
-        Envia un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345678). Si el usuario da un numero sin prefijo, preguntale el pais antes de enviar. IMPORTANTE: Esta accion requiere confirmacion. Cuando la llames, recibiras requires_confirmation=true y success=false - esto es NORMAL, NO es un error. Simplemente describe al usuario lo que se va a enviar y PARA. El sistema mostrara botones de confirmar/cancelar automaticamente. NO reintentes la accion.
+        Envia o acepta en cola un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345678). Si el usuario da un numero sin prefijo, preguntale el pais antes de enviar. IMPORTANTE: Esta accion requiere confirmacion. Cuando la llames, recibiras requires_confirmation=true y success=false - esto es NORMAL, NO es un error. Simplemente describe al usuario lo que se va a enviar y PARA. El sistema mostrara botones de confirmar/cancelar automaticamente. NO reintentes la accion. Tras confirmar, la respuesta puede incluir status:'queued' y queue_id si el guardrail anti-bloqueo aplaza el envio; queued significa aceptado, no message_id real todavia.
         ⚠️ Requires confirmation
       type: object
       properties:
