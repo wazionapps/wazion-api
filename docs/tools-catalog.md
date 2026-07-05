@@ -335,7 +335,7 @@
 | `send_ai_ticket_customer_reply` | Tickets IA | mutation | Envia al cliente un borrador seguro. El endpoint aplica control anti-filtracion contra notas internas antes de enviar. |
 | `send_email_reply` | Email | mutation | Envia una respuesta a un hilo de email existente o compone un nuevo email |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
-| `send_whatsapp_message` | WhatsApp | mutation | Envia o acepta en cola un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164. Si devuelve `status=queued`, usa `get_whatsapp_outbound_queue_status` hasta obtener `message_id` real. |
+| `send_whatsapp_message` | WhatsApp | mutation | Envia o acepta en cola un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.1... |
 | `set_ai_error` | Base de Conocimiento | mutation | Record a mistake in YOUR OWN responses or behavior (this dashboard chat). Call this when the user corrects you, AND w... |
 | `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use ON... |
 | `set_email_priority` | Email | mutation | Cambia la prioridad de un hilo de email. |
