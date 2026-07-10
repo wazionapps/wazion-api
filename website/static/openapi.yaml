@@ -8566,7 +8566,7 @@ components:
     UpdateWhatsappSessionArgs:
       description: |
         **update_whatsapp_session** [automation] (mutation)
-        Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada. Util para identificar numeros (ej: 'Soporte', 'Ventas').
+        Actualiza la etiqueta y el uso outbound de una sesion de WhatsApp. Usar outbound_role='primary' para el numero principal de conversaciones/workflows, 'operational' para pedidos/resenas/avisos y 'marketing' para campanas masivas.
       type: object
       properties:
         session_id:
@@ -8575,6 +8575,10 @@ components:
         label:
           type: string
           description: "Etiqueta para identificar la sesion (max 50 caracteres). Null para quitar la etiqueta."
+        outbound_role:
+          type: string
+          description: "Uso del numero: primary=conversaciones y workflows, operational=pedidos/resenas/avisos, marketing=campanas masivas. primary requiere que el numero ya este conectado."
+          enum: ["primary", "operational", "marketing"]
       required: ["session_id"]
 
     UpdateWhatsappWorkflowArgs:

@@ -406,7 +406,7 @@
 | `update_tasks_settings` | Tareas | mutation | Activa o desactiva el modulo de tareas para la tienda |
 | `update_timezone` | Configuracion General | mutation | Cambia la zona horaria para mostrar fechas y horas correctamente |
 | `update_whatsapp_profile` | WhatsApp | mutation | Actualiza campos del perfil de WhatsApp: info/about, y datos de empresa (descripcion, direccion, email, web, horario)... |
-| `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta (nombre) de una sesion de WhatsApp conectada. Util para identificar numeros (ej: 'Soporte', 'Ve... |
+| `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta y el uso outbound de una sesion de WhatsApp. Usar outbound_role='primary' para el numero princi... |
 | `update_whatsapp_workflow` | Automatizacion | mutation | Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar, activa... |
 | `upload_docqa_file` | Plugins | mutation | Sube un documento a un asistente Doc-QA para que pueda responder preguntas sobre su contenido |
 | `upload_email_attachment` | Email | mutation | Sube un archivo para adjuntarlo a un email |
