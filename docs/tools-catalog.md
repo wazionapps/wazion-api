@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 407 (excluding hidden)
+> Total tools: 408 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -44,7 +44,7 @@
 | `configure_plugin_productqa` | Plugins | mutation | Activa y configura el widget de preguntas sobre productos |
 | `configure_webhooks` | Avanzado | mutation | Modifica la configuracion de webhooks. ACTUALIZACION PARCIAL: solo se modifican los campos que envies; los que omitas... |
 | `connect_ecommerce` | Integraciones | mutation | Conecta tu tienda online (Shopify, WooCommerce, PrestaShop o VTEX) para buscar productos, pedidos y clientes. Pregunt... |
-| `connect_whatsapp` | WhatsApp | mutation | Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve un código QR para escanear con el teléfono. |
+| `connect_whatsapp` | WhatsApp | mutation | Inicia la conexión de un nuevo número y asigna uno o varios roles lógicos. Una tienda con un solo número puede usarlo... |
 | `count_filtered_contacts` | Marketing Masivo | query | Cuenta cuantos contactos de una lista cumplen con filtros de segmentacion (tags, actividad reciente, historial WhatsApp) |
 | `create_agent` | Agentes | mutation | Crea un nuevo agente de atencion. PREFLIGHT OBLIGATORIO: antes de llamar a esta accion, llama PRIMERO a list_agents p... |
 | `create_ai_ticket` | Tickets IA | mutation | Crea o actualiza un ticket interno para un cliente. No envia nada al cliente. El contenido de message/internal_note q... |
@@ -215,7 +215,8 @@
 | `get_whatsapp_health` | WhatsApp | query | Estado combinado de sesiones, actividad de mensajes 24h y workflows activos |
 | `get_whatsapp_live_chat_messages` | WhatsApp | query | Obtiene los mensajes recientes de un chat directamente desde el VPS de WhatsApp, combinando memoria viva y logs recie... |
 | `get_whatsapp_message_logs` | WhatsApp | query | Muestra los ultimos mensajes enviados y recibidos por WhatsApp |
-| `get_whatsapp_outbound_policy` | WhatsApp | query | Muestra la política de envío saliente de WhatsApp de la tienda: modo, número principal, orígenes a los que se aplica,... |
+| `get_whatsapp_outbound_delivery_status` | WhatsApp | query | Consulta y reconcilia el ledger durable de un envio WhatsApp mediante idempotency_key, siempre limitado a la tienda a... |
+| `get_whatsapp_outbound_policy` | WhatsApp | query | Muestra la política de envío saliente: modo, número con rol General, orígenes, pie de no respuesta y disponibilidad p... |
 | `get_whatsapp_outbound_queue_status` | WhatsApp | query | Consulta el estado real de un mensaje de WhatsApp aceptado en cola por el guardrail anti-bloqueo. Usalo cuando send_w... |
 | `get_whatsapp_profile` | WhatsApp | query | Obtiene el perfil de WhatsApp de una sesion conectada: nombre, foto, estado/info, y datos de empresa si es WhatsApp B... |
 | `get_whatsapp_qr` | Automatizacion | query | Obtiene el codigo QR de WhatsApp para que el usuario lo escanee. IMPORTANTE: Requiere que exista una sesion previa (e... |
@@ -341,7 +342,7 @@
 | `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use ON... |
 | `set_email_priority` | Email | mutation | Cambia la prioridad de un hilo de email. |
 | `set_email_tags` | Email | mutation | Establece las etiquetas de un hilo de email. Las etiquetas son strings libres. |
-| `set_whatsapp_outbound_policy` | WhatsApp | mutation | Configura la política de envío saliente de WhatsApp: modo (desactivada, auditoría o forzada), número principal, oríge... |
+| `set_whatsapp_outbound_policy` | WhatsApp | mutation | Configura el modo, los orígenes y el pie de no respuesta. El número físico se elige siempre por sus roles lógicos con... |
 | `smart_knowledge_update` | Prompt e IA | mutation | Busca y actualiza datos aprendidos que contradigan o estén desactualizados según la instrucción del usuario. Usa esto... |
 | `snooze_email_thread` | Email | mutation | Pospone un hilo de email hasta una fecha y hora especifica. El hilo se reabrira automaticamente cuando llegue el mome... |
 | `start_campaign` | Marketing Masivo | mutation | Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas. |
@@ -408,7 +409,7 @@
 | `update_tasks_settings` | Tareas | mutation | Activa o desactiva el modulo de tareas para la tienda |
 | `update_timezone` | Configuracion General | mutation | Cambia la zona horaria para mostrar fechas y horas correctamente |
 | `update_whatsapp_profile` | WhatsApp | mutation | Actualiza campos del perfil de WhatsApp: info/about, y datos de empresa (descripcion, direccion, email, web, horario)... |
-| `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta y el uso outbound de una sesion de WhatsApp. Usar outbound_role='primary' para el numero princi... |
+| `update_whatsapp_session` | Automatizacion | mutation | Actualiza la etiqueta y uno o varios roles lógicos de un número de WhatsApp. Un mismo número puede ser General, Opera... |
 | `update_whatsapp_workflow` | Automatizacion | mutation | Modifica un workflow existente (cambiar condiciones, añadir/quitar palabras clave, editar acciones, renombrar, activa... |
 | `upload_docqa_file` | Plugins | mutation | Sube un documento a un asistente Doc-QA para que pueda responder preguntas sobre su contenido |
 | `upload_email_attachment` | Email | mutation | Sube un archivo para adjuntarlo a un email |

@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    407 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    408 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1087,7 +1087,7 @@ components:
     ConnectWhatsappArgs:
       description: |
         **connect_whatsapp** [whatsapp_ops] (mutation)
-        Inicia el proceso de conexión de un nuevo número de WhatsApp. Devuelve un código QR para escanear con el teléfono.
+        Inicia la conexión de un nuevo número y asigna uno o varios roles lógicos. Una tienda con un solo número puede usarlo para General, Operaciones y Marketing; con varios números puede repartir o combinar roles.
       type: object
       properties:
         label:
@@ -1096,11 +1096,9 @@ components:
         force_new:
           type: boolean
           description: "Forzar creación de nueva sesión aunque haya sesiones desconectadas disponibles"
-        outbound_role:
-          type: string
-          description: "Rol de envío del número: principal (conversaciones), operativo (avisos/pedidos) o marketing (campañas)"
-          enum: ["primary", "operational", "marketing"]
-          default: "operational"
+        routing_roles:
+          type: array
+          description: "Roles del número: general (conversaciones/destino público), operations (avisos y pedidos) y/o marketing (campañas). Si es el primer número y se omite, se asignan los tres; los siguientes nacen como Operaciones."
 
     CountFilteredContactsArgs:
       description: |
@@ -4621,10 +4619,23 @@ components:
           description: "Buscar en contenido del mensaje"
       required: ["action"]
 
+    GetWhatsappOutboundDeliveryStatusArgs:
+      description: |
+        **get_whatsapp_outbound_delivery_status** [whatsapp_ops] (query)
+        Consulta y reconcilia el ledger durable de un envio WhatsApp mediante idempotency_key, siempre limitado a la tienda autenticada. Es el metodo preferido cuando el envio queda queued, retry_sending o sent_unconfirmed, incluso si el VPS no devolvio queue_id. Solo sent con message_id confirma envio fisico.
+      type: object
+      properties:
+        action:
+          type: string
+        idempotency_key:
+          type: string
+          description: "Clave estable usada al enviar. Para Vicshop: vicshop-wa-queue-{IdQueue}."
+      required: ["action", "idempotency_key"]
+
     GetWhatsappOutboundPolicyArgs:
       description: |
         **get_whatsapp_outbound_policy** [whatsapp_ops] (query)
-        Muestra la política de envío saliente de WhatsApp de la tienda: modo, número principal, orígenes a los que se aplica, pie de no respuesta y estado de disponibilidad de los números por rol.
+        Muestra la política de envío saliente: modo, número con rol General, orígenes, pie de no respuesta y disponibilidad por rol lógico.
       type: object
 
     GetWhatsappOutboundQueueStatusArgs:
@@ -7000,9 +7011,12 @@ components:
           type: string
           description: "Politica de archivado tras enviar: never no archiva; always archiva siempre; preserve_if_previously_archived conserva sin archivar solo los chats que ya estaban activos antes de enviar; si estaban archivados o no existian/no estaban en activos, los archiva tras enviar."
           enum: ["never", "always", "preserve_if_previously_archived"]
-        direction:
+        idempotency_key:
           type: string
-          description: "Filtrar por direccion"
+          description: "Clave estable del envio para deduplicar y consultar su entrega aunque no haya queue_id. Reutiliza exactamente la misma clave al reintentar la misma accion."
+        customer_locale:
+          type: string
+          description: "Idioma ISO del destinatario (por ejemplo es, en, de o fr) para plantillas, traducciones y mensajes auxiliares."
       required: ["action", "phone"]
 
     SetAiErrorArgs:
@@ -7077,16 +7091,13 @@ components:
     SetWhatsappOutboundPolicyArgs:
       description: |
         **set_whatsapp_outbound_policy** [whatsapp_ops] (mutation)
-        Configura la política de envío saliente de WhatsApp: modo (desactivada, auditoría o forzada), número principal, orígenes a los que aplica y el pie de no respuesta. Al forzar, cada mensaje se enruta al número del rol correspondiente.
+        Configura el modo, los orígenes y el pie de no respuesta. El número físico se elige siempre por sus roles lógicos configurados con update_whatsapp_session; no guardes ni envíes un ID de sesión en esta política.
       type: object
       properties:
         mode:
           type: string
           description: "Modo de la política: desactivada, auditoría (solo registra) o forzada (enruta los envíos)"
           enum: ["disabled", "audit", "enforced"]
-        primary_session_id:
-          type: integer
-          description: "ID de la sesión de WhatsApp que actúa como número principal (obligatorio cuando el modo no es desactivada; debe estar conectado)"
         apply_sources:
           type: array
           description: "Lista de orígenes de envío a los que aplica la política (usar ['*'] para todos)"
@@ -7099,6 +7110,15 @@ components:
         no_reply_footer_texts:
           type: object
           description: "Textos del pie de no respuesta por idioma"
+        inbound_redirect_enabled:
+          type: boolean
+          description: "Responder automáticamente cuando un cliente escribe a un número secundario y dirigirlo al número con rol General mediante un enlace de WhatsApp con su mensaje ya rellenado"
+        inbound_redirect_cooldown_seconds:
+          type: integer
+          description: "Tiempo mínimo entre respuestas de redirección al mismo cliente y número secundario (0-3600 segundos)"
+        inbound_redirect_texts:
+          type: object
+          description: "Texto de redirección por idioma; usa {url} para el enlace directo al número General con el mensaje original prerrellenado"
         sticky_enabled:
           type: boolean
           description: "Mantener al cliente en el mismo número una vez asignado"
@@ -8623,7 +8643,7 @@ components:
     UpdateWhatsappSessionArgs:
       description: |
         **update_whatsapp_session** [automation] (mutation)
-        Actualiza la etiqueta y el uso outbound de una sesion de WhatsApp. Usar outbound_role='primary' para el numero principal de conversaciones/workflows, 'operational' para pedidos/resenas/avisos y 'marketing' para campanas masivas.
+        Actualiza la etiqueta y uno o varios roles lógicos de un número de WhatsApp. Un mismo número puede ser General, Operaciones y Marketing a la vez; no guardes IDs físicos en automatizaciones.
       type: object
       properties:
         session_id:
@@ -8632,10 +8652,9 @@ components:
         label:
           type: string
           description: "Etiqueta para identificar la sesion (max 50 caracteres). Null para quitar la etiqueta."
-        outbound_role:
-          type: string
-          description: "Uso del numero: primary=conversaciones y workflows, operational=pedidos/resenas/avisos, marketing=campanas masivas. primary requiere que el numero ya este conectado."
-          enum: ["primary", "operational", "marketing"]
+        routing_roles:
+          type: array
+          description: "Uno o varios usos del número: general=conversaciones y destino público; operations=pedidos, reseñas y avisos; marketing=campañas masivas. General requiere que el número ya esté conectado."
       required: ["session_id"]
 
     UpdateWhatsappWorkflowArgs:
