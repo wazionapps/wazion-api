@@ -61,7 +61,7 @@
 | `create_knowledge_file` | Almacenamiento | mutation | Crea un nuevo archivo en la base de conocimiento a partir de contenido de texto. Ideal para anadir informacion como p... |
 | `create_list_from_followup` | Marketing Masivo | mutation | Crea una lista de contactos desde conversaciones detectadas por Smart Follow-up |
 | `create_list_from_inactive` | Marketing Masivo | mutation | Crea una nueva lista de contactos a partir de clientes que no han tenido conversación en un periodo determinado |
-| `create_scheduled_message` | WhatsApp | mutation | Programa un mensaje de WhatsApp para envio futuro. PREREQUISITO OBLIGATORIO: ANTES de llamar esta accion, DEBES llama... |
+| `create_scheduled_message` | WhatsApp | mutation | Programa un mensaje de WhatsApp para envio futuro usando un rol logico, nunca un ID de sesion. FLUJO DE CONFIRMACION:... |
 | `create_task` | Tareas | mutation | Crea una nueva tarea asociada opcionalmente a un cliente y agente |
 | `create_whatsapp_template_from_workflow` | WhatsApp | mutation | Crea un nuevo workflow de WhatsApp a partir de una plantilla existente |
 | `create_whatsapp_workflow` | Automatizacion | mutation | Crea un nuevo workflow de automatizacion para respuestas de WhatsApp. Campos requeridos: name y actions. Si el usuari... |
@@ -336,7 +336,7 @@
 | `send_ai_ticket_customer_reply` | Tickets IA | mutation | Envia al cliente un borrador seguro. El endpoint aplica control anti-filtracion contra notas internas antes de enviar. |
 | `send_email_reply` | Email | mutation | Envia una respuesta a un hilo de email existente o compone un nuevo email |
 | `send_support_ticket` | Soporte | mutation | Envia un mensaje al equipo de soporte de WAzion. Usa esta accion cuando el usuario tenga un problema que no puedas re... |
-| `send_whatsapp_message` | WhatsApp | mutation | Envia o acepta en cola un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.1... |
+| `send_whatsapp_message` | WhatsApp | mutation | Envia o acepta en cola texto o multimedia por WhatsApp usando un rol logico (General, Operaciones o Marketing), nunca... |
 | `set_ai_error` | Base de Conocimiento | mutation | Record a mistake in YOUR OWN responses or behavior (this dashboard chat). Call this when the user corrects you, AND w... |
 | `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use ON... |
 | `set_email_priority` | Email | mutation | Cambia la prioridad de un hilo de email. |
@@ -402,7 +402,7 @@
 | `update_knowledge_snippet` | Prompt e IA | mutation | Permite aprobar, rechazar, editar o eliminar un dato aprendido. Usa filter=pending en list_knowledge_snippets para ve... |
 | `update_language` | Configuracion General | mutation | Cambia el idioma del dashboard y las respuestas de la IA |
 | `update_order_settings` | Configuracion General | mutation | Configura prefijos de pedidos y telefonos/emails a ignorar |
-| `update_scheduled_message` | WhatsApp | mutation | Updates a pending scheduled WhatsApp message. Can modify the text, datetime, and/or sending session. Only pending mes... |
+| `update_scheduled_message` | WhatsApp | mutation | Updates a pending scheduled WhatsApp message. Can modify text, datetime and/or logical sender role. Only pending mess... |
 | `update_store_url` | Configuracion General | mutation | Actualiza la URL de tu tienda online |
 | `update_task` | Tareas | mutation | Modifica una tarea existente: cambiar estado, texto, prioridad, fecha limite o asignacion |
 | `update_tasks_settings` | Tareas | mutation | Activa o desactiva el modulo de tareas para la tienda |

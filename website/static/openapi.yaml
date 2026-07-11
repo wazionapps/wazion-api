@@ -1624,16 +1624,18 @@ components:
     CreateScheduledMessageArgs:
       description: |
         **create_scheduled_message** [whatsapp_ops] (mutation)
-        Programa un mensaje de WhatsApp para envio futuro. PREREQUISITO OBLIGATORIO: ANTES de llamar esta accion, DEBES llamar a get_whatsapp_status para obtener el session_id de una sesion conectada. Sin session_id la accion SIEMPRE falla. FLUJO DE CONFIRMACION: Esta accion devolvera requires_confirmation=true con success=false - esto NO es un error, es el flujo normal. Cuando recibas esto, describe brevemente al usuario lo que se programara y PARA. NO llames de nuevo a esta accion. El sistema mostrara botones automaticamente.
+        Programa un mensaje de WhatsApp para envio futuro usando un rol logico, nunca un ID de sesion. FLUJO DE CONFIRMACION: requires_confirmation=true con success=false es normal; describe lo que se programara y PARA.
         ⚠️ Requires confirmation
       type: object
       properties:
         action:
           type: string
           description: "Accion fija"
-        session_id:
-          type: integer
-          description: "ID numerico de la sesion de WhatsApp. OBLIGATORIO. Obtener llamando a get_whatsapp_status primero y usar el campo 'id' de una sesion con status 'connected'. Si hay varias sesiones, preguntar al usuario cual usar"
+        sender_role:
+          type: string
+          description: "Rol logico del emisor. Por defecto Operaciones."
+          enum: ["general", "operations", "marketing"]
+          default: "operations"
         phone:
           type: string
           description: "Numero de telefono destino con prefijo internacional formato E.164 (ej: +34612345678). Si el usuario da un numero sin prefijo, preguntarle el pais"
@@ -1646,7 +1648,7 @@ components:
         agent_id:
           type: integer
           description: "ID del agente que programa el mensaje"
-      required: ["action", "session_id", "phone", "message_text", "scheduled_at"]
+      required: ["action", "phone", "message_text", "scheduled_at"]
 
     CreateTaskArgs:
       description: |
@@ -6963,7 +6965,7 @@ components:
     SendWhatsappMessageArgs:
       description: |
         **send_whatsapp_message** [whatsapp_ops] (mutation)
-        Envia o acepta en cola un mensaje de WhatsApp a un telefono. El numero debe incluir prefijo internacional formato E.164 (ej: +34612345678). Si el usuario da un numero sin prefijo, preguntale el pais antes de enviar. IMPORTANTE: Esta accion requiere confirmacion. Cuando la llames, recibiras requires_confirmation=true y success=false - esto es NORMAL, NO es un error. Simplemente describe al usuario lo que se va a enviar y PARA. El sistema mostrara botones de confirmar/cancelar automaticamente. NO reintentes la accion. Tras confirmar, la respuesta puede incluir status:'queued' y queue_id si el guardrail anti-bloqueo aplaza el envio; queued significa aceptado, no message_id real todavia.
+        Envia o acepta en cola texto o multimedia por WhatsApp usando un rol logico (General, Operaciones o Marketing), nunca un ID de sesion. El telefono debe incluir prefijo internacional E.164. IMPORTANTE: requiere confirmacion; requires_confirmation=true es normal. Tras confirmar, queued significa aceptado pero aun no enviado.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -6974,16 +6976,23 @@ components:
           description: "Telefono destino en formato E.164 con prefijo internacional (ej: +34612345678). Si el usuario no incluye prefijo, preguntarle el pais. OBLIGATORIO"
         message:
           type: string
-          description: "Texto del mensaje a enviar. OBLIGATORIO - no enviar vacio"
-        session_id:
-          type: integer
-          description: "ID de sesion especifica legacy (opcional). Si se indica from_phone, from_phone tiene prioridad."
-        from_phone:
+          description: "Texto a enviar. Obligatorio si no se indica media_url; puede usarse como caption si hay multimedia."
+        sender_role:
           type: string
-          description: "Numero emisor opcional en formato E.164 (ej: +34612345678). Si se indica, se envia solo desde esa linea conectada y no se aplica el filtro marketing."
-        marketing:
-          type: boolean
-          description: "Preferencia de linea: true prefiere lineas con Marketing Masivo, false prefiere lineas operativas. Si solo hay una linea, o no hay candidatas del tipo pedido, se envia igualmente por una linea conectada."
+          description: "Rol logico del emisor. General para conversacion, Operations para avisos y Marketing para campanas."
+          enum: ["general", "operations", "marketing"]
+          default: "general"
+        media_url:
+          type: string
+          description: "URL publica http(s) de imagen, video, audio o documento."
+        media_type:
+          type: string
+          description: "Tipo del archivo de media_url."
+          enum: ["image", "video", "audio", "document"]
+          default: "image"
+        caption:
+          type: string
+          description: "Pie o texto que acompana al archivo."
         archive_after_send:
           type: boolean
           description: "Archivar chat tras enviar. Si se usa archive_policy, esta bandera queda como compatibilidad legacy."
@@ -6994,7 +7003,7 @@ components:
         direction:
           type: string
           description: "Filtrar por direccion"
-      required: ["action", "phone", "message"]
+      required: ["action", "phone"]
 
     SetAiErrorArgs:
       description: |
@@ -8474,7 +8483,7 @@ components:
     UpdateScheduledMessageArgs:
       description: |
         **update_scheduled_message** [whatsapp_ops] (mutation)
-        Updates a pending scheduled WhatsApp message. Can modify the text, datetime, and/or sending session. Only pending messages can be edited.
+        Updates a pending scheduled WhatsApp message. Can modify text, datetime and/or logical sender role. Only pending messages can be edited.
         ⚠️ Requires confirmation
       type: object
       properties:
@@ -8489,9 +8498,10 @@ components:
         scheduled_at:
           type: string
           description: "New date and time in format YYYY-MM-DD HH:MM (shop timezone)"
-        session_id:
-          type: integer
-          description: "New WhatsApp Auto session ID to send from"
+        sender_role:
+          type: string
+          description: "New logical WhatsApp sender role"
+          enum: ["general", "operations", "marketing"]
         agent_id:
           type: integer
           description: "ID del agente que modifica el mensaje"
