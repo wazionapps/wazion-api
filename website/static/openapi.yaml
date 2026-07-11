@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    405 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    407 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1096,6 +1096,11 @@ components:
         force_new:
           type: boolean
           description: "Forzar creación de nueva sesión aunque haya sesiones desconectadas disponibles"
+        outbound_role:
+          type: string
+          description: "Rol de envío del número: principal (conversaciones), operativo (avisos/pedidos) o marketing (campañas)"
+          enum: ["primary", "operational", "marketing"]
+          default: "operational"
 
     CountFilteredContactsArgs:
       description: |
@@ -4614,6 +4619,12 @@ components:
           description: "Buscar en contenido del mensaje"
       required: ["action"]
 
+    GetWhatsappOutboundPolicyArgs:
+      description: |
+        **get_whatsapp_outbound_policy** [whatsapp_ops] (query)
+        Muestra la política de envío saliente de WhatsApp de la tienda: modo, número principal, orígenes a los que se aplica, pie de no respuesta y estado de disponibilidad de los números por rol.
+      type: object
+
     GetWhatsappOutboundQueueStatusArgs:
       description: |
         **get_whatsapp_outbound_queue_status** [whatsapp_ops] (query)
@@ -7053,6 +7064,42 @@ components:
           type: array
           description: "Array de etiquetas (strings). Enviar array vacio para quitar todas."
       required: ["action", "thread_id", "tags"]
+
+    SetWhatsappOutboundPolicyArgs:
+      description: |
+        **set_whatsapp_outbound_policy** [whatsapp_ops] (mutation)
+        Configura la política de envío saliente de WhatsApp: modo (desactivada, auditoría o forzada), número principal, orígenes a los que aplica y el pie de no respuesta. Al forzar, cada mensaje se enruta al número del rol correspondiente.
+      type: object
+      properties:
+        mode:
+          type: string
+          description: "Modo de la política: desactivada, auditoría (solo registra) o forzada (enruta los envíos)"
+          enum: ["disabled", "audit", "enforced"]
+        primary_session_id:
+          type: integer
+          description: "ID de la sesión de WhatsApp que actúa como número principal (obligatorio cuando el modo no es desactivada; debe estar conectado)"
+        apply_sources:
+          type: array
+          description: "Lista de orígenes de envío a los que aplica la política (usar ['*'] para todos)"
+        no_reply_footer_enabled:
+          type: boolean
+          description: "Añadir un pie de no respuesta a los mensajes salientes"
+        no_reply_footer_text:
+          type: string
+          description: "Texto del pie de no respuesta (usa {url} para insertar el enlace de contacto; máximo 1000 caracteres)"
+        no_reply_footer_texts:
+          type: object
+          description: "Textos del pie de no respuesta por idioma"
+        sticky_enabled:
+          type: boolean
+          description: "Mantener al cliente en el mismo número una vez asignado"
+        failover_enabled:
+          type: boolean
+          description: "Reenviar por otro número disponible si el asignado no está conectado"
+        audit_enabled:
+          type: boolean
+          description: "Registrar en auditoría las decisiones de enrutamiento de envío"
+      required: ["mode"]
 
     SmartKnowledgeUpdateArgs:
       description: |

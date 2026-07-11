@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 405 (excluding hidden)
+> Total tools: 407 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -215,6 +215,7 @@
 | `get_whatsapp_health` | WhatsApp | query | Estado combinado de sesiones, actividad de mensajes 24h y workflows activos |
 | `get_whatsapp_live_chat_messages` | WhatsApp | query | Obtiene los mensajes recientes de un chat directamente desde el VPS de WhatsApp, combinando memoria viva y logs recie... |
 | `get_whatsapp_message_logs` | WhatsApp | query | Muestra los ultimos mensajes enviados y recibidos por WhatsApp |
+| `get_whatsapp_outbound_policy` | WhatsApp | query | Muestra la política de envío saliente de WhatsApp de la tienda: modo, número principal, orígenes a los que se aplica,... |
 | `get_whatsapp_outbound_queue_status` | WhatsApp | query | Consulta el estado real de un mensaje de WhatsApp aceptado en cola por el guardrail anti-bloqueo. Usalo cuando send_w... |
 | `get_whatsapp_profile` | WhatsApp | query | Obtiene el perfil de WhatsApp de una sesion conectada: nombre, foto, estado/info, y datos de empresa si es WhatsApp B... |
 | `get_whatsapp_qr` | Automatizacion | query | Obtiene el codigo QR de WhatsApp para que el usuario lo escanee. IMPORTANTE: Requiere que exista una sesion previa (e... |
@@ -340,6 +341,7 @@
 | `set_customer_ai_error` | Base de Conocimiento | mutation | Record a correction for the CUSTOMER-FACING WhatsApp AI (auto-pilot, workflows, suggestions, chat web plugin). Use ON... |
 | `set_email_priority` | Email | mutation | Cambia la prioridad de un hilo de email. |
 | `set_email_tags` | Email | mutation | Establece las etiquetas de un hilo de email. Las etiquetas son strings libres. |
+| `set_whatsapp_outbound_policy` | WhatsApp | mutation | Configura la política de envío saliente de WhatsApp: modo (desactivada, auditoría o forzada), número principal, oríge... |
 | `smart_knowledge_update` | Prompt e IA | mutation | Busca y actualiza datos aprendidos que contradigan o estén desactualizados según la instrucción del usuario. Usa esto... |
 | `snooze_email_thread` | Email | mutation | Pospone un hilo de email hasta una fecha y hora especifica. El hilo se reabrira automaticamente cuando llegue el mome... |
 | `start_campaign` | Marketing Masivo | mutation | Inicia el envio de una campana de marketing masivo. Funciona con campanas en estado borrador o programadas. |
