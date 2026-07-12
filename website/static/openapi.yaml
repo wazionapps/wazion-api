@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    408 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    409 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -1099,6 +1099,10 @@ components:
         routing_roles:
           type: array
           description: "Roles del número: general (conversaciones/destino público), operations (avisos y pedidos) y/o marketing (campañas). Si es el primer número y se omite, se asignan los tres; los siguientes nacen como Operaciones."
+        outbound_role:
+          type: string
+          description: "Alternativa compatible para asignar un único rol lógico cuando no se envía routing_roles. Si se envían ambos, routing_roles tiene prioridad."
+          enum: ["general", "operations", "marketing"]
 
     CountFilteredContactsArgs:
       description: |
@@ -4623,6 +4627,19 @@ components:
       description: |
         **get_whatsapp_outbound_delivery_status** [whatsapp_ops] (query)
         Consulta y reconcilia el ledger durable de un envio WhatsApp mediante idempotency_key, siempre limitado a la tienda autenticada. Es el metodo preferido cuando el envio queda queued, retry_sending o sent_unconfirmed, incluso si el VPS no devolvio queue_id. Solo sent con message_id confirma envio fisico.
+      type: object
+      properties:
+        action:
+          type: string
+        idempotency_key:
+          type: string
+          description: "Clave estable usada al enviar. Para Vicshop: vicshop-wa-queue-{IdQueue}."
+      required: ["action", "idempotency_key"]
+
+    GetWhatsappOutboundDeliveryStatusShortArgs:
+      description: |
+        **get_whatsapp_outbound_delivery_status_short** [whatsapp_ops] (query)
+        Alias de get_whatsapp_outbound_delivery_status: consulta y reconcilia el ledger durable de un envio WhatsApp mediante idempotency_key, siempre limitado a la tienda autenticada. Mismo comportamiento que la version larga.
       type: object
       properties:
         action:
@@ -8655,6 +8672,10 @@ components:
         routing_roles:
           type: array
           description: "Uno o varios usos del número: general=conversaciones y destino público; operations=pedidos, reseñas y avisos; marketing=campañas masivas. General requiere que el número ya esté conectado."
+        outbound_role:
+          type: string
+          description: "Alternativa compatible para asignar un único rol lógico cuando no se envía routing_roles. Si se envían ambos, routing_roles tiene prioridad."
+          enum: ["general", "operations", "marketing"]
       required: ["session_id"]
 
     UpdateWhatsappWorkflowArgs:

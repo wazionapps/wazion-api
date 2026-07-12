@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 408 (excluding hidden)
+> Total tools: 409 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -216,6 +216,7 @@
 | `get_whatsapp_live_chat_messages` | WhatsApp | query | Obtiene los mensajes recientes de un chat directamente desde el VPS de WhatsApp, combinando memoria viva y logs recie... |
 | `get_whatsapp_message_logs` | WhatsApp | query | Muestra los ultimos mensajes enviados y recibidos por WhatsApp |
 | `get_whatsapp_outbound_delivery_status` | WhatsApp | query | Consulta y reconcilia el ledger durable de un envio WhatsApp mediante idempotency_key, siempre limitado a la tienda a... |
+| `get_whatsapp_outbound_delivery_status_short` | WhatsApp | query | Alias de get_whatsapp_outbound_delivery_status: consulta y reconcilia el ledger durable de un envio WhatsApp mediante... |
 | `get_whatsapp_outbound_policy` | WhatsApp | query | Muestra la política de envío saliente: modo, número con rol General, orígenes, pie de no respuesta y disponibilidad p... |
 | `get_whatsapp_outbound_queue_status` | WhatsApp | query | Consulta el estado real de un mensaje de WhatsApp aceptado en cola por el guardrail anti-bloqueo. Usalo cuando send_w... |
 | `get_whatsapp_profile` | WhatsApp | query | Obtiene el perfil de WhatsApp de una sesion conectada: nombre, foto, estado/info, y datos de empresa si es WhatsApp B... |
