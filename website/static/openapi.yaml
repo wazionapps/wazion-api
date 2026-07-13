@@ -1099,10 +1099,6 @@ components:
         routing_roles:
           type: array
           description: "Roles del número: general (conversaciones/destino público), operations (avisos y pedidos) y/o marketing (campañas). Si es el primer número y se omite, se asignan los tres; los siguientes nacen como Operaciones."
-        outbound_role:
-          type: string
-          description: "Alternativa compatible para asignar un único rol lógico cuando no se envía routing_roles. Si se envían ambos, routing_roles tiene prioridad."
-          enum: ["general", "operations", "marketing"]
 
     CountFilteredContactsArgs:
       description: |
@@ -8672,10 +8668,6 @@ components:
         routing_roles:
           type: array
           description: "Uno o varios usos del número: general=conversaciones y destino público; operations=pedidos, reseñas y avisos; marketing=campañas masivas. General requiere que el número ya esté conectado."
-        outbound_role:
-          type: string
-          description: "Alternativa compatible para asignar un único rol lógico cuando no se envía routing_roles. Si se envían ambos, routing_roles tiene prioridad."
-          enum: ["general", "operations", "marketing"]
       required: ["session_id"]
 
     UpdateWhatsappWorkflowArgs:
