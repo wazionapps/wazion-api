@@ -3,7 +3,7 @@ info:
   title: WAzion API
   description: |
     WAzion is a WhatsApp Business automation and AI assistant platform. This API exposes
-    409 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
+    410 tools via the Model Context Protocol (MCP) over JSON-RPC 2.0, allowing you to
     manage every aspect of your WAzion dashboard programmatically.
 
     ## Protocol
@@ -833,6 +833,27 @@ components:
           type: string
           description: "ID de la sesion de chat del plugin"
       required: ["session_id"]
+
+    CheckWhatsappContactEligibilityArgs:
+      description: |
+        **check_whatsapp_contact_eligibility** [whatsapp_ops] (query)
+        Comprueba sin enviar nada si el cliente ha escrito recientemente a la misma linea fisica que usaria el origen automatico. Devuelve tambien el estado del filtro y la ventana configurada.
+      type: object
+      properties:
+        action:
+          type: string
+        phone:
+          type: string
+          description: "Telefono del cliente en formato E.164."
+        billing_source:
+          type: string
+          description: "Origen automatico que intentaria enviar el mensaje."
+          enum: ["order_automation", "shopify_order", "parts_progress", "campaign", "followup"]
+        sender_role:
+          type: string
+          description: "Rol logico solicitado; WAzion resuelve despues la linea fisica."
+          enum: ["general", "operations", "marketing"]
+      required: ["action", "phone", "billing_source"]
 
     CheckWhatsappOptoutArgs:
       description: |

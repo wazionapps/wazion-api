@@ -2,7 +2,7 @@
 # WAzion Tools Catalog
 
 > Auto-generated from `capabilities.json` v1.1.0
-> Total tools: 409 (excluding hidden)
+> Total tools: 410 (excluding hidden)
 
 | Tool | Category | Type | Description |
 |------|----------|------|-------------|
@@ -36,6 +36,7 @@
 | `cancel_scheduled_message` | WhatsApp | mutation | Cancela un mensaje de WhatsApp que esta programado para envio futuro |
 | `check_docqa_file_status` | Plugins | query | Comprueba el estado de procesamiento de los archivos subidos a un asistente Doc-QA |
 | `check_plugin_conversation_note` | Plugins | query | Comprueba si ya existe una nota guardada para una sesion de chat del plugin y muestra los datos del cliente asociado. |
+| `check_whatsapp_contact_eligibility` | WhatsApp | query | Comprueba sin enviar nada si el cliente ha escrito recientemente a la misma linea fisica que usaria el origen automat... |
 | `check_whatsapp_optout` | WhatsApp | query | Comprueba si un numero de telefono esta en la lista de opt-out de automatizacion WhatsApp |
 | `close_ai_ticket` | Tickets IA | mutation | Cierra un ticket interno cuando el caso queda terminado. A diferencia de resolver, marca el ticket como cerrado defin... |
 | `configure_ai_learning` | Prompt e IA | mutation | Configura el modo de despliegue del aprendizaje automatico para un canal concreto (off, sombra, suave, forzado), cuan... |
