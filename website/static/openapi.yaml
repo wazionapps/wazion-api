@@ -848,7 +848,7 @@ components:
         billing_source:
           type: string
           description: "Origen automatico que intentaria enviar el mensaje."
-          enum: ["order_automation", "shopify_order", "parts_progress", "campaign", "followup"]
+          enum: ["order_automation", "shopify_order", "parts_progress", "recambios_envia_event", "campaign", "followup"]
         sender_role:
           type: string
           description: "Rol logico solicitado; WAzion resuelve despues la linea fisica."
